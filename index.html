@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIO — Cinematic Instagram Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────
+   TOKENS
+───────────────────────────────────── */
+:root {
+  --void:    #060608;
+  --deep:    #0d0d10;
+  --surface: #141418;
+  --lift:    #1c1c22;
+  --border:  rgba(255,255,255,0.06);
+  --silver:  #8a8a96;
+  --mist:    #c4c4cc;
+  --white:   #ede9e2;
+  --ember:   #d4742a;
+  --ember2:  #e8a055;
+  --ember-dim: rgba(212,116,42,0.12);
+  --teal:    #2e8a9c;
+  --teal-dim: rgba(46,138,156,0.10);
+  --film:    #b8a882;
+  --grain:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+/* ── cursor ── */
+#cur,#cur2{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+#cur{width:7px;height:7px;background:var(--ember);transition:transform .08s}
+#cur2{width:30px;height:30px;border:1px solid rgba(212,116,42,.4);transition:transform .22s ease,width .2s,height .2s}
+body:hover #cur{transform:translate(-50%,-50%) scale(1)}
+
+/* ── scrollbar ── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--deep)}
+::-webkit-scrollbar-thumb{background:var(--ember);border-radius:2px}
+
+/* ─────────────────────────────────────
+   HEADER
+───────────────────────────────────── */
+.hdr{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 52px;
+  background:linear-gradient(to bottom,rgba(6,6,8,.97) 0%,rgba(6,6,8,0) 100%);
+  backdrop-filter:blur(2px);
+}
+.logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.35rem;letter-spacing:.22em;
+  color:var(--white);
+}
+.logo em{color:var(--ember);font-style:normal}
+.nav{display:flex;gap:8px;align-items:center}
+.nav a{
+  font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--silver);text-decoration:none;padding:6px 14px;
+  border:1px solid transparent;
+  transition:color .2s,border-color .2s;
+}
+.nav a:hover{color:var(--white);border-color:var(--border)}
+.nav .cta{
+  background:var(--ember);color:var(--void) !important;
+  border-color:var(--ember) !important;font-weight:500;
+  transition:background .2s !important;
+}
+.nav .cta:hover{background:var(--ember2) !important}
+
+/* ─────────────────────────────────────
+   HERO
+───────────────────────────────────── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:0 52px 72px;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 75% 25%, rgba(212,116,42,.09) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 15% 75%, rgba(46,138,156,.07) 0%, transparent 50%),
+    var(--void);
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background-image:var(--grain);opacity:.5;
+}
+/* diagonal accent line */
+.hero-line{
+  position:absolute;top:0;right:18%;
+  width:1px;height:100%;
+  background:linear-gradient(to bottom,transparent,rgba(212,116,42,.15) 40%,rgba(212,116,42,.08) 70%,transparent);
+}
+.hero-year{
+  position:absolute;top:120px;right:52px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.72rem;letter-spacing:.4em;
+  color:rgba(255,255,255,.12);writing-mode:vertical-rl;
+}
+.hero-kicker{
+  display:flex;align-items:center;gap:14px;
+  font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;
+  color:var(--ember);margin-bottom:18px;position:relative;
+}
+.hero-kicker::before{content:'';width:36px;height:1px;background:var(--ember)}
+.hero-h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,9vw,8rem);
+  letter-spacing:.04em;line-height:.9;
+  color:var(--white);position:relative;
+}
+.hero-h1 .em{color:var(--ember)}
+.hero-h1 .ghost{
+  position:absolute;left:0;top:0;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.04);
+  user-select:none;transform:translate(3px,3px);
+}
+.hero-sub{
+  margin-top:22px;max-width:500px;
+  font-size:.8rem;color:var(--silver);line-height:1.85;
+  position:relative;
+}
+.hero-meta{
+  margin-top:36px;display:flex;gap:36px;position:relative;
+}
+.meta-item{display:flex;flex-direction:column;gap:4px}
+.meta-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.8rem;letter-spacing:.05em;color:var(--white);line-height:1;
+}
+.meta-num span{color:var(--ember)}
+.meta-label{
+  font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--silver);
+}
+.meta-sep{width:1px;background:var(--border);align-self:stretch}
+.scroll-cue{
+  position:absolute;right:52px;bottom:72px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.scroll-cue span{
+  font-size:.54rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--silver);writing-mode:vertical-rl;
+}
+.scroll-bar{
+  width:1px;height:64px;
+  background:linear-gradient(to bottom,var(--ember),transparent);
+  animation:pulse 2.2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:.35;transform:scaleY(1)}50%{opacity:1;transform:scaleY(.75)}}
+
+/* ─────────────────────────────────────
+   SECTION SYSTEM
+───────────────────────────────────── */
+.sec-intro{
+  padding:88px 52px 36px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+}
+.si-left{}
+.si-n{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:5rem;line-height:1;letter-spacing:.04em;
+  color:rgba(255,255,255,.04);
+}
+.si-t{
+  font-family:'Playfair Display',serif;
+  font-size:1.7rem;font-weight:400;
+  color:var(--white);margin-top:-10px;
+}
+.si-d{
+  max-width:360px;text-align:right;
+  font-size:.73rem;color:var(--silver);line-height:1.85;
+}
+.divider{margin:0 52px;height:1px;background:var(--border)}
+
+/* ─────────────────────────────────────
+   TAB NAV
+───────────────────────────────────── */
+.tab-nav{
+  display:flex;gap:2px;padding:0 52px 32px;
+}
+.tab-btn{
+  font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--silver);padding:9px 20px;
+  background:none;border:1px solid transparent;
+  cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif;
+}
+.tab-btn:hover{color:var(--white);border-color:var(--border)}
+.tab-btn.active{color:var(--void);background:var(--ember);border-color:var(--ember)}
+.tab-pane{display:none;padding:0 52px}
+.tab-pane.active{display:block}
+
+/* ─────────────────────────────────────
+   TEMPLATE GRID
+───────────────────────────────────── */
+.tpl-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;padding-bottom:72px;
+}
+
+/* card wrapper */
+.tcard{
+  cursor:pointer;
+  animation:riseUp .55s ease both;
+}
+.tcard:nth-child(1){animation-delay:.04s}
+.tcard:nth-child(2){animation-delay:.11s}
+.tcard:nth-child(3){animation-delay:.18s}
+.tcard:nth-child(4){animation-delay:.25s}
+.tcard:nth-child(5){animation-delay:.32s}
+.tcard:nth-child(6){animation-delay:.39s}
+@keyframes riseUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+.tcard-frame{
+  aspect-ratio:1;position:relative;overflow:hidden;
+  border:1px solid var(--border);
+  transition:border-color .3s,transform .3s;
+}
+.tcard:hover .tcard-frame{
+  border-color:rgba(212,116,42,.4);
+  transform:scale(1.01);
+}
+.tcard-frame::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(212,116,42,0);
+  transition:background .3s;z-index:20;pointer-events:none;
+}
+.tcard:hover .tcard-frame::before{background:rgba(212,116,42,.035)}
+
+/* hover label */
+.tcard-hover{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(6,6,8,.92) 0%,transparent 100%);
+  padding:24px 16px 14px;
+  transform:translateY(100%);transition:transform .28s ease;
+  z-index:30;
+}
+.tcard:hover .tcard-hover{transform:translateY(0)}
+.tcard-hover-label{
+  font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ember);
+}
+.tcard-hover-hint{
+  font-size:.68rem;color:var(--mist);margin-top:4px;
+}
+.tcard-meta{
+  padding:11px 2px 0;
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.tcard-name{font-size:.76rem;font-weight:400;letter-spacing:.06em;color:var(--white)}
+.tcard-tag{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ember)}
+
+/* ═══════════════════════════════════
+   TEMPLATE DESIGNS — 9 TOTAL
+═══════════════════════════════════ */
+
+/* ── 1. Portfolio Hero ── */
+.t-port{
+  width:100%;height:100%;
+  background:var(--surface);
+  display:grid;grid-template-rows:1fr auto;
+  position:relative;overflow:hidden;
+}
+.t-port .ph-img{
+  background:linear-gradient(145deg,#161618 0%,#1e1e22 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.t-port .ph-img::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 60% 40%,rgba(212,116,42,.08),transparent 60%);
+}
+.t-port .lens{
+  width:38%;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(212,116,42,.18);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.t-port .lens::before{
+  content:'';position:absolute;
+  width:62%;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(212,116,42,.1);
+}
+.t-port .lens::after{
+  content:'';position:absolute;
+  width:28%;aspect-ratio:1;border-radius:50%;
+  background:rgba(212,116,42,.1);
+}
+.t-port .ph-bar{
+  padding:5% 7%;background:#0a0a0c;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.t-port .ph-tag{
+  font-size:clamp(.36rem,1.1vw,.52rem);
+  letter-spacing:.25em;text-transform:uppercase;color:var(--ember);
+}
+.t-port .ph-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(.6rem,2vw,.95rem);
+  color:var(--white);font-weight:400;margin-top:2%;
+}
+.t-port .ph-arr{font-size:clamp(.7rem,2.2vw,1rem);color:var(--ember)}
+.t-port .scan{
+  position:absolute;left:0;right:0;
+  height:1px;background:linear-gradient(to right,transparent,rgba(212,116,42,.25),transparent);
+  animation:scan 4s ease infinite;
+}
+@keyframes scan{0%{top:10%}100%{top:90%}}
+
+/* ── 2. Cinematic Title Card ── */
+.t-title{
+  width:100%;height:100%;
+  background:#020204;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:10%;text-align:center;
+  position:relative;overflow:hidden;
+}
+.t-title .lb-t,.t-title .lb-b{
+  position:absolute;left:0;right:0;height:7.5%;
+  background:#000;z-index:2;
+}
+.t-title .lb-t{top:0}.t-title .lb-b{bottom:0}
+.t-title .frame{
+  position:absolute;
+  top:9%;left:5%;right:5%;bottom:9%;
+  border:1px solid rgba(255,255,255,.05);
+}
+.t-title .c-tl,.t-title .c-tr,.t-title .c-bl,.t-title .c-br{
+  position:absolute;width:16px;height:16px;
+  border-color:rgba(212,116,42,.55);border-style:solid;
+}
+.t-title .c-tl{top:-1px;left:-1px;border-width:1px 0 0 1px}
+.t-title .c-tr{top:-1px;right:-1px;border-width:1px 1px 0 0}
+.t-title .c-bl{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
+.t-title .c-br{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+.t-title .bg-word{
+  position:absolute;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,11vw,5rem);
+  color:rgba(255,255,255,.025);letter-spacing:.08em;
+  user-select:none;
+}
+.t-title .quote{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(.68rem,2.4vw,1.1rem);
+  font-style:italic;color:var(--white);
+  line-height:1.75;z-index:1;
+}
+.t-title .dash{
+  width:22px;height:1px;background:var(--ember);
+  margin:7% auto;z-index:1;
+}
+.t-title .credit{
+  font-size:clamp(.36rem,1.1vw,.52rem);
+  letter-spacing:.3em;text-transform:uppercase;
+  color:var(--silver);z-index:1;
+}
+.t-title .tc-code{
+  position:absolute;bottom:9.5%;left:6%;
+  font-size:clamp(.3rem,1vw,.44rem);
+  letter-spacing:.15em;color:rgba(255,255,255,.12);
+  z-index:2;
+}
+
+/* ── 3. BTS Grid ── */
+.t-bts{
+  width:100%;height:100%;
+  background:#0c0c0e;
+  display:grid;grid-template-areas:"a a""b c";
+  grid-template-rows:55% 44%;
+  gap:2px;position:relative;
+}
+.bts-a{grid-area:a}.bts-b{grid-area:b}.bts-c{grid-area:c}
+.bts-cell{
+  background:var(--lift);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.bts-cell .ico{font-size:clamp(1.8rem,7vw,3rem);opacity:.1}
+.bts-cell .ov{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,6,8,.75),transparent 55%);
+}
+.bts-cell .lbl{
+  position:absolute;bottom:6%;left:7%;
+  font-size:clamp(.34rem,1.1vw,.5rem);
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--film);
+}
+.bts-cell .badge{
+  position:absolute;top:7%;right:7%;
+  font-size:clamp(.32rem,1vw,.46rem);
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ember);border:1px solid rgba(212,116,42,.4);
+  padding:2% 4%;
+}
+.bts-cell::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 30%,rgba(212,116,42,.04),transparent 70%);
+}
+
+/* ── 4. Service Card ── */
+.t-svc{
+  width:100%;height:100%;
+  background:var(--lift);
+  display:flex;flex-direction:column;
+  padding:8%;position:relative;overflow:hidden;
+}
+.t-svc::before{
+  content:'';position:absolute;top:0;right:0;
+  width:55%;height:55%;
+  background:radial-gradient(circle at top right,rgba(212,116,42,.1),transparent 70%);
+  pointer-events:none;
+}
+.t-svc .svc-bg-n{
+  position:absolute;top:2%;right:4%;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,13vw,5.5rem);
+  color:rgba(212,116,42,.05);
+  letter-spacing:.05em;line-height:1;
+}
+.t-svc .tag{
+  font-size:clamp(.38rem,1.2vw,.54rem);
+  letter-spacing:.3em;text-transform:uppercase;color:var(--ember);
+  margin-bottom:4%;
+}
+.t-svc .svc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(1.1rem,4.5vw,2rem);
+  letter-spacing:.06em;color:var(--white);
+  line-height:1.05;flex:1;display:flex;align-items:center;
+}
+.t-svc .rule{width:28px;height:1px;background:var(--ember);margin:5% 0}
+.t-svc .items{display:flex;flex-direction:column;gap:4%}
+.t-svc .it{
+  display:flex;align-items:center;gap:8px;
+  font-size:clamp(.38rem,1.2vw,.54rem);
+  color:var(--silver);letter-spacing:.04em;
+}
+.t-svc .it::before{
+  content:'';width:3px;height:3px;border-radius:50%;
+  background:var(--ember);flex-shrink:0;
+}
+.t-svc .svc-cta{
+  margin-top:auto;padding-top:6%;
+  font-size:clamp(.36rem,1.1vw,.5rem);
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ember);display:flex;align-items:center;gap:8px;
+}
+.t-svc .svc-cta::after{content:'→'}
+
+/* ── 5. Testimonial ── */
+.t-testi{
+  width:100%;height:100%;
+  background:#0a0e0d;
+  display:flex;flex-direction:column;
+  justify-content:space-between;padding:9%;
+  position:relative;overflow:hidden;
+}
+.t-testi::before{
+  content:'';position:absolute;top:-15%;left:-10%;
+  width:65%;height:65%;
+  background:radial-gradient(circle,rgba(46,138,156,.07),transparent 70%);
+}
+.t-testi::after{
+  content:'';position:absolute;bottom:-10%;right:-10%;
+  width:45%;height:45%;
+  background:radial-gradient(circle,rgba(212,116,42,.05),transparent 70%);
+}
+.t-testi .stars{
+  display:flex;gap:3px;
+  font-size:clamp(.5rem,1.8vw,.78rem);color:var(--ember);
+}
+.t-testi .body{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(.65rem,2.3vw,1.05rem);
+  color:var(--white);line-height:1.75;
+  flex:1;display:flex;align-items:center;
+  z-index:1;position:relative;
+}
+.t-testi .author{display:flex;align-items:center;gap:10%}
+.t-testi .av{
+  width:clamp(20px,8%,32px);aspect-ratio:1;border-radius:50%;
+  background:linear-gradient(135deg,var(--ember),var(--teal));opacity:.7;flex-shrink:0;
+}
+.t-testi .aname{
+  font-size:clamp(.44rem,1.4vw,.62rem);font-weight:500;
+  color:var(--white);letter-spacing:.04em;
+}
+.t-testi .arole{
+  font-size:clamp(.36rem,1.1vw,.5rem);
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--teal);margin-top:2%;
+}
+.t-testi .watermark{
+  position:absolute;bottom:7%;right:7%;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(.5rem,2vw,.9rem);letter-spacing:.2em;
+  color:rgba(200,184,154,.1);
+}
+
+/* ── 6. Reel Cover ── */
+.t-reel{
+  width:100%;height:100%;
+  background:#040406;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.t-reel .reel-top{
+  flex:1.6;
+  background:linear-gradient(160deg,#141416 0%,#1a1a1e 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.t-reel .reel-top::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(135deg,rgba(212,116,42,.05) 0%,transparent 50%,rgba(46,138,156,.04) 100%);
+}
+.t-reel .grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(200,184,154,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,184,154,.025) 1px,transparent 1px);
+  background-size:25% 25%;
+}
+.t-reel .reel-ico{font-size:clamp(1.8rem,7vw,3.2rem);opacity:.12;z-index:1}
+.t-reel .play-ring{
+  position:absolute;
+  width:22%;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(212,116,42,.25);
+  display:flex;align-items:center;justify-content:center;
+}
+.t-reel .play-ring::after{
+  content:'▶';
+  font-size:clamp(.5rem,2vw,.9rem);
+  color:rgba(212,116,42,.5);
+  margin-left:8%;
+}
+.t-reel .big-n{
+  position:absolute;bottom:-5%;right:3%;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,10vw,4.5rem);
+  color:rgba(255,255,255,.028);letter-spacing:.04em;line-height:1;
+}
+.t-reel .reel-bot{
+  padding:5.5% 7.5%;background:#040406;
+  display:flex;flex-direction:column;gap:2.5%;
+}
+.t-reel .rcat{
+  font-size:clamp(.34rem,1.1vw,.5rem);
+  letter-spacing:.3em;text-transform:uppercase;color:var(--ember);
+}
+.t-reel .rtitle{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(.9rem,3.6vw,1.6rem);
+  letter-spacing:.06em;color:var(--white);line-height:1.05;
+}
+.t-reel .rmeta{
+  display:flex;gap:14px;
+  font-size:clamp(.32rem,1vw,.46rem);
+  letter-spacing:.1em;color:var(--silver);
+}
+.t-reel .rmeta span+span::before{content:'·';margin-right:14px;color:rgba(255,255,255,.12)}
+
+/* ── 7. Before/After ── */
+.t-ba{
+  width:100%;height:100%;
+  background:#0c0c0e;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.t-ba .ba-top{
+  flex:1.8;display:grid;grid-template-columns:1fr 1fr;gap:2px;
+}
+.t-ba .ba-half{
+  background:var(--lift);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.t-ba .ba-half:first-child{
+  background:linear-gradient(145deg,#1a1a1a,#222);filter:grayscale(1) contrast(1.1);
+}
+.t-ba .ba-half:last-child{
+  background:linear-gradient(145deg,#1e1a14,#2a2218);
+}
+.t-ba .ba-ico{font-size:clamp(1.4rem,5.5vw,2.5rem);opacity:.1}
+.t-ba .ba-tag{
+  position:absolute;top:7%;left:50%;transform:translateX(-50%);
+  font-size:clamp(.34rem,1.1vw,.5rem);
+  letter-spacing:.25em;text-transform:uppercase;
+  padding:2% 5%;
+}
+.t-ba .ba-half:first-child .ba-tag{
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.45);
+}
+.t-ba .ba-half:last-child .ba-tag{
+  background:rgba(212,116,42,.12);color:var(--ember);
+}
+.t-ba .ba-div{
+  position:absolute;top:0;bottom:0;left:50%;
+  width:2px;background:var(--ember);
+  z-index:5;transform:translateX(-50%);
+}
+.t-ba .ba-bot{
+  padding:5.5% 7.5%;background:#080808;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.t-ba .ba-label{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(.7rem,2.5vw,1.1rem);
+  color:var(--white);font-weight:400;
+}
+.t-ba .ba-sub{
+  font-size:clamp(.34rem,1.1vw,.5rem);
+  letter-spacing:.18em;text-transform:uppercase;color:var(--silver);
+  margin-top:2%;
+}
+.t-ba .ba-cta{
+  font-size:clamp(.34rem,1.1vw,.5rem);
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ember);
+}
+
+/* ── 8. Stats / Data ── */
+.t-stats{
+  width:100%;height:100%;
+  background:var(--surface);
+  display:flex;flex-direction:column;
+  padding:8%;position:relative;overflow:hidden;
+}
+.t-stats::before{
+  content:'';position:absolute;top:0;right:0;
+  width:40%;height:40%;
+  background:rgba(212,116,42,.05);
+  clip-path:polygon(100% 0,0 0,100% 100%);
+}
+.t-stats .st-head{
+  font-size:clamp(.38rem,1.2vw,.54rem);
+  letter-spacing:.28em;text-transform:uppercase;color:var(--ember);
+  margin-bottom:7%;
+}
+.t-stats .st-grid{
+  flex:1;display:grid;grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;gap:6%;
+  align-content:center;
+}
+.t-stats .st-item{display:flex;flex-direction:column;gap:5%}
+.t-stats .st-n{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(1.2rem,5vw,2.2rem);
+  color:var(--white);line-height:1;
+}
+.t-stats .st-n span{color:var(--ember)}
+.t-stats .st-l{
+  font-size:clamp(.36rem,1.1vw,.52rem);
+  color:var(--silver);letter-spacing:.06em;line-height:1.4;
+}
+.t-stats .st-bar{
+  height:2px;background:var(--border);
+  margin-top:5%;position:relative;overflow:hidden;
+}
+.t-stats .st-bar::after{
+  content:'';position:absolute;top:0;left:0;
+  height:100%;background:var(--ember);
+}
+.b1::after{width:72%}.b2::after{width:88%}.b3::after{width:55%}.b4::after{width:93%}
+.t-stats .st-foot{
+  padding-top:6%;border-top:1px solid var(--border);
+  font-size:clamp(.34rem,1vw,.48rem);
+  letter-spacing:.1em;color:rgba(255,255,255,.18);
+}
+
+/* ── 9. Carousel Cover ── */
+.t-cover{
+  width:100%;height:100%;
+  background:#08080a;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.t-cover .cv-top{
+  background:var(--surface);padding:5.5% 8%;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.t-cover .cv-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(.7rem,2.5vw,1.1rem);
+  letter-spacing:.28em;text-transform:uppercase;color:var(--ember);
+}
+.t-cover .cv-num{
+  font-size:clamp(.34rem,1.1vw,.5rem);
+  letter-spacing:.15em;color:var(--silver);
+}
+.t-cover .cv-main{
+  flex:1;display:flex;flex-direction:column;
+  justify-content:center;padding:7% 9%;gap:5%;
+}
+.t-cover .cv-eye{
+  font-size:clamp(.36rem,1.2vw,.54rem);
+  letter-spacing:.32em;text-transform:uppercase;color:var(--ember);
+}
+.t-cover .cv-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1rem,4vw,1.85rem);
+  font-weight:400;color:var(--white);line-height:1.2;
+}
+.t-cover .cv-body{
+  font-size:clamp(.4rem,1.4vw,.62rem);
+  color:var(--silver);line-height:1.75;
+}
+.t-cover .cv-foot{
+  padding:4% 8%;display:flex;align-items:center;
+  border-top:1px solid var(--border);
+}
+.t-cover .cv-dots{display:flex;gap:5px}
+.t-cover .dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+}
+.t-cover .dot.on{background:var(--ember)}
+.t-cover .swipe{
+  margin-left:auto;
+  font-size:clamp(.32rem,1vw,.46rem);
+  letter-spacing:.18em;color:var(--silver);
+  display:flex;align-items:center;gap:6px;
+}
+.t-cover .swipe::after{content:'→';color:var(--ember)}
+
+/* ─────────────────────────────────────
+   CAPTION SECTION
+───────────────────────────────────── */
+.cap-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;padding-bottom:72px;
+}
+.cap-card{
+  background:var(--surface);border:1px solid var(--border);
+  padding:28px;
+  transition:border-color .25s,background .25s;
+}
+.cap-card:hover{border-color:rgba(212,116,42,.25);background:var(--lift)}
+.cap-type{
+  font-size:.54rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--ember);margin-bottom:14px;display:block;
+}
+.cap-body{font-size:.79rem;line-height:1.88;color:rgba(237,233,226,.62)}
+.cap-tags{margin-top:13px;font-size:.68rem;line-height:2;color:rgba(46,138,156,.75)}
+.cap-copy{
+  margin-top:14px;
+  background:none;border:1px solid var(--border);
+  color:var(--silver);font-family:'Outfit',sans-serif;
+  font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:7px 14px;cursor:pointer;
+  transition:all .2s;
+}
+.cap-copy:hover{border-color:var(--ember);color:var(--ember)}
+.cap-copy.copied{border-color:var(--teal);color:var(--teal)}
+
+/* ─────────────────────────────────────
+   STRATEGY BOARD
+───────────────────────────────────── */
+.strat-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:12px;padding-bottom:72px;
+}
+.strat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-top:2px solid var(--ember);padding:28px;
+}
+.sc-icon{font-size:1.4rem;margin-bottom:14px;display:block}
+.sc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1rem;letter-spacing:.1em;
+  color:var(--white);margin-bottom:10px;
+}
+.sc-body{font-size:.76rem;line-height:1.8;color:var(--silver)}
+.sc-pill{
+  display:inline-block;margin-top:12px;
+  background:var(--ember-dim);
+  font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ember);padding:5px 12px;
+}
+
+/* ─────────────────────────────────────
+   CHECKLIST
+───────────────────────────────────── */
+.cl-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:14px;padding-bottom:72px;
+}
+.cl-group{
+  background:var(--surface);border:1px solid var(--border);padding:32px;
+}
+.cl-head{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.95rem;letter-spacing:.12em;
+  color:var(--white);margin-bottom:8px;
+  padding-bottom:14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.cl-badge{
+  font-size:.5rem;padding:3px 9px;
+  background:var(--ember);color:var(--void);letter-spacing:.12em;
+  font-family:'Outfit',sans-serif;font-weight:600;
+}
+.cl-item{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.025);
+  cursor:pointer;user-select:none;
+}
+.cl-item:last-child{border-bottom:none;padding-bottom:0}
+.cl-item input[type=checkbox]{
+  appearance:none;width:14px;height:14px;
+  border:1px solid rgba(255,255,255,.18);
+  flex-shrink:0;margin-top:3px;cursor:pointer;
+  transition:all .15s;position:relative;
+}
+.cl-item input:checked{background:var(--ember);border-color:var(--ember)}
+.cl-item input:checked::after{
+  content:'✓';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:.48rem;color:var(--void);font-weight:700;
+}
+.cl-item label{
+  font-size:.77rem;color:rgba(237,233,226,.6);
+  line-height:1.5;cursor:pointer;transition:color .15s;
+}
+.cl-item input:checked+label{color:rgba(255,255,255,.22);text-decoration:line-through}
+
+/* ─────────────────────────────────────
+   CALENDAR
+───────────────────────────────────── */
+.cal-wrap{padding-bottom:80px}
+.cal-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+.cal-day-hdr{
+  font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--silver);text-align:center;padding:0 0 12px;
+}
+.cal-cell{
+  background:var(--surface);border:1px solid var(--border);
+  padding:12px 10px;min-height:80px;
+  transition:border-color .2s;
+}
+.cal-cell:hover{border-color:rgba(212,116,42,.3)}
+.cal-cell.empty{background:transparent;border-color:transparent}
+.cal-date{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.85rem;letter-spacing:.06em;color:rgba(255,255,255,.25);
+}
+.cal-post{
+  margin-top:6px;padding:3px 6px;
+  font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;
+  line-height:1.4;
+}
+.cal-post.reel{background:rgba(212,116,42,.15);color:var(--ember)}
+.cal-post.carousel{background:rgba(46,138,156,.12);color:var(--teal)}
+.cal-post.story{background:rgba(184,168,130,.08);color:var(--film)}
+.cal-post.static{background:rgba(255,255,255,.05);color:var(--silver)}
+.cal-legend{
+  display:flex;gap:24px;margin-bottom:18px;flex-wrap:wrap;
+}
+.legend-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:.6rem;letter-spacing:.14em;color:var(--silver);
+}
+.legend-dot{width:8px;height:8px;border-radius:1px}
+.ld-r{background:var(--ember)}.ld-c{background:var(--teal)}
+.ld-s{background:var(--film)}.ld-st{background:rgba(255,255,255,.3)}
+
+/* ─────────────────────────────────────
+   FOOTER
+───────────────────────────────────── */
+footer{
+  background:#030303;border-top:1px solid var(--border);
+  padding:30px 52px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+footer p{
+  font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.14);
+}
+.ft-ember{font-size:.58rem;letter-spacing:.14em;color:rgba(212,116,42,.35)}
+
+/* ─────────────────────────────────────
+   UTILITIES / ANIMATIONS
+───────────────────────────────────── */
+.fade-in{animation:fadeIn .7s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- ════════════════ HEADER ════════════════ -->
+<header class="hdr">
+  <div class="logo">RIO<em>.</em>KIT</div>
+  <nav class="nav">
+    <a href="#templates">Templates</a>
+    <a href="#captions">Captions</a>
+    <a href="#strategy">Strategy</a>
+    <a href="#checklist">Checklist</a>
+    <a href="#calendar" class="cta">Calendar</a>
+  </nav>
+</header>
+
+<!-- ════════════════ HERO ════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+  <div class="hero-year">2025 — 2026</div>
+
+  <div class="hero-kicker">Instagram Content Kit · riophotographer</div>
+  <h1 class="hero-h1">
+    <span class="ghost" aria-hidden="true">CINEMATIC<br>INSTAGRAM<br>KIT</span>
+    CINEMATIC<br>
+    <span class="em">INSTAGRAM</span><br>
+    KIT
+  </h1>
+  <p class="hero-sub">
+    フォトグラファー・シネマトグラファー・ウェブデザイナーとしてのあなたの世界観を、一貫したビジュアルランゲージで Instagram に表現するためのフルキット。
+  </p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-num">9<span>+</span></div>
+      <div class="meta-label">Templates</div>
+    </div>
+    <div class="meta-sep"></div>
+    <div class="meta-item">
+      <div class="meta-num">6<span>+</span></div>
+      <div class="meta-label">Captions</div>
+    </div>
+    <div class="meta-sep"></div>
+    <div class="meta-item">
+      <div class="meta-num">4<span>wk</span></div>
+      <div class="meta-label">Calendar</div>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <div class="scroll-bar"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ════════════════ TEMPLATES ════════════════ -->
+<section id="templates">
+  <div class="sec-intro">
+    <div class="si-left">
+      <div class="si-n">01</div>
+      <div class="si-t">Post Templates</div>
+    </div>
+    <p class="si-d">9種類の投稿テンプレート。リール・カルーセル・静止画すべてに対応し、映画的な世界観で統一します。</p>
+  </div>
+
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('all',this)">All</button>
+    <button class="tab-btn" onclick="switchTab('photo',this)">Photography</button>
+    <button class="tab-btn" onclick="switchTab('video',this)">Video</button>
+    <button class="tab-btn" onclick="switchTab('web',this)">Web Design</button>
+    <button class="tab-btn" onclick="switchTab('engage',this)">Engagement</button>
+  </div>
+
+  <div class="tab-pane active" id="pane-all">
+    <div class="tpl-grid">
+
+      <!-- 1 Portfolio Hero -->
+      <div class="tcard" data-cat="photo">
+        <div class="tcard-frame">
+          <div class="t-port">
+            <div class="ph-img">
+              <div class="lens"></div>
+              <div class="scan"></div>
+            </div>
+            <div class="ph-bar">
+              <div>
+                <div class="ph-tag">Photography</div>
+                <div class="ph-title">Golden Hour Series</div>
+              </div>
+              <div class="ph-arr">→</div>
+            </div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">静止画 / カルーセル表紙</div>
+            <div class="tcard-hover-hint">作品・ポートフォリオ紹介に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Portfolio Hero</span>
+          <span class="tcard-tag">作品紹介</span>
+        </div>
+      </div>
+
+      <!-- 2 Cinematic Title -->
+      <div class="tcard" data-cat="engage">
+        <div class="tcard-frame">
+          <div class="t-title">
+            <div class="lb-t"></div><div class="lb-b"></div>
+            <div class="frame">
+              <div class="c-tl"></div><div class="c-tr"></div>
+              <div class="c-bl"></div><div class="c-br"></div>
+            </div>
+            <div class="bg-word">LIGHT</div>
+            <div class="quote">"光は語る。<br>シャッターは、<br>その言葉を留める。"</div>
+            <div class="dash"></div>
+            <div class="credit">— Rio · Photographer</div>
+            <div class="tc-code">RIO_STUDIO · 001</div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">静止画 / カルーセル表紙</div>
+            <div class="tcard-hover-hint">ブランド哲学・名言シェアに</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Cinematic Quote</span>
+          <span class="tcard-tag">ブランド哲学</span>
+        </div>
+      </div>
+
+      <!-- 3 BTS Grid -->
+      <div class="tcard" data-cat="video">
+        <div class="tcard-frame">
+          <div class="t-bts">
+            <div class="bts-cell bts-a">
+              <div class="ico">🎬</div>
+              <div class="ov"></div>
+              <div class="badge">BTS</div>
+              <div class="lbl">Main Camera Setup</div>
+            </div>
+            <div class="bts-cell bts-b">
+              <div class="ico">📷</div>
+              <div class="ov"></div>
+              <div class="lbl">Lens</div>
+            </div>
+            <div class="bts-cell bts-c">
+              <div class="ico">💡</div>
+              <div class="ov"></div>
+              <div class="lbl">Light</div>
+            </div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">カルーセル / 静止画</div>
+            <div class="tcard-hover-hint">撮影現場・機材紹介に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Behind the Scenes</span>
+          <span class="tcard-tag">撮影現場</span>
+        </div>
+      </div>
+
+      <!-- 4 Service Card -->
+      <div class="tcard" data-cat="web">
+        <div class="tcard-frame">
+          <div class="t-svc">
+            <div class="svc-bg-n">04</div>
+            <div class="tag">Web Design</div>
+            <div class="svc-title">Brand Identity &amp; Web</div>
+            <div class="rule"></div>
+            <div class="items">
+              <div class="it">ロゴ &amp; ビジュアルアイデンティティ</div>
+              <div class="it">レスポンシブWebデザイン</div>
+              <div class="it">モーショングラフィックス</div>
+            </div>
+            <div class="svc-cta">詳細・お問い合わせ</div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">静止画</div>
+            <div class="tcard-hover-hint">サービス告知・料金案内に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Service Offer</span>
+          <span class="tcard-tag">サービス告知</span>
+        </div>
+      </div>
+
+      <!-- 5 Testimonial -->
+      <div class="tcard" data-cat="engage">
+        <div class="tcard-frame">
+          <div class="t-testi">
+            <div class="stars">★★★★★</div>
+            <div class="body">"映像を見た瞬間、言葉を失いました。私たちのブランドを完璧に体現してくれた。"</div>
+            <div class="author">
+              <div class="av"></div>
+              <div>
+                <div class="aname">Keiko Tanaka</div>
+                <div class="arole">Brand Director · Tokyo</div>
+              </div>
+            </div>
+            <div class="watermark">REVIEW</div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">静止画 / カルーセル</div>
+            <div class="tcard-hover-hint">クライアントの声・信頼構築に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Testimonial</span>
+          <span class="tcard-tag">クライアント実績</span>
+        </div>
+      </div>
+
+      <!-- 6 Reel Cover -->
+      <div class="tcard" data-cat="video">
+        <div class="tcard-frame">
+          <div class="t-reel">
+            <div class="reel-top">
+              <div class="grid"></div>
+              <div class="play-ring"></div>
+              <div class="big-n">06</div>
+            </div>
+            <div class="reel-bot">
+              <div class="rcat">Cinematography · 2025</div>
+              <div class="rtitle">NEON DUSK — SHORT FILM</div>
+              <div class="rmeta">
+                <span>4K</span><span>Anamorphic</span><span>12 min</span>
+              </div>
+            </div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">リールサムネイル</div>
+            <div class="tcard-hover-hint">映像作品の公開告知に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Reel Cover</span>
+          <span class="tcard-tag">映像発表</span>
+        </div>
+      </div>
+
+      <!-- 7 Before/After -->
+      <div class="tcard" data-cat="photo">
+        <div class="tcard-frame">
+          <div class="t-ba">
+            <div class="ba-top">
+              <div class="ba-half">
+                <div class="ba-ico">🌑</div>
+                <div class="ba-tag">BEFORE</div>
+              </div>
+              <div class="ba-half">
+                <div class="ba-ico">🌟</div>
+                <div class="ba-tag">AFTER</div>
+              </div>
+              <div class="ba-div"></div>
+            </div>
+            <div class="ba-bot">
+              <div>
+                <div class="ba-label">現像の魔法</div>
+                <div class="ba-sub">RAW → Cinematic Grade</div>
+              </div>
+              <div class="ba-cta">詳細を見る →</div>
+            </div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">カルーセル / リール</div>
+            <div class="tcard-hover-hint">現像・編集プロセス公開に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Before / After</span>
+          <span class="tcard-tag">現像プロセス</span>
+        </div>
+      </div>
+
+      <!-- 8 Stats -->
+      <div class="tcard" data-cat="web">
+        <div class="tcard-frame">
+          <div class="t-stats">
+            <div class="st-head">実績 · 2024</div>
+            <div class="st-grid">
+              <div class="st-item">
+                <div class="st-n">120<span>+</span></div>
+                <div class="st-l">撮影件数 / 年</div>
+                <div class="st-bar b1"></div>
+              </div>
+              <div class="st-item">
+                <div class="st-n">15<span>yr</span></div>
+                <div class="st-l">キャリア年数</div>
+                <div class="st-bar b2"></div>
+              </div>
+              <div class="st-item">
+                <div class="st-n">40<span>+</span></div>
+                <div class="st-l">Web制作件数</div>
+                <div class="st-bar b3"></div>
+              </div>
+              <div class="st-item">
+                <div class="st-n">98<span>%</span></div>
+                <div class="st-l">リピート率</div>
+                <div class="st-bar b4"></div>
+              </div>
+            </div>
+            <div class="st-foot">Rio Studio · Tochigi / Tokyo · Est.2010</div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">静止画</div>
+            <div class="tcard-hover-hint">実績・信頼感の訴求に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Studio Stats</span>
+          <span class="tcard-tag">実績データ</span>
+        </div>
+      </div>
+
+      <!-- 9 Carousel Cover -->
+      <div class="tcard" data-cat="engage">
+        <div class="tcard-frame">
+          <div class="t-cover">
+            <div class="cv-top">
+              <div class="cv-brand">Rio Studio</div>
+              <div class="cv-num">01 / 05</div>
+            </div>
+            <div class="cv-main">
+              <div class="cv-eye">Photography Tips</div>
+              <div class="cv-title">フォトグラファーが<br>教える5つの秘訣</div>
+              <div class="cv-body">プロが普段やっている、光の読み方からポスプロまでのポイントを全5枚で解説します。</div>
+            </div>
+            <div class="cv-foot">
+              <div class="cv-dots">
+                <div class="dot on"></div>
+                <div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div>
+              </div>
+              <div class="swipe">スワイプ</div>
+            </div>
+          </div>
+          <div class="tcard-hover">
+            <div class="tcard-hover-label">カルーセル表紙</div>
+            <div class="tcard-hover-hint">How-to・Tips系リーチ拡大に</div>
+          </div>
+        </div>
+        <div class="tcard-meta">
+          <span class="tcard-name">Carousel Cover</span>
+          <span class="tcard-tag">カルーセル</span>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /pane-all -->
+
+  <!-- filtered panes (generated by JS) -->
+  <div class="tab-pane" id="pane-photo"></div>
+  <div class="tab-pane" id="pane-video"></div>
+  <div class="tab-pane" id="pane-web"></div>
+  <div class="tab-pane" id="pane-engage"></div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════ CAPTIONS ════════════════ -->
+<section id="captions">
+  <div class="sec-intro">
+    <div class="si-left">
+      <div class="si-n">02</div>
+      <div class="si-t">Caption Templates</div>
+    </div>
+    <p class="si-d">投稿タイプ別のキャプションテンプレート。ブランドボイスを統一し、CTAを明確にします。</p>
+  </div>
+  <div class="tab-pane active" style="padding:0 52px">
+  <div class="cap-grid">
+
+    <div class="cap-card">
+      <span class="cap-type">作品紹介 / Portfolio</span>
+      <div class="cap-body" id="cap1">
+新しい作品が完成しました。📷
+
+[場所・テーマ] をテーマに撮影。
+自然光と [使用機材] を組み合わせ、[雰囲気] を表現しました。
+
+詳細はプロフィールリンクからご覧ください。</div>
+      <div class="cap-tags">#photography #フォトグラファー #riophotographer #[カスタムタグ]</div>
+      <button class="cap-copy" onclick="copyText('cap1',this)">Copy</button>
+    </div>
+
+    <div class="cap-card">
+      <span class="cap-type">撮影現場 / Behind the Scenes</span>
+      <div class="cap-body" id="cap2">
+制作の舞台裏をお届けします。🎬
+
+[プロジェクト名] の撮影現場より。
+[機材・場所・時間帯] の条件の中で、[こだわりポイント] を追求しました。
+
+完成作品は近日公開予定。お楽しみに。</div>
+      <div class="cap-tags">#bts #behindthescenes #filmmaker #cinematographer</div>
+      <button class="cap-copy" onclick="copyText('cap2',this)">Copy</button>
+    </div>
+
+    <div class="cap-card">
+      <span class="cap-type">サービス告知 / Service</span>
+      <div class="cap-body" id="cap3">
+[月・季節] のご予約受付中です。
+
+📸 写真撮影（ポートレート / 商品 / ブランディング）
+🎬 シネマティック映像制作
+💻 Webデザイン &amp; ブランディング
+
+DMまたはプロフィールリンクからどうぞ。</div>
+      <div class="cap-tags">#撮影依頼受付中 #webdesign #フォトグラファー栃木 #videographer</div>
+      <button class="cap-copy" onclick="copyText('cap3',this)">Copy</button>
+    </div>
+
+    <div class="cap-card">
+      <span class="cap-type">How-to / カルーセル</span>
+      <div class="cap-body" id="cap4">
+フォトグラファーが教える [テーマ] のコツ💡
+
+✔ [ポイント1]
+✔ [ポイント2]
+✔ [ポイント3]
+
+続きは次のスライドへ → スワイプしてください。
+保存しておくと後で見返せます🔖</div>
+      <div class="cap-tags">#写真の撮り方 #photography_tips #カメラ初心者 #撮影テクニック</div>
+      <button class="cap-copy" onclick="copyText('cap4',this)">Copy</button>
+    </div>
+
+    <div class="cap-card">
+      <span class="cap-type">Before / After 現像</span>
+      <div class="cap-body" id="cap5">
+Before → After 🎞️
+
+RAWからの現像プロセスを公開。
+
+使用ツール：[Lightroom / Capture One 等]
+グレーディングのポイント：[シャドウ・ハイライト・色温度の調整]
+
+どちらが好きですか？コメントで教えてください👇</div>
+      <div class="cap-tags">#現像 #lightroom #カラーグレーディング #beforeafter</div>
+      <button class="cap-copy" onclick="copyText('cap5',this)">Copy</button>
+    </div>
+
+    <div class="cap-card">
+      <span class="cap-type">クライアント実績 / Testimonial</span>
+      <div class="cap-body" id="cap6">
+クライアント様からの声をいただきました🙏
+
+「[引用テキスト]」
+— [お客様名・役職]
+
+[案件の概要：どんな撮影・制作だったか1〜2行]
+
+ご依頼・ご相談はプロフィールリンクまたはDMへ。</div>
+      <div class="cap-tags">#クライアント事例 #撮影実績 #webdesign実績 #riophotographer</div>
+      <button class="cap-copy" onclick="copyText('cap6',this)">Copy</button>
+    </div>
+
+  </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════ STRATEGY ════════════════ -->
+<section id="strategy">
+  <div class="sec-intro">
+    <div class="si-left">
+      <div class="si-n">03</div>
+      <div class="si-t">Growth Strategy</div>
+    </div>
+    <p class="si-d">2025年のアルゴリズム分析に基づいた、フォロワー増加のための投稿戦略。</p>
+  </div>
+  <div class="tab-pane active" style="padding:0 52px">
+  <div class="strat-grid">
+    <div class="strat-card">
+      <span class="sc-icon">🎬</span>
+      <div class="sc-title">REELS — リーチ最大化</div>
+      <div class="sc-body">新規フォロワー獲得のメインエンジン。最初の3秒で視聴者を引き込む冒頭構成が命。一番印象的なシーンを冒頭に置き、60〜90秒の尺がシェア率を最大24%高める。<br><br>推奨頻度：週3〜4本</div>
+      <div class="sc-pill">新規リーチ</div>
+    </div>
+    <div class="strat-card">
+      <span class="sc-icon">🖼️</span>
+      <div class="sc-title">CAROUSEL — 保存数・滞在時間</div>
+      <div class="sc-body">エンゲージメント率が最も高い（0.55%平均）。How-to・作品シリーズ・Before/Afterはスワイプを誘発しやすい。保存数が多いとアルゴリズムが「価値あるコンテンツ」と判断し拡散。<br><br>推奨頻度：週2〜3本</div>
+      <div class="sc-pill">エンゲージメント</div>
+    </div>
+    <div class="strat-card">
+      <span class="sc-icon">📖</span>
+      <div class="sc-title">STORIES — 既存ファンの維持</div>
+      <div class="sc-body">新規獲得より「関係深化」が目的。投票・質問スタンプで反応を増やし、撮影の裏側・日常をカジュアルに見せる。毎日1〜2枚が理想。フォロワーとの距離を縮める場所。<br><br>推奨頻度：毎日1〜3枚</div>
+      <div class="sc-pill">関係構築</div>
+    </div>
+    <div class="strat-card">
+      <span class="sc-icon">🔁</span>
+      <div class="sc-title">TRIAL REELS — 非フォロワーへ</div>
+      <div class="sc-body">Trial Reels機能を活用。既存フォロワーに表示せず、新規層のみにリーチできる機能。過去のベスト投稿をTrial Reelsとして再活用し、費用ゼロで継続的な新規開拓が可能。</div>
+      <div class="sc-pill">穴場機能</div>
+    </div>
+    <div class="strat-card">
+      <span class="sc-icon">🔑</span>
+      <div class="sc-title">PROFILE — 検索で見つかる設計</div>
+      <div class="sc-body">「名前フィールド」にキーワードを入れるのが最重要。例：「Rio｜写真・映像・Web」。Instagramの検索はBioよりも名前フィールドを優先する。ハイライトを「実績・料金・About」に整理。</div>
+      <div class="sc-pill">検索流入</div>
+    </div>
+    <div class="strat-card">
+      <span class="sc-icon">🎯</span>
+      <div class="sc-title">コンテンツの3本柱</div>
+      <div class="sc-body">
+        <strong style="color:var(--ember)">作品</strong>：ポートフォリオ・現場記録（信頼）<br>
+        <strong style="color:var(--teal)">教育</strong>：撮影Tips・How-to（保存数・リーチ）<br>
+        <strong style="color:var(--film)">人柄</strong>：日常・こだわり・哲学（ファン化）<br><br>
+        この3:3:4の比率でバランスを保つ。
+      </div>
+      <div class="sc-pill">コンテンツ設計</div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════ CHECKLIST ════════════════ -->
+<section id="checklist">
+  <div class="sec-intro">
+    <div class="si-left">
+      <div class="si-n">04</div>
+      <div class="si-t">Post Checklist</div>
+    </div>
+    <p class="si-d">投稿前に確認するべき全項目。ブランドの一貫性と品質をキープします。</p>
+  </div>
+  <div class="tab-pane active" style="padding:0 52px">
+  <div class="cl-grid">
+    <div class="cl-group">
+      <div class="cl-head"><span class="cl-badge">IMG</span>ビジュアル品質</div>
+      <label class="cl-item"><input type="checkbox"><label>解像度・シャープネスが十分か（最低1080×1080px）</label></label>
+      <label class="cl-item"><input type="checkbox"><label>カラーグレーディングがブランドトーンと一致しているか</label></label>
+      <label class="cl-item"><input type="checkbox"><label>ノイズ・手ブレが許容範囲内か</label></label>
+      <label class="cl-item"><input type="checkbox"><label>トリミング・コンポジションが意図通りか</label></label>
+      <label class="cl-item"><input type="checkbox"><label>テキスト・ロゴの配置と可読性の確認</label></label>
+    </div>
+    <div class="cl-group">
+      <div class="cl-head"><span class="cl-badge">TXT</span>キャプション</div>
+      <label class="cl-item"><input type="checkbox"><label>ブランドのトーン・ボイスに合っているか</label></label>
+      <label class="cl-item"><input type="checkbox"><label>CTAが明確に含まれているか（保存・DM・リンク等）</label></label>
+      <label class="cl-item"><input type="checkbox"><label>誤字・脱字のチェック</label></label>
+      <label class="cl-item"><input type="checkbox"><label>ハッシュタグは20〜30個の最適範囲内か</label></label>
+      <label class="cl-item"><input type="checkbox"><label>改行・絵文字が読みやすい構造になっているか</label></label>
+    </div>
+    <div class="cl-group">
+      <div class="cl-head"><span class="cl-badge">SET</span>投稿設定</div>
+      <label class="cl-item"><input type="checkbox"><label>位置情報タグの追加（栃木・東京など）</label></label>
+      <label class="cl-item"><input type="checkbox"><label>コラボレーター・クライアントのタグ付け</label></label>
+      <label class="cl-item"><input type="checkbox"><label>Altテキスト（アクセシビリティ・SEO）の入力</label></label>
+      <label class="cl-item"><input type="checkbox"><label>投稿タイミングのスケジュール設定（推奨：平日19〜21時）</label></label>
+    </div>
+    <div class="cl-group">
+      <div class="cl-head"><span class="cl-badge">PRO</span>ブランド一貫性</div>
+      <label class="cl-item"><input type="checkbox"><label>フィードのグリッドバランスを確認（明暗・テーマ）</label></label>
+      <label class="cl-item"><input type="checkbox"><label>ストーリーズへのクロス投稿を計画・実施</label></label>
+      <label class="cl-item"><input type="checkbox"><label>前回投稿と差別化されているか（テーマの流れ）</label></label>
+      <label class="cl-item"><input type="checkbox"><label>投稿後30分はコメント返信・エンゲージメント対応</label></label>
+    </div>
+  </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════ CALENDAR ════════════════ -->
+<section id="calendar">
+  <div class="sec-intro">
+    <div class="si-left">
+      <div class="si-n">05</div>
+      <div class="si-t">4-Week Calendar</div>
+    </div>
+    <p class="si-d">3スキルを週3〜5本の最適頻度で回す4週間の投稿カレンダー。</p>
+  </div>
+  <div class="tab-pane active" style="padding:0 52px">
+
+  <div class="cal-legend">
+    <div class="legend-item"><div class="legend-dot ld-r"></div>リール</div>
+    <div class="legend-item"><div class="legend-dot ld-c"></div>カルーセル</div>
+    <div class="legend-item"><div class="legend-dot ld-s"></div>ストーリーズ</div>
+    <div class="legend-item"><div class="legend-dot ld-st"></div>静止画</div>
+  </div>
+
+  <div class="cal-wrap">
+    <!-- header row -->
+    <div class="cal-grid" style="margin-bottom:6px">
+      <div class="cal-day-hdr">月</div>
+      <div class="cal-day-hdr">火</div>
+      <div class="cal-day-hdr">水</div>
+      <div class="cal-day-hdr">木</div>
+      <div class="cal-day-hdr">金</div>
+      <div class="cal-day-hdr">土</div>
+      <div class="cal-day-hdr">日</div>
+    </div>
+
+    <!-- WEEK 1 -->
+    <div style="font-size:.54rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ember);margin:0 0 8px;padding-left:2px">Week 01 — Photography</div>
+    <div class="cal-grid" style="margin-bottom:16px">
+      <div class="cal-cell">
+        <div class="cal-date">1</div>
+        <div class="cal-post reel">📷 作品リール<br>Golden Hour</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">2</div>
+        <div class="cal-post story">📖 撮影日記</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">3</div>
+        <div class="cal-post carousel">🖼️ Before/After<br>現像カルーセル</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">4</div>
+        <div class="cal-post story">📖 機材紹介</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">5</div>
+        <div class="cal-post reel">🎬 BTS リール<br>撮影現場</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">6</div>
+        <div class="cal-post static">🖼️ ポートフォリオ<br>静止画</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">7</div>
+        <div class="cal-post story">📖 週まとめ</div>
+      </div>
+    </div>
+
+    <!-- WEEK 2 -->
+    <div style="font-size:.54rem;letter-spacing:.25em;text-transform:uppercase;color:var(--teal);margin:0 0 8px;padding-left:2px">Week 02 — Cinematography</div>
+    <div class="cal-grid" style="margin-bottom:16px">
+      <div class="cal-cell">
+        <div class="cal-date">8</div>
+        <div class="cal-post reel">🎬 映像作品<br>ショートリール</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">9</div>
+        <div class="cal-post story">📖 編集プロセス</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">10</div>
+        <div class="cal-post carousel">🖼️ 撮影Tips<br>5枚カルーセル</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">11</div>
+        <div class="cal-post reel">🎬 カラーグレード<br>解説リール</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">12</div>
+        <div class="cal-post story">📖 機材Q&amp;A</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">13</div>
+        <div class="cal-post static">🎞️ 映像スチール<br>静止画</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">14</div>
+        <div class="cal-post story">📖 週まとめ</div>
+      </div>
+    </div>
+
+    <!-- WEEK 3 -->
+    <div style="font-size:.54rem;letter-spacing:.25em;text-transform:uppercase;color:var(--film);margin:0 0 8px;padding-left:2px">Week 03 — Web Design</div>
+    <div class="cal-grid" style="margin-bottom:16px">
+      <div class="cal-cell">
+        <div class="cal-date">15</div>
+        <div class="cal-post reel">💻 制作事例<br>Web紹介リール</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">16</div>
+        <div class="cal-post story">📖 デザインの裏側</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">17</div>
+        <div class="cal-post carousel">🖼️ UI/UXのコツ<br>カルーセル</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">18</div>
+        <div class="cal-post reel">🎬 サービス紹介<br>リール</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">19</div>
+        <div class="cal-post static">💻 制作実績<br>スクリーンショット</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">20</div>
+        <div class="cal-post story">📖 ビフォーアフター</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">21</div>
+        <div class="cal-post story">📖 週まとめ</div>
+      </div>
+    </div>
+
+    <!-- WEEK 4 -->
+    <div style="font-size:.54rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ember2);margin:0 0 8px;padding-left:2px">Week 04 — Engagement &amp; Trust</div>
+    <div class="cal-grid" style="margin-bottom:32px">
+      <div class="cal-cell">
+        <div class="cal-date">22</div>
+        <div class="cal-post reel">⭐ クライアント<br>紹介リール</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">23</div>
+        <div class="cal-post carousel">🖼️ 実績データ<br>カルーセル</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">24</div>
+        <div class="cal-post story">📖 Q&amp;Aストーリーズ</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">25</div>
+        <div class="cal-post reel">🎬 ブランド哲学<br>リール</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">26</div>
+        <div class="cal-post carousel">🖼️ 来月予告<br>カルーセル</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">27</div>
+        <div class="cal-post story">📖 振り返り</div>
+      </div>
+      <div class="cal-cell">
+        <div class="cal-date">28</div>
+        <div class="cal-post story">📖 来週の予告</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer>
+  <p>Rio · Instagram Kit · Cinematic Edition · 2025</p>
+  <div class="ft-ember">riophotographer</div>
+</footer>
+
+<!-- ════════════════ SCRIPTS ════════════════ -->
+<script>
+// Cursor
+const cur = document.getElementById('cur');
+const cur2 = document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function loop(){
+  rx+=(mx-rx)*.14; ry+=(my-ry)*.14;
+  cur2.style.left=rx+'px'; cur2.style.top=ry+'px';
+  requestAnimationFrame(loop);
+})();
+
+// Tab system — filter by data-cat
+function switchTab(cat, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.tab-pane').forEach(p=>{
+    if(p.id && p.id.startsWith('pane-')) p.classList.remove('active');
+  });
+
+  if(cat==='all'){
+    document.getElementById('pane-all').classList.add('active');
+    return;
+  }
+
+  const target = document.getElementById('pane-'+cat);
+  // clone matching cards
+  target.innerHTML='';
+  const grid = document.createElement('div');
+  grid.className='tpl-grid';
+  document.querySelectorAll('#pane-all .tcard').forEach(card=>{
+    if(card.dataset.cat===cat){
+      grid.appendChild(card.cloneNode(true));
+    }
+  });
+  if(grid.children.length===0){
+    grid.innerHTML='<p style="color:var(--silver);font-size:.8rem;grid-column:1/-1;padding:40px 0">このカテゴリのテンプレートは近日追加予定です。</p>';
+  }
+  target.appendChild(grid);
+  target.classList.add('active');
+}
+
+// Copy caption
+function copyText(id, btn){
+  const el = document.getElementById(id);
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
+  });
+}
+
+// Scroll fade-in
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.style.opacity='1';
+  });
+},{threshold:0.1});
+document.querySelectorAll('.strat-card,.cap-card').forEach(el=>{
+  el.style.opacity='0';el.style.transition='opacity .6s ease';
+  io.observe(el);
+});
+</script>
+</body>
+</html>
