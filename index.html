@@ -1,1006 +1,1105 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RIO — Cinematic Instagram Kit</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<title>RIO · Creator Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ─── TOKENS ─── */
 :root{
   --void:#060608;--deep:#0d0d10;--surface:#141418;--lift:#1c1c22;
-  --border:rgba(255,255,255,.06);--silver:#8a8a96;--mist:#c4c4cc;
-  --white:#ede9e2;--ember:#d4742a;--ember2:#e8a055;
+  --border:rgba(255,255,255,.07);--silver:#8a8a96;--white:#ede9e2;
+  --ember:#d4742a;--ember2:#e8a055;--edim:rgba(212,116,42,.12);
   --teal:#2e8a9c;--film:#b8a882;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
-#cur,#cur2{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
-#cur{width:7px;height:7px;background:var(--ember)}
-#cur2{width:30px;height:30px;border:1px solid rgba(212,116,42,.4);transition:transform .22s ease}
+html,body{height:100%;overflow:hidden}
+body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;font-weight:300}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--deep)}::-webkit-scrollbar-thumb{background:var(--ember)}
 
-/* ─── HEADER ─── */
-.hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:18px 52px;background:linear-gradient(to bottom,rgba(6,6,8,.97),transparent);backdrop-filter:blur(2px)}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.22em;color:var(--white)}
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-rows:52px 1fr;height:100vh}
+.workspace{display:grid;grid-template-columns:220px 1fr 290px;height:calc(100vh - 52px);overflow:hidden}
+
+/* ── HEADER ── */
+.hdr{background:rgba(6,6,8,.98);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.2em;flex-shrink:0}
 .logo em{color:var(--ember);font-style:normal}
-.nav{display:flex;gap:6px;align-items:center}
-.nav a{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--silver);text-decoration:none;padding:6px 14px;border:1px solid transparent;transition:all .2s}
-.nav a:hover{color:var(--white);border-color:var(--border)}
-.nav .cta{background:var(--ember);color:var(--void)!important;border-color:var(--ember)!important;font-weight:500}
-.nav .cta:hover{background:var(--ember2)!important;border-color:var(--ember2)!important}
+.hdiv{width:1px;height:26px;background:var(--border);flex-shrink:0}
+.mode-pills{display:flex;gap:2px}
+.mpill{font-family:'Outfit',sans-serif;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 13px;background:none;border:1px solid transparent;color:var(--silver);cursor:pointer;transition:all .18s;white-space:nowrap}
+.mpill:hover{color:var(--white);border-color:var(--border)}
+.mpill.on{background:var(--ember);border-color:var(--ember);color:var(--void);font-weight:600}
+.hdr-r{margin-left:auto;display:flex;gap:6px}
+.hbtn{font-family:'Outfit',sans-serif;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;padding:6px 14px;background:none;border:1px solid var(--border);color:var(--silver);cursor:pointer;transition:all .18s;white-space:nowrap}
+.hbtn:hover{border-color:var(--ember);color:var(--ember)}
+.hbtn.em{background:var(--ember);border-color:var(--ember);color:var(--void);font-weight:600}
+.hbtn.em:hover{background:var(--ember2)}
+.hbtn:disabled{opacity:.35;cursor:not-allowed}
 
-/* ─── HERO ─── */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 52px 72px;position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 75% 25%,rgba(212,116,42,.09) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 15% 75%,rgba(46,138,156,.07) 0%,transparent 50%),var(--void)}
-.hero-bg::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.4}
-.hero-line{position:absolute;top:0;right:18%;width:1px;height:100%;background:linear-gradient(to bottom,transparent,rgba(212,116,42,.15) 40%,rgba(212,116,42,.08) 70%,transparent)}
-.hero-year{position:absolute;top:120px;right:52px;font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.4em;color:rgba(255,255,255,.12);writing-mode:vertical-rl}
-.hero-kicker{display:flex;align-items:center;gap:14px;font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--ember);margin-bottom:18px;position:relative}
-.hero-kicker::before{content:'';width:36px;height:1px;background:var(--ember)}
-.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,9vw,8rem);letter-spacing:.04em;line-height:.9;color:var(--white);position:relative}
-.hero-h1 .em{color:var(--ember)}
-.hero-h1 .ghost{position:absolute;left:0;top:0;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.04);user-select:none;transform:translate(3px,3px)}
-.hero-sub{margin-top:22px;max-width:500px;font-size:.8rem;color:var(--silver);line-height:1.85;position:relative}
-.hero-meta{margin-top:36px;display:flex;gap:36px;position:relative}
-.meta-item{display:flex;flex-direction:column;gap:4px}
-.meta-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.05em;color:var(--white);line-height:1}
-.meta-num span{color:var(--ember)}
-.meta-label{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--silver)}
-.meta-sep{width:1px;background:var(--border);align-self:stretch}
-.scroll-cue{position:absolute;right:52px;bottom:72px;display:flex;flex-direction:column;align-items:center;gap:10px}
-.scroll-cue span{font-size:.54rem;letter-spacing:.3em;text-transform:uppercase;color:var(--silver);writing-mode:vertical-rl}
-.scroll-bar{width:1px;height:64px;background:linear-gradient(to bottom,var(--ember),transparent);animation:pulse 2.2s ease infinite}
-@keyframes pulse{0%,100%{opacity:.35;transform:scaleY(1)}50%{opacity:1;transform:scaleY(.75)}}
+/* ── LEFT PANEL ── */
+.pl{background:var(--deep);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.pl-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.pltab{flex:1;font-family:'Outfit',sans-serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;padding:9px 4px;background:none;border:none;border-bottom:2px solid transparent;color:var(--silver);cursor:pointer;transition:all .18s}
+.pltab:hover{color:var(--white)}
+.pltab.on{color:var(--ember);border-bottom-color:var(--ember)}
+.pl-body{flex:1;overflow-y:auto;padding:12px 10px}
+.pl-sec{margin-bottom:16px}
+.pl-lbl{font-size:.48rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ember);margin-bottom:8px;display:block}
 
-/* ─── SECTION SYSTEM ─── */
-.sec-intro{padding:88px 52px 36px;display:flex;align-items:flex-end;justify-content:space-between}
-.si-n{font-family:'Bebas Neue',sans-serif;font-size:5rem;line-height:1;letter-spacing:.04em;color:rgba(255,255,255,.04)}
-.si-t{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;color:var(--white);margin-top:-10px}
-.si-d{max-width:360px;text-align:right;font-size:.73rem;color:var(--silver);line-height:1.85}
-.divider{margin:0 52px;height:1px;background:var(--border)}
+/* template list */
+.tpl-list{display:flex;flex-direction:column;gap:5px}
+.ti-row{display:flex;gap:8px;align-items:center;padding:7px;border:1px solid var(--border);cursor:pointer;transition:all .18s}
+.ti-row:hover{border-color:rgba(212,116,42,.4);background:var(--surface)}
+.ti-row.on{border-color:var(--ember);background:var(--edim)}
+.ti-ico{width:38px;height:38px;flex-shrink:0;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.ti-info strong{font-size:.66rem;font-weight:500;color:var(--white);display:block}
+.ti-info span{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ember);margin-top:1px;display:block}
 
-/* ─── TAB NAV ─── */
-.tab-nav{display:flex;gap:2px;padding:0 52px 32px}
-.tab-btn{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--silver);padding:9px 20px;background:none;border:1px solid transparent;cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif}
-.tab-btn:hover{color:var(--white);border-color:var(--border)}
-.tab-btn.active{color:var(--void);background:var(--ember);border-color:var(--ember)}
-.tab-pane{display:none}.tab-pane.active{display:block}
+/* upload zone */
+.upzone{border:1px dashed rgba(212,116,42,.32);padding:16px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upzone:hover,.upzone.drag{border-color:var(--ember);background:var(--edim)}
+.upzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upzone-ico{font-size:1.4rem;display:block;margin-bottom:6px}
+.upzone-t{font-size:.63rem;color:var(--silver);line-height:1.55}
+.upzone-s{font-size:.52rem;color:rgba(255,255,255,.22);margin-top:3px}
 
-/* ─── TEMPLATE GRID ─── */
-.tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 52px 72px}
-.tcard{cursor:pointer;animation:riseUp .55s ease both}
-.tcard:nth-child(1){animation-delay:.04s}.tcard:nth-child(2){animation-delay:.11s}.tcard:nth-child(3){animation-delay:.18s}
-.tcard:nth-child(4){animation-delay:.25s}.tcard:nth-child(5){animation-delay:.32s}.tcard:nth-child(6){animation-delay:.39s}
-.tcard:nth-child(7){animation-delay:.46s}.tcard:nth-child(8){animation-delay:.53s}.tcard:nth-child(9){animation-delay:.60s}
-@keyframes riseUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-.tcard-frame{aspect-ratio:1;position:relative;overflow:hidden;border:1px solid var(--border);transition:border-color .3s,transform .3s}
-.tcard:hover .tcard-frame{border-color:rgba(212,116,42,.4);transform:scale(1.01)}
-.tcard-overlay{position:absolute;inset:0;background:rgba(6,6,8,0);transition:background .3s;z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.tcard:hover .tcard-overlay{background:rgba(6,6,8,.65)}
-.tcard-overlay .ov-btn{opacity:0;transform:translateY(8px);transition:all .25s;font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:10px 22px;cursor:pointer;border:none}
-.tcard:hover .tcard-overlay .ov-btn{opacity:1;transform:translateY(0)}
-.ov-edit{background:var(--ember);color:var(--void);font-weight:600}
-.ov-edit:hover{background:var(--ember2)}
-.ov-dl{background:none;border:1px solid rgba(255,255,255,.3)!important;color:var(--white)}
-.ov-dl:hover{border-color:var(--ember)!important;color:var(--ember)}
-.tcard-meta{padding:11px 2px 0;display:flex;justify-content:space-between;align-items:baseline}
-.tcard-name{font-size:.76rem;font-weight:400;letter-spacing:.06em;color:var(--white)}
-.tcard-tag{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ember)}
+.media-list{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.mitem{display:flex;gap:7px;align-items:center;padding:6px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color .18s}
+.mitem:hover{border-color:rgba(212,116,42,.4)}
+.mitem.on{border-color:var(--ember)}
+.mthumb{width:34px;height:34px;object-fit:cover;flex-shrink:0;background:var(--lift)}
+.minfo{flex:1;min-width:0}
+.mname{font-size:.6rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mtype{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ember);margin-top:1px}
+.mdel{background:none;border:none;color:var(--silver);cursor:pointer;padding:3px 5px;font-size:.75rem;flex-shrink:0}
+.mdel:hover{color:#c43a5a}
 
-/* ─── TEMPLATE INNER STYLES ─── */
-.ti{width:100%;height:100%;position:relative;overflow:hidden;display:flex;flex-direction:column;font-family:'Outfit',sans-serif}
-.grain{position:absolute;inset:0;pointer-events:none;z-index:50;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.45}
+/* ── CENTER ── */
+.pc{display:flex;flex-direction:column;align-items:center;background:#060608;overflow:auto;padding:20px 16px}
+.canvas-toolbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;justify-content:center;width:100%;max-width:560px}
+.sz-btn{font-family:'Outfit',sans-serif;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;background:none;border:1px solid var(--border);color:var(--silver);cursor:pointer;transition:all .18s}
+.sz-btn:hover{border-color:var(--ember);color:var(--ember)}
+.sz-btn.on{background:var(--ember);border-color:var(--ember);color:var(--void);font-weight:600}
+.canvas-wrap{position:relative;flex-shrink:0}
+#mc{display:block;box-shadow:0 16px 64px rgba(0,0,0,.8)}
+.c-foot{margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:560px}
+.cfbtn{font-family:'Outfit',sans-serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:8px 15px;border:1px solid var(--border);color:var(--silver);background:none;cursor:pointer;transition:all .18s;white-space:nowrap}
+.cfbtn:hover{border-color:var(--ember);color:var(--ember)}
+.cfbtn.em{background:var(--ember);border-color:var(--ember);color:var(--void);font-weight:600}
+.cfbtn.em:hover{background:var(--ember2)}
+/* export formats */
+.fmt-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;max-width:560px;width:100%}
+.fmt-btn{background:var(--surface);border:1px solid var(--border);padding:8px 4px;text-align:center;cursor:pointer;transition:all .18s}
+.fmt-btn:hover{border-color:rgba(212,116,42,.4)}
+.fmt-btn.on{border-color:var(--ember);background:var(--edim)}
+.fmt-ico{font-size:.9rem;display:block;margin-bottom:3px}
+.fmt-nm{font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.fmt-sz{font-size:.46rem;color:var(--silver);margin-top:1px}
 
-/* T1 Portfolio */
-.t1{background:#141418}
-.t1 .imgz{flex:1.4;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.t1 .imgz::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 35%,rgba(212,116,42,.1),transparent 60%)}
-.t1 .lens{width:36%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(212,116,42,.22);display:flex;align-items:center;justify-content:center;position:relative}
-.t1 .lens::before{content:'';position:absolute;width:62%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(212,116,42,.1)}
-.t1 .lens::after{content:'';position:absolute;width:28%;aspect-ratio:1;border-radius:50%;background:rgba(212,116,42,.1)}
-.t1 .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(212,116,42,.3),transparent);animation:scan 4s ease infinite}
-@keyframes scan{0%{top:10%}100%{top:90%}}
-.t1 .bar{padding:5% 7%;background:#09090b;display:flex;align-items:center;justify-content:space-between}
-.t1 .etag{font-size:clamp(.36rem,1.2vw,.55rem);letter-spacing:.25em;text-transform:uppercase}
-.t1 .etitle{font-family:'Playfair Display',serif;font-size:clamp(.6rem,2vw,.95rem);font-weight:400;margin-top:.3em;color:#ede9e2}
-.t1 .arr{font-size:clamp(.7rem,2.2vw,1rem)}
+/* ── RIGHT PANEL ── */
+.pr{background:var(--deep);border-left:1px solid var(--border);overflow-y:auto;padding:12px}
+.pr-sec{margin-bottom:16px}
+.pr-lbl{font-size:.48rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ember);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);display:block}
+.field{display:flex;flex-direction:column;gap:3px;margin-bottom:7px}
+.field label{font-size:.56rem;letter-spacing:.08em;color:var(--silver)}
+.field input,.field textarea,.field select{background:var(--surface);border:1px solid var(--border);color:var(--white);font-family:'Outfit',sans-serif;font-size:.72rem;padding:5px 7px;outline:none;transition:border-color .18s;width:100%}
+.field input:focus,.field textarea:focus{border-color:rgba(212,116,42,.5)}
+.field textarea{resize:vertical;min-height:46px}
+.field select option{background:var(--surface)}
+.srow{display:flex;flex-direction:column;gap:3px;margin-bottom:7px}
+.srow label{font-size:.56rem;letter-spacing:.08em;color:var(--silver);display:flex;justify-content:space-between}
+.srow label b{color:var(--ember);font-weight:400}
+.srow input[type=range]{width:100%;accent-color:var(--ember);cursor:pointer}
+.ccols{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:7px}
+.ccolitem{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ccolitem input[type=color]{width:100%;height:26px;border:1px solid var(--border);padding:2px;background:var(--surface);cursor:pointer}
+.ccolitem span{font-size:.42rem;letter-spacing:.06em;color:var(--silver);text-align:center}
+.prow{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:7px}
+.prbtn{font-family:'Outfit',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 3px;cursor:pointer;border:none;transition:opacity .18s;text-align:center}
+.prbtn:hover{opacity:.8}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);margin-bottom:3px}
+.tog-row label{font-size:.63rem;color:var(--white)}
+.tog{position:relative;width:30px;height:16px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0}
+.tog-sl{position:absolute;inset:0;background:var(--surface);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:.22s}
+.tog-sl::before{content:'';position:absolute;height:10px;width:10px;left:2px;bottom:2px;background:var(--silver);border-radius:50%;transition:.22s}
+.tog input:checked+.tog-sl{background:var(--ember);border-color:var(--ember)}
+.tog input:checked+.tog-sl::before{transform:translateX(14px);background:#fff}
+/* placement buttons */
+.pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:7px}
+.posbtn{font-size:.5rem;padding:5px;background:var(--surface);border:1px solid var(--border);color:var(--silver);cursor:pointer;text-align:center;transition:all .18s}
+.posbtn:hover{border-color:var(--ember);color:var(--ember)}
+.posbtn.on{background:var(--ember);border-color:var(--ember);color:var(--void)}
+/* layers */
+.lyr-list{display:flex;flex-direction:column;gap:4px}
+.lyr{display:flex;align-items:center;gap:6px;padding:6px 7px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all .18s}
+.lyr:hover{border-color:rgba(212,116,42,.35)}
+.lyr.on{border-color:var(--ember);background:var(--edim)}
+.lyr-ico{font-size:.85rem;flex-shrink:0}
+.lyr-nm{font-size:.63rem;color:var(--white);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lyr-btn{background:none;border:none;color:var(--silver);cursor:pointer;font-size:.65rem;padding:2px 4px}
+.lyr-btn:hover{color:var(--ember)}
+.lyr-del:hover{color:#c43a5a!important}
+.add-lbtn{width:100%;background:none;border:1px dashed var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:7px;cursor:pointer;margin-top:5px;transition:all .18s}
+.add-lbtn:hover{border-color:var(--ember);color:var(--ember)}
+/* placement preview area in panel */
+.placement-preview{width:100%;aspect-ratio:1;background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:7px;cursor:crosshair}
+.placement-preview canvas{width:100%!important;height:100%!important}
+.pp-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:rgba(255,255,255,.2);pointer-events:none;text-align:center;line-height:1.6}
 
-/* T2 Cinematic Quote */
-.t2{background:#020204;align-items:center;justify-content:center;text-align:center;padding:10%}
-.t2 .lb{position:absolute;left:0;right:0;height:8%;background:#000;z-index:5}
-.t2 .lbt{top:0}.t2 .lbb{bottom:0}
-.t2 .frm{position:absolute;top:10%;left:6%;right:6%;bottom:10%;border:1px solid rgba(255,255,255,.05)}
-.t2 .cor{position:absolute;width:14px;height:14px;border-color:rgba(212,116,42,.55);border-style:solid}
-.t2 .cor.tl{top:-1px;left:-1px;border-width:1px 0 0 1px}.t2 .cor.tr{top:-1px;right:-1px;border-width:1px 1px 0 0}
-.t2 .cor.bl{bottom:-1px;left:-1px;border-width:0 0 1px 1px}.t2 .cor.br{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
-.t2 .bg-w{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,10vw,4.5rem);color:rgba(255,255,255,.025);letter-spacing:.08em;user-select:none}
-.t2 .qt{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.68rem,2.4vw,1.1rem);color:#ede9e2;line-height:1.75;z-index:2;position:relative}
-.t2 .dash{width:20px;height:1px;margin:6% auto;z-index:2;position:relative}
-.t2 .cred{font-size:clamp(.36rem,1.1vw,.52rem);letter-spacing:.28em;text-transform:uppercase;color:#8a8a96;z-index:2;position:relative}
-.t2 .tc{position:absolute;bottom:9.5%;left:6%;font-size:clamp(.3rem,1vw,.44rem);letter-spacing:.15em;color:rgba(255,255,255,.12);z-index:2}
+/* ── SHARE MODAL ── */
+.smodal{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.smodal.open{display:flex}
+.sbox{background:var(--deep);border:1px solid var(--border);padding:28px;width:min(94vw,420px);animation:popIn .28s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.sbox-title{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sbox-title em{color:var(--ember);font-style:normal}
+.s-prev{background:var(--surface);border:1px solid var(--border);padding:10px;display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.s-prev-img{width:56px;height:56px;object-fit:cover;flex-shrink:0}
+.s-prev-info strong{font-size:.72rem;color:var(--white);display:block;margin-bottom:2px}
+.s-prev-info span{font-size:.56rem;color:var(--silver)}
+.s-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.sopt{background:var(--surface);border:1px solid var(--border);padding:14px;text-align:center;cursor:pointer;transition:all .18s}
+.sopt:hover{border-color:rgba(212,116,42,.4);background:var(--lift)}
+.sopt-ico{font-size:1.4rem;display:block;margin-bottom:6px}
+.sopt-nm{font-size:.64rem;font-weight:500;color:var(--white)}
+.sopt-d{font-size:.52rem;color:var(--silver);margin-top:2px;line-height:1.4}
+.s-close{width:100%;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;padding:9px;cursor:pointer;transition:all .18s}
+.s-close:hover{border-color:var(--ember);color:var(--ember)}
 
-/* T3 BTS */
-.t3{background:#0c0c0e;display:grid;grid-template-areas:"a a""b c";grid-template-rows:55% 44%;gap:2px}
-.t3 .ba{grid-area:a}.t3 .bb{grid-area:b}.t3 .bc{grid-area:c}
-.bts-cell{background:var(--lift);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.bts-cell .ico{font-size:clamp(1.8rem,7vw,3rem);opacity:.1}
-.bts-cell .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,8,.75),transparent 55%)}
-.bts-cell .lbl{position:absolute;bottom:6%;left:7%;font-size:clamp(.34rem,1.1vw,.5rem);letter-spacing:.2em;text-transform:uppercase;color:var(--film)}
-.bts-cell .badge{position:absolute;top:7%;right:7%;font-size:clamp(.32rem,1vw,.46rem);letter-spacing:.18em;text-transform:uppercase;color:var(--ember);border:1px solid rgba(212,116,42,.4);padding:2% 4%}
-.bts-cell::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(212,116,42,.04),transparent 70%)}
-
-/* T4 Service */
-.t4-s{padding:8%;position:relative;overflow:hidden;display:flex;flex-direction:column}
-.t4-s::before{content:'';position:absolute;top:0;right:0;width:55%;height:55%;background:radial-gradient(circle at top right,rgba(212,116,42,.1),transparent 70%)}
-.t4-s .bgn{position:absolute;top:2%;right:4%;font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,13vw,5.5rem);color:rgba(212,116,42,.05);letter-spacing:.05em;line-height:1}
-.t4-s .stag{font-size:clamp(.38rem,1.2vw,.54rem);letter-spacing:.3em;text-transform:uppercase;margin-bottom:4%}
-.t4-s .stitle{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.1rem,4.5vw,2rem);letter-spacing:.06em;line-height:1.05;flex:1;display:flex;align-items:center}
-.t4-s .rule{width:28px;height:1px;margin:5% 0}
-.t4-s .items{display:flex;flex-direction:column;gap:4%}
-.t4-s .it{display:flex;align-items:center;gap:8px;font-size:clamp(.38rem,1.2vw,.54rem);letter-spacing:.04em}
-.t4-s .it::before{content:'';width:3px;height:3px;border-radius:50%;flex-shrink:0}
-.t4-s .scta{margin-top:auto;padding-top:6%;font-size:clamp(.36rem,1.1vw,.5rem);letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.t4-s .scta::after{content:'→'}
-
-/* T5 Testimonial */
-.t5{padding:9%;justify-content:space-between;position:relative;overflow:hidden}
-.t5::before{content:'';position:absolute;top:-15%;left:-10%;width:65%;height:65%;background:radial-gradient(circle,rgba(46,138,156,.07),transparent 70%)}
-.t5::after{content:'';position:absolute;bottom:-10%;right:-10%;width:45%;height:45%;background:radial-gradient(circle,rgba(212,116,42,.05),transparent 70%)}
-.t5 .stars{display:flex;gap:3px;font-size:clamp(.5rem,1.8vw,.78rem)}
-.t5 .tbody{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.65rem,2.3vw,1.05rem);line-height:1.75;flex:1;display:flex;align-items:center;z-index:1;position:relative}
-.t5 .auth{display:flex;align-items:center;gap:10%}
-.t5 .av{width:clamp(20px,8%,32px);aspect-ratio:1;border-radius:50%;background:linear-gradient(135deg,var(--ember),var(--teal));opacity:.7;flex-shrink:0}
-.t5 .aname{font-size:clamp(.44rem,1.4vw,.62rem);font-weight:500;letter-spacing:.04em}
-.t5 .arole{font-size:clamp(.36rem,1.1vw,.5rem);letter-spacing:.15em;text-transform:uppercase;color:var(--teal);margin-top:2%}
-.t5 .wm{position:absolute;bottom:7%;right:7%;font-family:'Bebas Neue',sans-serif;font-size:clamp(.5rem,2vw,.9rem);letter-spacing:.2em;color:rgba(200,184,154,.1)}
-
-/* T6 Reel Cover */
-.t6{background:#040406}
-.t6 .rtop{flex:1.6;background:linear-gradient(160deg,#141416,#1a1a1e);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.t6 .rtop::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,116,42,.05),transparent 50%,rgba(46,138,156,.04))}
-.t6 .rgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,184,154,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(200,184,154,.025) 1px,transparent 1px);background-size:25% 25%}
-.t6 .pring{position:absolute;width:22%;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.t6 .pring::after{content:'▶';font-size:clamp(.5rem,2vw,.9rem);margin-left:8%}
-.t6 .rbot{padding:5.5% 7.5%;background:#040406;display:flex;flex-direction:column;gap:2.5%}
-.t6 .rcat{font-size:clamp(.34rem,1.1vw,.5rem);letter-spacing:.3em;text-transform:uppercase}
-.t6 .rtitle{font-family:'Bebas Neue',sans-serif;font-size:clamp(.9rem,3.6vw,1.6rem);letter-spacing:.06em;line-height:1.05}
-.t6 .rmeta{display:flex;gap:14px;font-size:clamp(.32rem,1vw,.46rem);letter-spacing:.1em;color:#8a8a96}
-.t6 .rmeta span+span::before{content:'·';margin-right:14px;color:rgba(255,255,255,.12)}
-
-/* T7 Before/After */
-.t7{background:#0c0c0e}
-.t7 .baw{flex:1.8;display:grid;grid-template-columns:1fr 1fr;gap:2px;position:relative}
-.t7 .bh{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.t7 .bh:first-child{background:linear-gradient(145deg,#1a1a1a,#222);filter:grayscale(1) contrast(1.1)}
-.t7 .bh:last-child{background:linear-gradient(145deg,#1e1a14,#2a2218)}
-.t7 .bico{font-size:clamp(1.4rem,5.5vw,2.5rem);opacity:.1}
-.t7 .btag{position:absolute;top:7%;left:50%;transform:translateX(-50%);font-size:clamp(.34rem,1.1vw,.5rem);letter-spacing:.25em;text-transform:uppercase;padding:2% 5%;white-space:nowrap}
-.t7 .bh:first-child .btag{background:rgba(255,255,255,.07);color:rgba(255,255,255,.45)}
-.t7 .bdiv{position:absolute;top:0;bottom:0;left:50%;width:2px;z-index:5;transform:translateX(-50%)}
-.t7 .bfoot{padding:5% 7%;background:#080808;display:flex;align-items:center;justify-content:space-between}
-.t7 .blabel{font-family:'Playfair Display',serif;font-size:clamp(.7rem,2.5vw,1.1rem);font-weight:400}
-.t7 .bsub{font-size:clamp(.34rem,1.1vw,.5rem);letter-spacing:.18em;text-transform:uppercase;color:#8a8a96;margin-top:2%}
-.t7 .bcta{font-size:clamp(.34rem,1.1vw,.5rem);letter-spacing:.22em;text-transform:uppercase}
-
-/* T8 Stats */
-.t8{padding:8%;position:relative;overflow:hidden;display:flex;flex-direction:column}
-.t8::before{content:'';position:absolute;top:0;right:0;width:40%;height:40%;background:rgba(212,116,42,.05);clip-path:polygon(100% 0,0 0,100% 100%)}
-.t8 .shead{font-size:clamp(.38rem,1.2vw,.54rem);letter-spacing:.28em;text-transform:uppercase;margin-bottom:7%}
-.t8 .sgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6%;align-content:center}
-.t8 .sitem{display:flex;flex-direction:column;gap:4%}
-.t8 .snum{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,5vw,2.2rem);line-height:1}
-.t8 .snum em{font-style:normal}
-.t8 .slbl{font-size:clamp(.36rem,1.1vw,.52rem);color:#8a8a96;letter-spacing:.06em;line-height:1.4}
-.t8 .sbar{height:2px;background:var(--border);margin-top:5%;position:relative;overflow:hidden}
-.t8 .sbar::after{content:'';position:absolute;top:0;left:0;height:100%}
-.t8 .b1::after{width:72%}.t8 .b2::after{width:88%}.t8 .b3::after{width:55%}.t8 .b4::after{width:93%}
-.t8 .sfoot{padding-top:5%;border-top:1px solid var(--border);font-size:clamp(.34rem,1vw,.48rem);letter-spacing:.1em;color:rgba(255,255,255,.15)}
-
-/* T9 Carousel Cover */
-.t9{background:#08080a}
-.t9 .cvtop{background:var(--surface);padding:5.5% 8%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.t9 .cvbrand{font-family:'Bebas Neue',sans-serif;font-size:clamp(.7rem,2.5vw,1.1rem);letter-spacing:.28em;text-transform:uppercase}
-.t9 .cvnum{font-size:clamp(.34rem,1.1vw,.5rem);letter-spacing:.15em;color:#8a8a96}
-.t9 .cvmain{flex:1;display:flex;flex-direction:column;justify-content:center;padding:7% 9%;gap:5%}
-.t9 .cveye{font-size:clamp(.36rem,1.2vw,.54rem);letter-spacing:.32em;text-transform:uppercase}
-.t9 .cvtitle{font-family:'Playfair Display',serif;font-size:clamp(1rem,4vw,1.85rem);font-weight:400;line-height:1.2}
-.t9 .cvbody{font-size:clamp(.4rem,1.4vw,.62rem);color:#8a8a96;line-height:1.75}
-.t9 .cvfoot{padding:4% 8%;display:flex;align-items:center;border-top:1px solid var(--border)}
-.t9 .cvdots{display:flex;gap:5px}
-.t9 .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.15)}
-.t9 .dot.on{background:var(--ember)}
-.t9 .swipe{margin-left:auto;font-size:clamp(.32rem,1vw,.46rem);letter-spacing:.18em;color:#8a8a96;display:flex;align-items:center;gap:6px}
-.t9 .swipe::after{content:'→'}
-
-/* ─── EDITOR MODAL ─── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
-.modal-bg.open{display:flex}
-.modal{background:var(--deep);border:1px solid var(--border);width:min(96vw,1080px);max-height:90vh;display:grid;grid-template-columns:260px 1fr 280px;overflow:hidden;position:relative;animation:modalIn .3s ease}
-@keyframes modalIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
-.modal-close{position:absolute;top:14px;right:16px;z-index:10;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:6px 14px;cursor:pointer;transition:all .2s}
-.modal-close:hover{border-color:var(--ember);color:var(--ember)}
-
-/* modal left */
-.ml{background:var(--void);border-right:1px solid var(--border);padding:20px 14px;overflow-y:auto}
-.ml h3{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ember);margin-bottom:12px}
-.ml-list{display:flex;flex-direction:column;gap:6px}
-.ml-item{display:flex;gap:10px;align-items:center;padding:9px;border:1px solid var(--border);cursor:pointer;transition:all .2s;border-radius:2px}
-.ml-item:hover{border-color:rgba(212,116,42,.4);background:var(--surface)}
-.ml-item.active{border-color:var(--ember);background:rgba(212,116,42,.08)}
-.ml-ico{width:40px;height:40px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.ml-info strong{font-size:.7rem;font-weight:500;color:var(--white);display:block}
-.ml-info span{font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ember);margin-top:1px;display:block}
-
-/* modal center */
-.mc{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:14px;background:var(--void);overflow:auto}
-#ed-preview{width:400px;height:400px;flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,.8)}
-.mc-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.btn-dl{background:var(--ember);color:var(--void);font-family:'Outfit',sans-serif;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;border:none;padding:10px 22px;cursor:pointer;transition:background .2s}
-.btn-dl:hover{background:var(--ember2)}
-.btn-dl:disabled{background:var(--surface);color:var(--silver);cursor:not-allowed}
-.btn-rst{background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:all .2s}
-.btn-rst:hover{border-color:var(--ember);color:var(--ember)}
-.mc-note{font-size:.54rem;letter-spacing:.14em;color:var(--silver)}
-
-/* modal right */
-.mr{background:var(--deep);border-left:1px solid var(--border);padding:16px 14px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
-.mr::-webkit-scrollbar{width:2px}
-.ps{font-size:.5rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ember);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);display:block}
-.field{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
-.field label{font-size:.58rem;letter-spacing:.1em;color:var(--silver)}
-.field input[type=text],.field textarea{background:var(--surface);border:1px solid var(--border);color:var(--white);font-family:'Outfit',sans-serif;font-size:.74rem;padding:6px 8px;resize:vertical;outline:none;transition:border-color .2s}
-.field input[type=text]:focus,.field textarea:focus{border-color:rgba(212,116,42,.5)}
-.field textarea{min-height:50px}
-.color-row{display:flex;gap:6px;flex-wrap:wrap}
-.cc{display:flex;flex-direction:column;align-items:center;gap:3px}
-.cc input[type=color]{width:32px;height:32px;border:1px solid var(--border);border-radius:2px;cursor:pointer;padding:2px;background:var(--surface)}
-.cc span{font-size:.46rem;letter-spacing:.08em;color:var(--silver)}
-.pre-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.pre-btn{font-family:'Outfit',sans-serif;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;padding:7px;cursor:pointer;transition:opacity .2s;border:none}
-.pre-btn:hover{opacity:.8}
-
-/* ─── CAPTIONS ─── */
-.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 52px 72px}
-.cap-card{background:var(--surface);border:1px solid var(--border);padding:24px;transition:border-color .25s,background .25s}
-.cap-card:hover{border-color:rgba(212,116,42,.25);background:var(--lift)}
-.cap-type{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ember);margin-bottom:12px;display:block}
-.cap-body{font-size:.77rem;line-height:1.88;color:rgba(237,233,226,.62)}
-.cap-tags{margin-top:12px;font-size:.67rem;line-height:2;color:rgba(46,138,156,.75)}
-.cap-copy{margin-top:12px;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all .2s}
-.cap-copy:hover{border-color:var(--ember);color:var(--ember)}
-.cap-copy.copied{border-color:var(--teal);color:var(--teal)}
-
-/* ─── STRATEGY ─── */
-.strat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 52px 72px}
-.strat-card{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--ember);padding:26px}
-.sc-icon{font-size:1.3rem;margin-bottom:12px;display:block}
-.sc-title{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.1em;color:var(--white);margin-bottom:9px}
-.sc-body{font-size:.74rem;line-height:1.8;color:var(--silver)}
-.sc-pill{display:inline-block;margin-top:11px;background:rgba(212,116,42,.12);font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);padding:4px 11px}
-
-/* ─── CHECKLIST ─── */
-.cl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 52px 72px}
-.cl-group{background:var(--surface);border:1px solid var(--border);padding:28px}
-.cl-head{font-family:'Bebas Neue',sans-serif;font-size:.92rem;letter-spacing:.12em;color:var(--white);margin-bottom:8px;padding-bottom:13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
-.cl-badge{font-size:.48rem;padding:3px 9px;background:var(--ember);color:var(--void);letter-spacing:.12em;font-family:'Outfit',sans-serif;font-weight:600}
-.cl-item{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.025);cursor:pointer;user-select:none}
-.cl-item:last-child{border-bottom:none;padding-bottom:0}
-.cl-item input[type=checkbox]{appearance:none;width:14px;height:14px;border:1px solid rgba(255,255,255,.18);flex-shrink:0;margin-top:3px;cursor:pointer;transition:all .15s;position:relative}
-.cl-item input:checked{background:var(--ember);border-color:var(--ember)}
-.cl-item input:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.48rem;color:var(--void);font-weight:700}
-.cl-item label{font-size:.75rem;color:rgba(237,233,226,.6);line-height:1.5;cursor:pointer;transition:color .15s}
-.cl-item input:checked+label{color:rgba(255,255,255,.22);text-decoration:line-through}
-
-/* ─── CALENDAR ─── */
-.cal-wrap{padding:0 52px 80px}
-.cal-legend{display:flex;gap:22px;margin-bottom:16px;flex-wrap:wrap}
-.legend-item{display:flex;align-items:center;gap:8px;font-size:.58rem;letter-spacing:.14em;color:var(--silver)}
-.legend-dot{width:8px;height:8px;border-radius:1px}
-.ld-r{background:var(--ember)}.ld-c{background:var(--teal)}.ld-s{background:var(--film)}.ld-st{background:rgba(255,255,255,.3)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
-.cal-day-hdr{font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);text-align:center;padding:0 0 11px}
-.cal-cell{background:var(--surface);border:1px solid var(--border);padding:10px;min-height:76px;transition:border-color .2s}
-.cal-cell:hover{border-color:rgba(212,116,42,.3)}
-.cal-cell.empty{background:transparent;border-color:transparent}
-.cal-date{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.06em;color:rgba(255,255,255,.22)}
-.cal-post{margin-top:5px;padding:3px 5px;font-size:.47rem;letter-spacing:.1em;text-transform:uppercase;line-height:1.45}
-.cal-post.reel{background:rgba(212,116,42,.15);color:var(--ember)}
-.cal-post.carousel{background:rgba(46,138,156,.12);color:var(--teal)}
-.cal-post.story{background:rgba(184,168,130,.08);color:var(--film)}
-.cal-post.static{background:rgba(255,255,255,.05);color:var(--silver)}
-.wk-label{font-size:.52rem;letter-spacing:.25em;text-transform:uppercase;margin:16px 0 7px;padding-left:2px}
-
-/* ─── FOOTER ─── */
-footer{background:#030303;border-top:1px solid var(--border);padding:28px 52px;display:flex;align-items:center;justify-content:space-between}
-footer p{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.14)}
-.ft-e{font-size:.58rem;letter-spacing:.14em;color:rgba(212,116,42,.35)}
-
-/* ─── TOAST ─── */
-.toast{position:fixed;bottom:28px;right:28px;z-index:999;background:var(--ember);color:var(--void);font-family:'Outfit',sans-serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;padding:11px 22px;transform:translateY(60px);opacity:0;transition:all .32s cubic-bezier(.16,1,.3,1);pointer-events:none}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--ember);color:var(--void);font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:9px 18px;transform:translateY(56px);opacity:0;transition:all .28s cubic-bezier(.16,1,.3,1);pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-
-<div id="cur"></div><div id="cur2"></div>
+<div class="app">
 
 <!-- HEADER -->
 <header class="hdr">
-  <div class="logo">RIO<em>.</em>KIT</div>
-  <nav class="nav">
-    <a href="#templates">Templates</a>
-    <a href="#captions">Captions</a>
-    <a href="#strategy">Strategy</a>
-    <a href="#checklist">Checklist</a>
-    <a href="#calendar" class="cta">Calendar</a>
-  </nav>
+  <div class="logo">RIO<em>.</em>STUDIO</div>
+  <div class="hdiv"></div>
+  <div class="mode-pills">
+    <button class="mpill on"  onclick="setMode('template',this)">📐 テンプレート</button>
+    <button class="mpill"     onclick="setMode('photo',this)">🖼️ フォト投稿</button>
+    <button class="mpill"     onclick="setMode('video',this)">🎬 動画オーバーレイ</button>
+  </div>
+  <div class="hdr-r">
+    <button class="hbtn" onclick="openShare()">🔗 シェア</button>
+    <button class="hbtn em" id="dlBtn" onclick="doExport('png')">📥 PNG 保存</button>
+  </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-line"></div>
-  <div class="hero-year">2025 — 2026</div>
-  <div class="hero-kicker">Instagram Content Kit · riophotographer</div>
-  <h1 class="hero-h1">
-    <span class="ghost" aria-hidden="true">CINEMATIC<br>INSTAGRAM<br>KIT</span>
-    CINEMATIC<br><span class="em">INSTAGRAM</span><br>KIT
-  </h1>
-  <p class="hero-sub">フォトグラファー・シネマトグラファー・ウェブデザイナーとしての世界観を、一貫したビジュアルで表現するためのフルキット。テンプレートをクリックして編集・ダウンロード。</p>
-  <div class="hero-meta">
-    <div class="meta-item"><div class="meta-num">9<span>+</span></div><div class="meta-label">Templates</div></div>
-    <div class="meta-sep"></div>
-    <div class="meta-item"><div class="meta-num">6<span>+</span></div><div class="meta-label">Captions</div></div>
-    <div class="meta-sep"></div>
-    <div class="meta-item"><div class="meta-num">4<span>wk</span></div><div class="meta-label">Calendar</div></div>
+<!-- WORKSPACE -->
+<div class="workspace">
+
+  <!-- LEFT -->
+  <div class="pl">
+    <div class="pl-tabs">
+      <button class="pltab on"  onclick="switchPLTab('tpl',this)">Templates</button>
+      <button class="pltab"     onclick="switchPLTab('media',this)">Media</button>
+    </div>
+    <div class="pl-body" id="plBody"></div>
   </div>
-  <div class="scroll-cue"><div class="scroll-bar"></div><span>Scroll</span></div>
-</section>
 
-<!-- ═══ 01 TEMPLATES ═══ -->
-<section id="templates">
-  <div class="sec-intro">
-    <div><div class="si-n">01</div><div class="si-t">Post Templates</div></div>
-    <p class="si-d">9種類の投稿テンプレート。クリックするとエディターが開き、テキスト・カラーを編集してPNGダウンロードできます。</p>
-  </div>
-  <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('all',this)">All</button>
-    <button class="tab-btn" onclick="switchTab('photo',this)">Photography</button>
-    <button class="tab-btn" onclick="switchTab('video',this)">Video</button>
-    <button class="tab-btn" onclick="switchTab('web',this)">Web Design</button>
-    <button class="tab-btn" onclick="switchTab('engage',this)">Engagement</button>
-  </div>
-  <div id="tpl-container"></div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══ 02 CAPTIONS ═══ -->
-<section id="captions">
-  <div class="sec-intro">
-    <div><div class="si-n">02</div><div class="si-t">Caption Templates</div></div>
-    <p class="si-d">投稿タイプ別のキャプションテンプレート。Copyボタンでワンクリック取得。</p>
-  </div>
-  <div class="cap-grid">
-    <div class="cap-card">
-      <span class="cap-type">作品紹介 / Portfolio</span>
-      <div class="cap-body" id="cap1">新しい作品が完成しました。📷
-
-[場所・テーマ] をテーマに撮影。
-自然光と [使用機材] を組み合わせ、[雰囲気] を表現しました。
-
-詳細はプロフィールリンクからご覧ください。</div>
-      <div class="cap-tags">#photography #フォトグラファー #riophotographer #[カスタムタグ]</div>
-      <button class="cap-copy" onclick="copyCap('cap1',this)">Copy</button>
+  <!-- CENTER -->
+  <div class="pc">
+    <div class="canvas-toolbar">
+      <button class="sz-btn on" onclick="setFmt('ig-sq',this)">■ 正方形</button>
+      <button class="sz-btn"    onclick="setFmt('ig-st',this)">▭ ストーリー</button>
+      <button class="sz-btn"    onclick="setFmt('ig-ld',this)">▬ 横長</button>
+      <button class="sz-btn"    onclick="setFmt('x-post',this)">◻ X/OGP</button>
     </div>
-    <div class="cap-card">
-      <span class="cap-type">撮影現場 / Behind the Scenes</span>
-      <div class="cap-body" id="cap2">制作の舞台裏をお届けします。🎬
-
-[プロジェクト名] の撮影現場より。
-[機材・場所・時間帯] の条件の中で、[こだわりポイント] を追求しました。
-
-完成作品は近日公開予定。お楽しみに。</div>
-      <div class="cap-tags">#bts #behindthescenes #filmmaker #cinematographer</div>
-      <button class="cap-copy" onclick="copyCap('cap2',this)">Copy</button>
+    <div class="canvas-wrap">
+      <canvas id="mc"></canvas>
     </div>
-    <div class="cap-card">
-      <span class="cap-type">サービス告知 / Service</span>
-      <div class="cap-body" id="cap3">[月・季節] のご予約受付中です。
-
-📸 写真撮影（ポートレート / 商品 / ブランディング）
-🎬 シネマティック映像制作
-💻 Webデザイン & ブランディング
-
-DMまたはプロフィールリンクからどうぞ。</div>
-      <div class="cap-tags">#撮影依頼受付中 #webdesign #フォトグラファー栃木 #videographer</div>
-      <button class="cap-copy" onclick="copyCap('cap3',this)">Copy</button>
+    <div class="c-foot">
+      <button class="cfbtn" onclick="undo()">↩ Undo</button>
+      <button class="cfbtn" onclick="addTextLayer()">＋ テキスト</button>
+      <button class="cfbtn" onclick="addLogoLayer()">＋ ロゴ</button>
+      <button class="cfbtn em" onclick="doExport('png')">📥 PNG</button>
+      <button class="cfbtn em" onclick="doExport('jpg')">📥 JPEG</button>
+      <button class="cfbtn" onclick="openShare()">🔗 シェア</button>
     </div>
-    <div class="cap-card">
-      <span class="cap-type">How-to / カルーセル</span>
-      <div class="cap-body" id="cap4">フォトグラファーが教える [テーマ] のコツ💡
-
-✔ [ポイント1]
-✔ [ポイント2]
-✔ [ポイント3]
-
-続きは次のスライドへ → スワイプしてください。
-保存しておくと後で見返せます🔖</div>
-      <div class="cap-tags">#写真の撮り方 #photography_tips #カメラ初心者 #撮影テクニック</div>
-      <button class="cap-copy" onclick="copyCap('cap4',this)">Copy</button>
-    </div>
-    <div class="cap-card">
-      <span class="cap-type">Before / After 現像</span>
-      <div class="cap-body" id="cap5">Before → After 🎞️
-
-RAWからの現像プロセスを公開。
-
-使用ツール：[Lightroom / Capture One 等]
-グレーディングのポイント：[シャドウ・ハイライト・色温度の調整]
-
-どちらが好きですか？コメントで教えてください👇</div>
-      <div class="cap-tags">#現像 #lightroom #カラーグレーディング #beforeafter</div>
-      <button class="cap-copy" onclick="copyCap('cap5',this)">Copy</button>
-    </div>
-    <div class="cap-card">
-      <span class="cap-type">クライアント実績 / Testimonial</span>
-      <div class="cap-body" id="cap6">クライアント様からの声をいただきました🙏
-
-「[引用テキスト]」
-— [お客様名・役職]
-
-[案件の概要：どんな撮影・制作だったか1〜2行]
-
-ご依頼・ご相談はプロフィールリンクまたはDMへ。</div>
-      <div class="cap-tags">#クライアント事例 #撮影実績 #webdesign実績 #riophotographer</div>
-      <button class="cap-copy" onclick="copyCap('cap6',this)">Copy</button>
+    <div class="fmt-row">
+      <div class="fmt-btn on" onclick="clickFmt('ig-sq',this)"><span class="fmt-ico">📸</span><div class="fmt-nm">Instagram</div><div class="fmt-sz">1080×1080</div></div>
+      <div class="fmt-btn"    onclick="clickFmt('ig-st',this)"><span class="fmt-ico">📱</span><div class="fmt-nm">Story/Reel</div><div class="fmt-sz">1080×1920</div></div>
+      <div class="fmt-btn"    onclick="clickFmt('ig-ld',this)"><span class="fmt-ico">🖼️</span><div class="fmt-nm">横長</div><div class="fmt-sz">1080×566</div></div>
+      <div class="fmt-btn"    onclick="clickFmt('x-post',this)"><span class="fmt-ico">𝕏</span><div class="fmt-nm">X / OGP</div><div class="fmt-sz">1200×628</div></div>
     </div>
   </div>
-</section>
 
-<div class="divider"></div>
+  <!-- RIGHT -->
+  <div class="pr" id="panelR"></div>
 
-<!-- ═══ 03 STRATEGY ═══ -->
-<section id="strategy">
-  <div class="sec-intro">
-    <div><div class="si-n">03</div><div class="si-t">Growth Strategy</div></div>
-    <p class="si-d">2025年アルゴリズム分析に基づいたフォロワー増加のための投稿戦略。</p>
-  </div>
-  <div class="strat-grid">
-    <div class="strat-card"><span class="sc-icon">🎬</span><div class="sc-title">REELS — リーチ最大化</div><div class="sc-body">新規フォロワー獲得のメインエンジン。最初の3秒で視聴者を引き込む構成が命。一番印象的なシーンを冒頭に置き、60〜90秒の尺でシェア率を最大24%高める。<br><br>推奨頻度：週3〜4本</div><div class="sc-pill">新規リーチ</div></div>
-    <div class="strat-card"><span class="sc-icon">🖼️</span><div class="sc-title">CAROUSEL — 保存数・滞在時間</div><div class="sc-body">エンゲージメント率が最も高い（0.55%平均）。How-to・作品シリーズ・Before/Afterはスワイプを誘発しやすい。保存数が多いとアルゴリズムが「価値あるコンテンツ」と判断し拡散。<br><br>推奨頻度：週2〜3本</div><div class="sc-pill">エンゲージメント</div></div>
-    <div class="strat-card"><span class="sc-icon">📖</span><div class="sc-title">STORIES — 既存ファンの維持</div><div class="sc-body">新規獲得より「関係深化」が目的。投票・質問スタンプで反応を増やし、撮影の裏側・日常をカジュアルに見せる。毎日1〜2枚が理想。フォロワーとの距離を縮める場所。<br><br>推奨頻度：毎日1〜3枚</div><div class="sc-pill">関係構築</div></div>
-    <div class="strat-card"><span class="sc-icon">🔁</span><div class="sc-title">TRIAL REELS — 非フォロワーへ</div><div class="sc-body">Trial Reels機能を活用。既存フォロワーに表示せず、新規層のみにリーチできる機能。過去のベスト投稿をTrial Reelsとして再活用し、費用ゼロで継続的な新規開拓が可能。</div><div class="sc-pill">穴場機能</div></div>
-    <div class="strat-card"><span class="sc-icon">🔑</span><div class="sc-title">PROFILE — 検索で見つかる設計</div><div class="sc-body">「名前フィールド」にキーワードを入れるのが最重要。例：「Rio｜写真・映像・Web」。Instagramの検索はBioより名前フィールドを優先。ハイライトを「実績・料金・About」に整理。</div><div class="sc-pill">検索流入</div></div>
-    <div class="strat-card"><span class="sc-icon">🎯</span><div class="sc-title">コンテンツの3本柱</div><div class="sc-body"><strong style="color:var(--ember)">作品</strong>：ポートフォリオ・現場記録（信頼）<br><strong style="color:var(--teal)">教育</strong>：撮影Tips・How-to（保存数・リーチ）<br><strong style="color:var(--film)">人柄</strong>：日常・こだわり・哲学（ファン化）<br><br>この3:3:4の比率でバランスを保つ。</div><div class="sc-pill">コンテンツ設計</div></div>
-  </div>
-</section>
+</div><!-- /workspace -->
+</div><!-- /app -->
 
-<div class="divider"></div>
-
-<!-- ═══ 04 CHECKLIST ═══ -->
-<section id="checklist">
-  <div class="sec-intro">
-    <div><div class="si-n">04</div><div class="si-t">Post Checklist</div></div>
-    <p class="si-d">投稿前に確認するべき全項目。クリックでチェック完了。</p>
-  </div>
-  <div class="cl-grid">
-    <div class="cl-group">
-      <div class="cl-head"><span class="cl-badge">IMG</span>ビジュアル品質</div>
-      <label class="cl-item"><input type="checkbox"><label>解像度・シャープネスが十分か（最低1080×1080px）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>カラーグレーディングがブランドトーンと一致しているか</label></label>
-      <label class="cl-item"><input type="checkbox"><label>ノイズ・手ブレが許容範囲内か</label></label>
-      <label class="cl-item"><input type="checkbox"><label>トリミング・コンポジションが意図通りか</label></label>
-      <label class="cl-item"><input type="checkbox"><label>テキスト・ロゴの配置と可読性の確認</label></label>
+<!-- SHARE MODAL -->
+<div class="smodal" id="shareModal" onclick="if(event.target===this)closeSM()">
+  <div class="sbox">
+    <div class="sbox-title">シェア <em>/</em> エクスポート</div>
+    <div class="s-prev"><img id="smImg" class="s-prev-img" src="" alt=""><div class="s-prev-info"><strong id="smTitle">-</strong><span id="smDesc">-</span></div></div>
+    <div class="s-opts">
+      <div class="sopt" onclick="shareAct('clipboard')"><span class="sopt-ico">📋</span><div class="sopt-nm">クリップボード</div><div class="sopt-d">コピーしてSNSに貼り付け</div></div>
+      <div class="sopt" onclick="shareAct('png')"><span class="sopt-ico">🖼️</span><div class="sopt-nm">PNG 保存</div><div class="sopt-d">高解像度ダウンロード</div></div>
+      <div class="sopt" onclick="shareAct('jpg')"><span class="sopt-ico">📁</span><div class="sopt-nm">JPEG 保存</div><div class="sopt-d">軽量・SNS向け</div></div>
+      <div class="sopt" onclick="shareAct('native')"><span class="sopt-ico">🔗</span><div class="sopt-nm">共有メニュー</div><div class="sopt-d">システムシート（モバイル対応）</div></div>
     </div>
-    <div class="cl-group">
-      <div class="cl-head"><span class="cl-badge">TXT</span>キャプション</div>
-      <label class="cl-item"><input type="checkbox"><label>ブランドのトーン・ボイスに合っているか</label></label>
-      <label class="cl-item"><input type="checkbox"><label>CTAが明確に含まれているか（保存・DM・リンク等）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>誤字・脱字のチェック</label></label>
-      <label class="cl-item"><input type="checkbox"><label>ハッシュタグは20〜30個の最適範囲内か</label></label>
-      <label class="cl-item"><input type="checkbox"><label>改行・絵文字が読みやすい構造になっているか</label></label>
-    </div>
-    <div class="cl-group">
-      <div class="cl-head"><span class="cl-badge">SET</span>投稿設定</div>
-      <label class="cl-item"><input type="checkbox"><label>位置情報タグの追加（栃木・東京など）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>コラボレーター・クライアントのタグ付け</label></label>
-      <label class="cl-item"><input type="checkbox"><label>Altテキスト（アクセシビリティ・SEO）の入力</label></label>
-      <label class="cl-item"><input type="checkbox"><label>投稿タイミングのスケジュール設定（推奨：平日19〜21時）</label></label>
-    </div>
-    <div class="cl-group">
-      <div class="cl-head"><span class="cl-badge">PRO</span>ブランド一貫性</div>
-      <label class="cl-item"><input type="checkbox"><label>フィードのグリッドバランスを確認（明暗・テーマ）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>ストーリーズへのクロス投稿を計画・実施</label></label>
-      <label class="cl-item"><input type="checkbox"><label>前回投稿と差別化されているか（テーマの流れ）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>投稿後30分はコメント返信・エンゲージメント対応</label></label>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══ 05 CALENDAR ═══ -->
-<section id="calendar">
-  <div class="sec-intro">
-    <div><div class="si-n">05</div><div class="si-t">4-Week Calendar</div></div>
-    <p class="si-d">3スキルを週3〜5本の最適頻度で回す4週間の投稿カレンダー。</p>
-  </div>
-  <div class="cal-wrap">
-    <div class="cal-legend">
-      <div class="legend-item"><div class="legend-dot ld-r"></div>リール</div>
-      <div class="legend-item"><div class="legend-dot ld-c"></div>カルーセル</div>
-      <div class="legend-item"><div class="legend-dot ld-s"></div>ストーリーズ</div>
-      <div class="legend-item"><div class="legend-dot ld-st"></div>静止画</div>
-    </div>
-    <div class="cal-grid" style="margin-bottom:6px">
-      <div class="cal-day-hdr">月</div><div class="cal-day-hdr">火</div><div class="cal-day-hdr">水</div>
-      <div class="cal-day-hdr">木</div><div class="cal-day-hdr">金</div><div class="cal-day-hdr">土</div><div class="cal-day-hdr">日</div>
-    </div>
-    <div class="wk-label" style="color:var(--ember)">Week 01 — Photography</div>
-    <div class="cal-grid" style="margin-bottom:14px">
-      <div class="cal-cell"><div class="cal-date">1</div><div class="cal-post reel">📷 作品リール<br>Golden Hour</div></div>
-      <div class="cal-cell"><div class="cal-date">2</div><div class="cal-post story">📖 撮影日記</div></div>
-      <div class="cal-cell"><div class="cal-date">3</div><div class="cal-post carousel">🖼️ Before/After<br>現像カルーセル</div></div>
-      <div class="cal-cell"><div class="cal-date">4</div><div class="cal-post story">📖 機材紹介</div></div>
-      <div class="cal-cell"><div class="cal-date">5</div><div class="cal-post reel">🎬 BTS リール<br>撮影現場</div></div>
-      <div class="cal-cell"><div class="cal-date">6</div><div class="cal-post static">🖼️ ポートフォリオ<br>静止画</div></div>
-      <div class="cal-cell"><div class="cal-date">7</div><div class="cal-post story">📖 週まとめ</div></div>
-    </div>
-    <div class="wk-label" style="color:var(--teal)">Week 02 — Cinematography</div>
-    <div class="cal-grid" style="margin-bottom:14px">
-      <div class="cal-cell"><div class="cal-date">8</div><div class="cal-post reel">🎬 映像作品<br>ショートリール</div></div>
-      <div class="cal-cell"><div class="cal-date">9</div><div class="cal-post story">📖 編集プロセス</div></div>
-      <div class="cal-cell"><div class="cal-date">10</div><div class="cal-post carousel">🖼️ 撮影Tips<br>5枚カルーセル</div></div>
-      <div class="cal-cell"><div class="cal-date">11</div><div class="cal-post reel">🎬 カラーグレード<br>解説リール</div></div>
-      <div class="cal-cell"><div class="cal-date">12</div><div class="cal-post story">📖 機材Q&A</div></div>
-      <div class="cal-cell"><div class="cal-date">13</div><div class="cal-post static">🎞️ 映像スチール<br>静止画</div></div>
-      <div class="cal-cell"><div class="cal-date">14</div><div class="cal-post story">📖 週まとめ</div></div>
-    </div>
-    <div class="wk-label" style="color:var(--film)">Week 03 — Web Design</div>
-    <div class="cal-grid" style="margin-bottom:14px">
-      <div class="cal-cell"><div class="cal-date">15</div><div class="cal-post reel">💻 制作事例<br>Web紹介リール</div></div>
-      <div class="cal-cell"><div class="cal-date">16</div><div class="cal-post story">📖 デザインの裏側</div></div>
-      <div class="cal-cell"><div class="cal-date">17</div><div class="cal-post carousel">🖼️ UI/UXのコツ<br>カルーセル</div></div>
-      <div class="cal-cell"><div class="cal-date">18</div><div class="cal-post reel">🎬 サービス紹介<br>リール</div></div>
-      <div class="cal-cell"><div class="cal-date">19</div><div class="cal-post static">💻 制作実績<br>スクリーンショット</div></div>
-      <div class="cal-cell"><div class="cal-date">20</div><div class="cal-post story">📖 ビフォーアフター</div></div>
-      <div class="cal-cell"><div class="cal-date">21</div><div class="cal-post story">📖 週まとめ</div></div>
-    </div>
-    <div class="wk-label" style="color:var(--ember2)">Week 04 — Engagement & Trust</div>
-    <div class="cal-grid" style="margin-bottom:32px">
-      <div class="cal-cell"><div class="cal-date">22</div><div class="cal-post reel">⭐ クライアント<br>紹介リール</div></div>
-      <div class="cal-cell"><div class="cal-date">23</div><div class="cal-post carousel">🖼️ 実績データ<br>カルーセル</div></div>
-      <div class="cal-cell"><div class="cal-date">24</div><div class="cal-post story">📖 Q&Aストーリーズ</div></div>
-      <div class="cal-cell"><div class="cal-date">25</div><div class="cal-post reel">🎬 ブランド哲学<br>リール</div></div>
-      <div class="cal-cell"><div class="cal-date">26</div><div class="cal-post carousel">🖼️ 来月予告<br>カルーセル</div></div>
-      <div class="cal-cell"><div class="cal-date">27</div><div class="cal-post story">📖 振り返り</div></div>
-      <div class="cal-cell"><div class="cal-date">28</div><div class="cal-post story">📖 来週の予告</div></div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <p>Rio · Cinematic Instagram Kit · 2025</p>
-  <div class="ft-e">riophotographer</div>
-</footer>
-
-<!-- ═══ EDITOR MODAL ═══ -->
-<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
-  <div class="modal" onclick="e=>e.stopPropagation()">
-    <button class="modal-close" onclick="closeModalDirect()">✕ 閉じる</button>
-    <!-- left: template list -->
-    <div class="ml">
-      <h3>テンプレート</h3>
-      <div class="ml-list" id="mlList"></div>
-    </div>
-    <!-- center: preview -->
-    <div class="mc">
-      <div id="ed-preview"></div>
-      <div class="mc-actions">
-        <button class="btn-dl" id="btnDl" onclick="doDownload()">📥 PNG ダウンロード (1080px)</button>
-        <button class="btn-rst" onclick="resetEditor()">↺ リセット</button>
-      </div>
-      <div class="mc-note">Instagram 1080 × 1080 px</div>
-    </div>
-    <!-- right: editor -->
-    <div class="mr" id="edPanel"></div>
+    <button class="s-close" onclick="closeSM()">✕ 閉じる</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
-<div id="hiddenZone" style="position:fixed;left:-9999px;top:0;pointer-events:none;z-index:-1"></div>
 
 <script>
-/* ════════════════════════════════
-   TEMPLATE DEFINITIONS
-════════════════════════════════ */
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+const S = {
+  mode: 'template',
+  fmt: 'ig-sq',
+  cW: 1080, cH: 1080,
+  dW: 520,  dH: 520,
+  tplId: 'p1',
+  plTab: 'tpl',
+  media: [],          // {id,name,type,url,img,file}
+  bgId: null,         // media id used as background
+  bgPos: 'cover',     // cover|contain|fill
+  bgOpacity: 0.9,
+  bgBlur: 0,
+  frameId: null,      // media id placed in template frame
+  framePos: 'cover',
+  overlay: { on:true, color:'#000000', opacity:0.42 },
+  colors: { ac:'#d4742a', bg:'#141418', txt:'#ede9e2' },
+  textVals: {},       // tplId → {k:v}
+  layers: [],         // free layers (text/logo)
+  selLayer: null,
+  undoStack: [],
+  shareDataUrl: '',
+  videoEl: null,      // for live video preview
+  videoAF: null,
+};
 
-const TPLS=[
+const FMTS = {
+  'ig-sq':  {w:1080,h:1080},
+  'ig-st':  {w:1080,h:1920},
+  'ig-ld':  {w:1080,h:566},
+  'x-post': {w:1200,h:628},
+};
+
+/* ══════════════════════════════════════════════
+   CANVAS
+══════════════════════════════════════════════ */
+const cv = document.getElementById('mc');
+const ctx = cv.getContext('2d');
+let rafId = null;
+
+function calcDisplay(w, h) {
+  const maxW = Math.min(540, window.innerWidth * 0.45);
+  const maxH = window.innerHeight * 0.65;
+  const s = Math.min(maxW / w, maxH / h);
+  return { dW: Math.round(w * s), dH: Math.round(h * s) };
+}
+
+function applyFmt(fmtKey) {
+  const f = FMTS[fmtKey];
+  S.cW = f.w; S.cH = f.h;
+  const { dW, dH } = calcDisplay(f.w, f.h);
+  S.dW = dW; S.dH = dH;
+  cv.width = f.w; cv.height = f.h;
+  cv.style.width = dW + 'px';
+  cv.style.height = dH + 'px';
+}
+
+function setFmt(key, btn) {
+  S.fmt = key;
+  document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  applyFmt(key);
+  schedRender();
+}
+function clickFmt(key, btn) {
+  setFmt(key, null);
+  document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  // sync size buttons
+  const map = {'ig-sq':0,'ig-st':1,'ig-ld':2,'x-post':3};
+  document.querySelectorAll('.sz-btn').forEach((b,i)=>b.classList.toggle('on',i===map[key]));
+}
+
+function schedRender() {
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(renderAll);
+}
+
+async function renderAll() {
+  const W = S.cW, H = S.cH;
+  ctx.clearRect(0,0,W,H);
+
+  // 1. Background (solid or media)
+  if (S.bgId) {
+    const m = S.media.find(x => x.id === S.bgId);
+    if (m) {
+      const src = (S.mode === 'video' && m.type === 'video' && S.videoEl) ? S.videoEl : m.img;
+      if (src) {
+        if (S.bgBlur > 0) { ctx.save(); ctx.filter = `blur(${S.bgBlur}px)`; }
+        ctx.globalAlpha = S.bgOpacity;
+        drawFit(src, 0, 0, W, H, S.bgPos);
+        ctx.globalAlpha = 1;
+        if (S.bgBlur > 0) ctx.restore();
+      }
+    }
+  } else {
+    ctx.fillStyle = S.colors.bg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // 2. Overlay
+  if (S.overlay.on) {
+    ctx.globalAlpha = S.overlay.opacity;
+    ctx.fillStyle = S.overlay.color;
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+  }
+
+  // 3. Template (draws text/graphic elements + frame if needed)
+  if (S.mode === 'template') await drawTpl(W, H);
+  else if (S.mode === 'photo') drawPhotoMode(W, H);
+  else if (S.mode === 'video') await drawVideoMode(W, H);
+
+  // 4. Free layers
+  for (const l of S.layers) {
+    if (!l.visible) continue;
+    if (l.type === 'text' || l.type === 'logo') renderTextLayer(l, W, H);
+  }
+
+  // 5. Grain
+  grain(W, H);
+}
+
+function drawFit(img, x, y, w, h, mode) {
+  const iw = img.videoWidth || img.naturalWidth || img.width || 1;
+  const ih = img.videoHeight || img.naturalHeight || img.height || 1;
+  if (mode === 'cover') {
+    const s = Math.max(w / iw, h / ih);
+    ctx.drawImage(img, x + (w - iw*s)/2, y + (h - ih*s)/2, iw*s, ih*s);
+  } else if (mode === 'contain') {
+    const s = Math.min(w / iw, h / ih);
+    ctx.drawImage(img, x + (w - iw*s)/2, y + (h - ih*s)/2, iw*s, ih*s);
+  } else {
+    ctx.drawImage(img, x, y, w, h);
+  }
+}
+
+function grain(W, H) {
+  ctx.save();
+  const id = ctx.createImageData(W, H);
+  const d = id.data;
+  for (let i = 0; i < d.length; i+=4) {
+    const n = (Math.random()-.5)*14;
+    d[i]=d[i+1]=d[i+2]=128+n; d[i+3]=6;
+  }
+  ctx.putImageData(id, 0, 0);
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════
+   TEMPLATE DEFINITIONS
+══════════════════════════════════════════════ */
+function tv(k) {
+  if (!S.textVals[S.tplId]) S.textVals[S.tplId] = {};
+  return S.textVals[S.tplId][k];
+}
+function def(k, d) { return tv(k) !== undefined ? tv(k) : d; }
+
+async function drawTpl(W, H) {
+  await document.fonts.ready;
+  const ac = S.colors.ac, tc = S.colors.txt;
+  const tpl = TPLS.find(t => t.id === S.tplId);
+  if (tpl) tpl.draw(ctx, W, H, ac, tc, S.frameId ? S.media.find(m=>m.id===S.frameId) : null);
+}
+
+function drawPhotoMode(W, H) {
+  // Simple photo post - image already drawn as bg
+  // Just add branding watermark at bottom
+  const ac = S.colors.ac;
+  const bh = H * 0.09;
+  const grd = ctx.createLinearGradient(0, H-bh*2, 0, H);
+  grd.addColorStop(0, 'transparent');
+  grd.addColorStop(1, 'rgba(0,0,0,0.6)');
+  ctx.fillStyle = grd; ctx.fillRect(0, H-bh*2, W, bh*2);
+  // optional logo
+  ctx.font = `400 ${W*0.032}px "Bebas Neue"`;
+  ctx.fillStyle = ac; ctx.globalAlpha = 0.7;
+  ctx.letterSpacing = '0.2em';
+  ctx.fillText('RIO STUDIO', W*0.06, H*0.956);
+  ctx.globalAlpha = 1;
+}
+
+async function drawVideoMode(W, H) {
+  // Video frame already drawn as bg; add overlay frame/borders
+  const ac = S.colors.ac;
+  ctx.strokeStyle = ac + '33'; ctx.lineWidth = 1.5;
+  ctx.strokeRect(W*0.04, H*0.04, W*0.92, H*0.92);
+  // timecode style
+  ctx.font = `300 ${W*0.018}px "Outfit"`;
+  ctx.fillStyle = ac + 'bb'; ctx.letterSpacing = '0.12em';
+  const now = new Date();
+  ctx.fillText(`${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}:00`, W*0.05, H*0.95);
+  ctx.fillStyle = '#8a8a96'; ctx.textAlign = 'right';
+  ctx.fillText('REC ●', W*0.95, H*0.95);
+  ctx.textAlign = 'left';
+}
+
+// ── 9 TEMPLATE DRAW FUNCTIONS ──
+const TPLS = [
   {
-    id:'p1',name:'Portfolio Hero',tag:'作品紹介',icon:'📷',cat:'photo',
-    fields:[
-      {k:'tag',  l:'カテゴリタグ',t:'text',    d:'Photography'},
-      {k:'title',l:'タイトル',    t:'text',    d:'Golden Hour Series'},
-      {k:'ac',   l:'アクセント',  t:'color',   d:'#d4742a'},
-      {k:'bg',   l:'背景',        t:'color',   d:'#141418'},
-    ],
-    html(v){return`<div class="ti t1" style="background:${v.bg}">
-      <div class="imgz"><div class="lens" style="border-color:${v.ac}33"></div><div class="scan"></div></div>
-      <div class="bar" style="background:#09090b">
-        <div><div class="etag" style="color:${v.ac}">${esc(v.tag)}</div><div class="etitle">${esc(v.title)}</div></div>
-        <div class="arr" style="color:${v.ac}">→</div>
-      </div><div class="grain"></div></div>`}
+    id:'p1', name:'Portfolio Hero', tag:'作品紹介', icon:'📷', cat:'photo',
+    fields:[{k:'tag',l:'カテゴリ',d:'Photography'},{k:'title',l:'タイトル',d:'Golden Hour Series'}],
+    draw(ctx,W,H,ac,tc,fMedia) {
+      // frame area: upper 72%
+      if (fMedia && fMedia.img) {
+        ctx.save();
+        ctx.beginPath(); ctx.rect(0,0,W,H*0.72); ctx.clip();
+        drawFit(fMedia.img, 0, 0, W, H*0.72, S.framePos);
+        ctx.restore();
+        const grd=ctx.createLinearGradient(0,H*0.4,0,H*0.72);
+        grd.addColorStop(0,'transparent'); grd.addColorStop(1,'rgba(0,0,0,0.5)');
+        ctx.fillStyle=grd; ctx.fillRect(0,0,W,H*0.72);
+      } else if (!S.bgId) {
+        // draw lens placeholder
+        ctx.strokeStyle=ac+'44'; ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.arc(W*.5,H*.35,W*.18,0,Math.PI*2);ctx.stroke();
+        ctx.beginPath();ctx.arc(W*.5,H*.35,W*.11,0,Math.PI*2);ctx.stroke();
+        ctx.fillStyle=ac+'15';ctx.beginPath();ctx.arc(W*.5,H*.35,W*.05,0,Math.PI*2);ctx.fill();
+      }
+      // bottom bar
+      ctx.fillStyle='rgba(8,8,10,0.93)';ctx.fillRect(0,H*.72,W,H*.28);
+      ctx.font=`300 ${W*.024}px "Outfit"`;ctx.fillStyle=ac;ctx.letterSpacing='0.28em';
+      ctx.fillText(def('tag','Photography').toUpperCase(),W*.07,H*.81);
+      ctx.font=`400 ${W*.055}px "Playfair Display"`;ctx.fillStyle=tc;ctx.letterSpacing='0';
+      ctx.fillText(def('title','Golden Hour Series'),W*.07,H*.89);
+      ctx.font=`300 ${W*.055}px "Outfit"`;ctx.fillStyle=ac;
+      ctx.fillText('→',W*.88,H*.88);
+    }
   },
   {
-    id:'p2',name:'Cinematic Quote',tag:'ブランド哲学',icon:'✦',cat:'engage',
-    fields:[
-      {k:'quote', l:'引用テキスト',t:'textarea',d:'光は語る。\nシャッターは、\nその言葉を留める。'},
-      {k:'credit',l:'クレジット',  t:'text',    d:'Rio · Photographer'},
-      {k:'ac',    l:'アクセント',  t:'color',   d:'#d4742a'},
-    ],
-    html(v){const q=esc(v.quote).replace(/\n/g,'<br>');return`<div class="ti t2">
-      <div class="lb lbt"></div><div class="lb lbb"></div>
-      <div class="frm"><div class="cor tl"></div><div class="cor tr"></div><div class="cor bl"></div><div class="cor br"></div></div>
-      <div class="bg-w">LIGHT</div>
-      <div class="qt">"${q}"</div>
-      <div class="dash" style="background:${v.ac}"></div>
-      <div class="cred">— ${esc(v.credit)}</div>
-      <div class="tc">RIO_STUDIO · 001</div>
-      <div class="grain"></div></div>`}
+    id:'p2', name:'Cinematic Quote', tag:'ブランド哲学', icon:'✦', cat:'engage',
+    fields:[{k:'quote',l:'引用テキスト',d:'光は語る。\nその言葉を留める。'},{k:'credit',l:'クレジット',d:'Rio · Photographer'}],
+    draw(ctx,W,H,ac,tc) {
+      ctx.fillStyle='#000';ctx.fillRect(0,0,W,H*.08);ctx.fillRect(0,H*.92,W,H*.08);
+      const cs=W*.038;
+      [[W*.07,H*.1],[W*.93,H*.1],[W*.07,H*.9],[W*.93,H*.9]].forEach(([x,y],i)=>{
+        ctx.strokeStyle=ac+'cc';ctx.lineWidth=1.5;
+        const dx=i%2===0?cs:-cs,dy=i<2?cs:-cs;
+        ctx.beginPath();ctx.moveTo(x+dx,y);ctx.lineTo(x,y);ctx.lineTo(x,y+dy);ctx.stroke();
+      });
+      const lines=(def('quote','光は語る。\nその言葉を留める。')).split('\n');
+      const fs=W*.048;
+      ctx.font=`italic 400 ${fs}px "Playfair Display"`;
+      ctx.fillStyle=tc;ctx.textAlign='center';ctx.letterSpacing='0';
+      lines.forEach((l,i)=>ctx.fillText(`"${l}"`,W*.5,H*.42+i*fs*1.55));
+      ctx.fillStyle=ac;ctx.fillRect(W*.5-14,H*.58,28,1.5);
+      ctx.font=`300 ${W*.022}px "Outfit"`;ctx.fillStyle='#8a8a96';ctx.letterSpacing='0.22em';
+      ctx.fillText(('— '+def('credit','Rio')).toUpperCase(),W*.5,H*.64);
+      ctx.textAlign='left';
+    }
   },
   {
-    id:'p3',name:'Behind the Scenes',tag:'撮影現場',icon:'🎬',cat:'video',
-    fields:[
-      {k:'badge',l:'バッジテキスト',t:'text',d:'BTS'},
-      {k:'lbl1', l:'メインラベル', t:'text',d:'Main Camera Setup'},
-      {k:'lbl2', l:'左ラベル',     t:'text',d:'Lens Select'},
-      {k:'lbl3', l:'右ラベル',     t:'text',d:'Lighting'},
-      {k:'ac',   l:'アクセント',   t:'color',d:'#d4742a'},
-    ],
-    html(v){return`<div class="ti t3" style="background:#0c0c0e">
-      <div class="bts-cell ba" style="grid-area:a;height:55%">
-        <div class="ico">🎬</div><div class="ov"></div>
-        <div class="badge" style="color:${v.ac};border-color:${v.ac}66">${esc(v.badge)}</div>
-        <div class="lbl" style="color:var(--film)">${esc(v.lbl1)}</div>
-      </div>
-      <div class="bts-cell bb" style="grid-area:b;height:44%"><div class="ico">📷</div><div class="ov"></div><div class="lbl">${esc(v.lbl2)}</div></div>
-      <div class="bts-cell bc" style="grid-area:c;height:44%"><div class="ico">💡</div><div class="ov"></div><div class="lbl">${esc(v.lbl3)}</div></div>
-      <div class="grain"></div></div>`}
+    id:'p3', name:'BTS Grid', tag:'撮影現場', icon:'🎬', cat:'video',
+    fields:[{k:'badge',l:'バッジ',d:'BTS'},{k:'lbl1',l:'ラベル1',d:'Main Camera'},{k:'lbl2',l:'ラベル2',d:'Lens Select'},{k:'lbl3',l:'ラベル3',d:'Lighting'}],
+    draw(ctx,W,H,ac,tc,fMedia) {
+      const mh=H*.56,ch=(H-mh-3)*.5;
+      [[0,0,W,mh,'#181818'],[0,mh+2,W/2-1,ch,'#151517'],[W/2+1,mh+2,W/2-1,ch,'#151517']].forEach(([x,y,w,h,c])=>{
+        if(fMedia&&fMedia.img&&y===0){
+          ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+          drawFit(fMedia.img,x,y,w,h,S.framePos);ctx.restore();
+          const g=ctx.createLinearGradient(0,h*.4,0,h);g.addColorStop(0,'transparent');g.addColorStop(1,'rgba(0,0,0,.65)');
+          ctx.fillStyle=g;ctx.fillRect(x,y,w,h);
+        } else { ctx.fillStyle=c;ctx.fillRect(x,y,w,h); }
+      });
+      ctx.strokeStyle=ac+'88';ctx.lineWidth=1;
+      ctx.strokeRect(W*.72,mh*.07,W*.21,mh*.1);
+      ctx.font=`300 ${W*.022}px "Outfit"`;ctx.fillStyle=ac;ctx.textAlign='center';ctx.letterSpacing='0.18em';
+      ctx.fillText(def('badge','BTS').toUpperCase(),W*.825,mh*.135);ctx.textAlign='left';
+      ctx.fillStyle=S.colors.film||'#b8a882';ctx.letterSpacing='0.15em';
+      ctx.fillText(def('lbl1','Main Camera').toUpperCase(),W*.06,mh*.92);
+      ctx.fillText(def('lbl2','Lens Select').toUpperCase(),W*.06,mh+2+ch*.86);
+      ctx.fillText(def('lbl3','Lighting').toUpperCase(),W/2+1+W*.06,mh+2+ch*.86);
+      if(!fMedia&&!S.bgId){
+        ctx.globalAlpha=.06;ctx.font=`${W*.11}px serif`;ctx.textAlign='center';
+        ctx.fillText('🎬',W*.5,mh*.6);ctx.fillText('📷',W*.25,mh+2+ch*.6);ctx.fillText('💡',W*.75,mh+2+ch*.6);
+        ctx.globalAlpha=1;ctx.textAlign='left';
+      }
+    }
   },
   {
-    id:'p4',name:'Service Offer',tag:'サービス告知',icon:'💼',cat:'web',
-    fields:[
-      {k:'tag',  l:'カテゴリタグ',t:'text',  d:'Web Design'},
-      {k:'title',l:'サービス名',  t:'text',  d:'Brand Identity & Web'},
-      {k:'i1',   l:'項目1',       t:'text',  d:'ロゴ & ビジュアルアイデンティティ'},
-      {k:'i2',   l:'項目2',       t:'text',  d:'レスポンシブWebデザイン'},
-      {k:'i3',   l:'項目3',       t:'text',  d:'モーショングラフィックス'},
-      {k:'cta',  l:'CTAテキスト', t:'text',  d:'詳細・お問い合わせ'},
-      {k:'ac',   l:'アクセント',  t:'color', d:'#d4742a'},
-      {k:'bg',   l:'背景',        t:'color', d:'#1c1c22'},
-    ],
-    html(v){return`<div class="ti t4-s" style="background:${v.bg}">
-      <div class="bgn">04</div>
-      <div class="stag" style="color:${v.ac}">${esc(v.tag)}</div>
-      <div class="stitle" style="color:#ede9e2">${esc(v.title)}</div>
-      <div class="rule" style="background:${v.ac}"></div>
-      <div class="items">
-        <div class="it" style="color:#8a8a96"><span style="background:${v.ac};display:inline-block;width:3px;height:3px;border-radius:50%;flex-shrink:0;margin-right:8px"></span>${esc(v.i1)}</div>
-        <div class="it" style="color:#8a8a96"><span style="background:${v.ac};display:inline-block;width:3px;height:3px;border-radius:50%;flex-shrink:0;margin-right:8px"></span>${esc(v.i2)}</div>
-        <div class="it" style="color:#8a8a96"><span style="background:${v.ac};display:inline-block;width:3px;height:3px;border-radius:50%;flex-shrink:0;margin-right:8px"></span>${esc(v.i3)}</div>
-      </div>
-      <div class="scta" style="color:${v.ac}">${esc(v.cta)}</div>
-      <div class="grain"></div></div>`}
+    id:'p4', name:'Service Offer', tag:'サービス告知', icon:'💼', cat:'web',
+    fields:[{k:'tag',l:'カテゴリ',d:'Web Design'},{k:'title',l:'サービス名',d:'Brand Identity & Web'},{k:'i1',l:'項目1',d:'ロゴ & ブランディング'},{k:'i2',l:'項目2',d:'レスポンシブWebデザイン'},{k:'i3',l:'項目3',d:'モーショングラフィックス'},{k:'cta',l:'CTA',d:'詳細・お問い合わせ'}],
+    draw(ctx,W,H,ac,tc) {
+      ctx.font=`400 ${W*.42}px "Bebas Neue"`;ctx.fillStyle=ac;ctx.globalAlpha=.04;ctx.fillText('04',W*.48,H*.56);ctx.globalAlpha=1;
+      ctx.font=`300 ${W*.024}px "Outfit"`;ctx.fillStyle=ac;ctx.letterSpacing='0.3em';ctx.fillText(def('tag','Web Design').toUpperCase(),W*.08,H*.18);
+      ctx.font=`400 ${W*.072}px "Bebas Neue"`;ctx.fillStyle=tc;ctx.letterSpacing='0.04em';
+      const tl=wrapText(ctx,def('title','Brand Identity & Web'),W*.84);
+      tl.forEach((l,i)=>ctx.fillText(l,W*.08,H*.28+i*W*.08));
+      ctx.fillStyle=ac;ctx.fillRect(W*.08,H*.42,W*.06,1.5);
+      ctx.font=`300 ${W*.028}px "Outfit"`;ctx.letterSpacing='0.02em';
+      [def('i1',''),def('i2',''),def('i3','')].forEach((it,i)=>{
+        if(!it)return;
+        ctx.fillStyle=ac;ctx.beginPath();ctx.arc(W*.09,H*.5+i*H*.082-4,3,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#8a8a96';ctx.fillText(it,W*.115,H*.5+i*H*.082);
+      });
+      ctx.font=`300 ${W*.025}px "Outfit"`;ctx.fillStyle=ac;ctx.letterSpacing='0.2em';
+      ctx.fillText((def('cta','お問い合わせ')+' →').toUpperCase(),W*.08,H*.83);
+    }
   },
   {
-    id:'p5',name:'Testimonial',tag:'クライアントの声',icon:'⭐',cat:'engage',
-    fields:[
-      {k:'stars',l:'★の数',      t:'text',    d:'★★★★★'},
-      {k:'quote',l:'コメント',   t:'textarea',d:'映像を見た瞬間、言葉を失いました。私たちのブランドを完璧に体現してくれた。'},
-      {k:'name', l:'お客様名',   t:'text',    d:'Keiko Tanaka'},
-      {k:'role', l:'肩書き',     t:'text',    d:'Brand Director · Tokyo'},
-      {k:'ac',   l:'アクセント', t:'color',   d:'#d4742a'},
-      {k:'bg',   l:'背景',       t:'color',   d:'#0a0e0d'},
-    ],
-    html(v){return`<div class="ti t5" style="background:${v.bg}">
-      <div class="stars" style="color:${v.ac}">${esc(v.stars)}</div>
-      <div class="tbody" style="color:#ede9e2">"${esc(v.quote)}"</div>
-      <div class="auth"><div class="av"></div><div>
-        <div class="aname" style="color:#ede9e2">${esc(v.name)}</div>
-        <div class="arole">${esc(v.role)}</div>
-      </div></div>
-      <div class="wm">REVIEW</div>
-      <div class="grain"></div></div>`}
+    id:'p5', name:'Testimonial', tag:'クライアントの声', icon:'⭐', cat:'engage',
+    fields:[{k:'stars',l:'評価',d:'★★★★★'},{k:'quote',l:'コメント',d:'映像を見た瞬間、言葉を失いました。'},{k:'name',l:'お客様名',d:'Keiko Tanaka'},{k:'role',l:'肩書き',d:'Brand Director · Tokyo'}],
+    draw(ctx,W,H,ac,tc) {
+      ctx.font=`${W*.055}px serif`;ctx.fillStyle=ac;ctx.fillText(def('stars','★★★★★'),W*.08,H*.22);
+      ctx.font=`italic 400 ${W*.044}px "Playfair Display"`;ctx.fillStyle=tc;ctx.letterSpacing='0';
+      const ql=wrapText(ctx,`"${def('quote','コメント')}"`,W*.84);
+      ql.forEach((l,i)=>ctx.fillText(l,W*.08,H*.34+i*W*.054));
+      const ay=H*.82;
+      ctx.fillStyle=ac;ctx.fillRect(W*.08,ay,W*.04,1.5);
+      ctx.font=`500 ${W*.03}px "Outfit"`;ctx.fillStyle=tc;ctx.letterSpacing='0.04em';ctx.fillText(def('name','Client'),W*.14,ay+W*.038);
+      ctx.font=`300 ${W*.023}px "Outfit"`;ctx.fillStyle='#2e8a9c';ctx.letterSpacing='0.12em';ctx.fillText(def('role','').toUpperCase(),W*.14,ay+W*.068);
+      ctx.font=`400 ${W*.05}px "Bebas Neue"`;ctx.fillStyle=tc;ctx.globalAlpha=.06;ctx.textAlign='right';ctx.letterSpacing='0.2em';ctx.fillText('REVIEW',W*.92,H*.94);ctx.globalAlpha=1;ctx.textAlign='left';
+    }
   },
   {
-    id:'p6',name:'Reel Cover',tag:'映像発表',icon:'🎞️',cat:'video',
-    fields:[
-      {k:'cat',  l:'カテゴリ',  t:'text',  d:'Cinematography · 2025'},
-      {k:'title',l:'タイトル',  t:'text',  d:'NEON DUSK — SHORT FILM'},
-      {k:'m1',   l:'メタ情報1', t:'text',  d:'4K'},
-      {k:'m2',   l:'メタ情報2', t:'text',  d:'Anamorphic'},
-      {k:'m3',   l:'メタ情報3', t:'text',  d:'12 min'},
-      {k:'ac',   l:'アクセント',t:'color', d:'#d4742a'},
-      {k:'bg',   l:'背景',      t:'color', d:'#040406'},
-    ],
-    html(v){return`<div class="ti t6" style="background:${v.bg}">
-      <div class="rtop">
-        <div class="rgrid"></div>
-        <div class="pring" style="border:1px solid ${v.ac}44">
-          <span style="color:${v.ac}66;font-size:clamp(.5rem,2vw,.9rem);margin-left:8%">▶</span>
-        </div>
-      </div>
-      <div class="rbot">
-        <div class="rcat" style="color:${v.ac}">${esc(v.cat)}</div>
-        <div class="rtitle" style="color:#ede9e2">${esc(v.title)}</div>
-        <div class="rmeta"><span>${esc(v.m1)}</span><span>${esc(v.m2)}</span><span>${esc(v.m3)}</span></div>
-      </div>
-      <div class="grain"></div></div>`}
+    id:'p6', name:'Reel Cover', tag:'映像発表', icon:'🎞️', cat:'video',
+    fields:[{k:'cat',l:'カテゴリ',d:'Cinematography · 2025'},{k:'title',l:'タイトル',d:'NEON DUSK — SHORT FILM'},{k:'m1',l:'メタ1',d:'4K'},{k:'m2',l:'メタ2',d:'Anamorphic'},{k:'m3',l:'メタ3',d:'12 min'}],
+    draw(ctx,W,H,ac,tc,fMedia) {
+      if(fMedia&&fMedia.img){
+        ctx.save();ctx.beginPath();ctx.rect(0,0,W,H*.7);ctx.clip();
+        drawFit(fMedia.img,0,0,W,H*.7,S.framePos);ctx.restore();
+        const g=ctx.createLinearGradient(0,H*.35,0,H*.7);g.addColorStop(0,'transparent');g.addColorStop(1,'rgba(4,4,6,.7)');
+        ctx.fillStyle=g;ctx.fillRect(0,0,W,H*.7);
+      }
+      ctx.strokeStyle=ac+'22';ctx.lineWidth=1;
+      for(let i=1;i<4;i++){ctx.beginPath();ctx.moveTo(W*i/4,0);ctx.lineTo(W*i/4,H*.7);ctx.stroke()}
+      for(let i=1;i<4;i++){ctx.beginPath();ctx.moveTo(0,H*.7*i/4);ctx.lineTo(W,H*.7*i/4);ctx.stroke()}
+      ctx.strokeStyle=ac+'44';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(W*.5,H*.37,W*.11,0,Math.PI*2);ctx.stroke();
+      ctx.font=`${W*.055}px sans-serif`;ctx.fillStyle=ac+'66';ctx.textAlign='center';ctx.fillText('▶',W*.52,H*.4);ctx.textAlign='left';
+      ctx.fillStyle='rgba(4,4,6,.95)';ctx.fillRect(0,H*.7,W,H*.3);
+      ctx.font=`300 ${W*.023}px "Outfit"`;ctx.fillStyle=ac;ctx.letterSpacing='0.28em';ctx.fillText(def('cat','Cinematography').toUpperCase(),W*.07,H*.76);
+      ctx.font=`400 ${W*.063}px "Bebas Neue"`;ctx.fillStyle=tc;ctx.letterSpacing='0.04em';ctx.fillText(def('title','FILM TITLE'),W*.07,H*.845);
+      ctx.font=`300 ${W*.023}px "Outfit"`;ctx.fillStyle='#8a8a96';ctx.letterSpacing='0.1em';
+      ctx.fillText([def('m1','4K'),def('m2','Anamorphic'),def('m3','12 min')].filter(Boolean).join(' · ').toUpperCase(),W*.07,H*.925);
+    }
   },
   {
-    id:'p7',name:'Before / After',tag:'現像プロセス',icon:'🔀',cat:'photo',
-    fields:[
-      {k:'label',l:'メインラベル',t:'text',  d:'現像の魔法'},
-      {k:'sub',  l:'サブテキスト',t:'text',  d:'RAW → Cinematic Grade'},
-      {k:'cta',  l:'CTAテキスト', t:'text',  d:'詳細を見る →'},
-      {k:'ac',   l:'アクセント',  t:'color', d:'#d4742a'},
-    ],
-    html(v){return`<div class="ti t7">
-      <div class="baw">
-        <div class="bh"><div class="bico">🌑</div><div class="btag">BEFORE</div></div>
-        <div class="bh"><div class="bico">🌟</div><div class="btag" style="background:rgba(212,116,42,.12);color:${v.ac}">AFTER</div></div>
-        <div class="bdiv" style="background:${v.ac}"></div>
-      </div>
-      <div class="bfoot">
-        <div><div class="blabel" style="color:#ede9e2">${esc(v.label)}</div><div class="bsub">${esc(v.sub)}</div></div>
-        <div class="bcta" style="color:${v.ac}">${esc(v.cta)}</div>
-      </div>
-      <div class="grain"></div></div>`}
+    id:'p7', name:'Before / After', tag:'現像プロセス', icon:'🔀', cat:'photo',
+    fields:[{k:'label',l:'ラベル',d:'現像の魔法'},{k:'sub',l:'サブ',d:'RAW → Cinematic Grade'},{k:'cta',l:'CTA',d:'詳細を見る →'}],
+    draw(ctx,W,H,ac,tc,fMedia) {
+      const sx=W*.5;
+      if(fMedia&&fMedia.img){
+        // left=grayscale, right=color
+        ctx.save();ctx.filter='grayscale(1) contrast(1.08)';ctx.beginPath();ctx.rect(0,0,sx,H*.72);ctx.clip();
+        drawFit(fMedia.img,0,0,sx,H*.72,S.framePos);ctx.restore();
+        ctx.save();ctx.beginPath();ctx.rect(sx,0,sx,H*.72);ctx.clip();
+        drawFit(fMedia.img,0,0,W,H*.72,S.framePos);ctx.restore();
+      } else {
+        ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,sx,H*.72);
+        ctx.fillStyle='#1e1a14';ctx.fillRect(sx,0,sx,H*.72);
+      }
+      ctx.fillStyle='rgba(255,255,255,.07)';ctx.fillRect(sx*.15,H*.07,sx*.7,H*.09);
+      ctx.font=`300 ${W*.022}px "Outfit"`;ctx.fillStyle='rgba(255,255,255,.45)';ctx.letterSpacing='0.22em';ctx.textAlign='center';ctx.fillText('BEFORE',sx*.5,H*.125);
+      ctx.fillStyle=ac+'22';ctx.fillRect(sx+sx*.15,H*.07,sx*.7,H*.09);
+      ctx.fillStyle=ac;ctx.fillText('AFTER',sx+sx*.5,H*.125);ctx.textAlign='left';
+      ctx.fillStyle=ac;ctx.fillRect(sx-1,0,2,H*.72);
+      ctx.fillStyle='rgba(6,6,8,.95)';ctx.fillRect(0,H*.72,W,H*.28);
+      ctx.font=`400 ${W*.058}px "Playfair Display"`;ctx.fillStyle=tc;ctx.letterSpacing='0';ctx.fillText(def('label','現像の魔法'),W*.07,H*.83);
+      ctx.font=`300 ${W*.023}px "Outfit"`;ctx.fillStyle='#8a8a96';ctx.letterSpacing='0.14em';ctx.fillText(def('sub','RAW → Cinematic Grade').toUpperCase(),W*.07,H*.9);
+      ctx.fillStyle=ac;ctx.letterSpacing='0.18em';ctx.fillText(def('cta','詳細を見る →').toUpperCase(),W*.63,H*.87);
+    }
   },
   {
-    id:'p8',name:'Studio Stats',tag:'実績データ',icon:'📊',cat:'web',
-    fields:[
-      {k:'head',l:'ヘッダー',  t:'text',  d:'実績 · 2024'},
-      {k:'n1',  l:'数値1',     t:'text',  d:'120+'},
-      {k:'l1',  l:'ラベル1',   t:'text',  d:'撮影件数 / 年'},
-      {k:'n2',  l:'数値2',     t:'text',  d:'15yr'},
-      {k:'l2',  l:'ラベル2',   t:'text',  d:'キャリア年数'},
-      {k:'n3',  l:'数値3',     t:'text',  d:'40+'},
-      {k:'l3',  l:'ラベル3',   t:'text',  d:'Web制作件数'},
-      {k:'n4',  l:'数値4',     t:'text',  d:'98%'},
-      {k:'l4',  l:'ラベル4',   t:'text',  d:'リピート率'},
-      {k:'foot',l:'フッター',  t:'text',  d:'Rio Studio · Tochigi / Tokyo'},
-      {k:'ac',  l:'アクセント',t:'color', d:'#d4742a'},
-      {k:'bg',  l:'背景',      t:'color', d:'#141418'},
-    ],
-    html(v){return`<div class="ti t8" style="background:${v.bg}">
-      <div class="shead" style="color:${v.ac}">${esc(v.head)}</div>
-      <div class="sgrid">
-        <div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n1)}</div><div class="slbl">${esc(v.l1)}</div><div class="sbar b1" style="--ember:${v.ac}"></div></div>
-        <div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n2)}</div><div class="slbl">${esc(v.l2)}</div><div class="sbar b2"></div></div>
-        <div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n3)}</div><div class="slbl">${esc(v.l3)}</div><div class="sbar b3"></div></div>
-        <div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n4)}</div><div class="slbl">${esc(v.l4)}</div><div class="sbar b4"></div></div>
-      </div>
-      <div class="sfoot">${esc(v.foot)}</div>
-      <div class="grain"></div></div>`}
+    id:'p8', name:'Studio Stats', tag:'実績データ', icon:'📊', cat:'web',
+    fields:[{k:'head',l:'ヘッダー',d:'実績 · 2024'},{k:'n1',l:'数値1',d:'120+'},{k:'l1',l:'ラベル1',d:'撮影件数 / 年'},{k:'n2',l:'数値2',d:'15yr'},{k:'l2',l:'ラベル2',d:'キャリア年数'},{k:'n3',l:'数値3',d:'40+'},{k:'l3',l:'ラベル3',d:'Web制作件数'},{k:'n4',l:'数値4',d:'98%'},{k:'l4',l:'ラベル4',d:'リピート率'},{k:'foot',l:'フッター',d:'Rio Studio · Tochigi / Tokyo'}],
+    draw(ctx,W,H,ac,tc) {
+      ctx.fillStyle=ac;ctx.globalAlpha=.05;ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(W*.55,0);ctx.lineTo(W,H*.45);ctx.fill();ctx.globalAlpha=1;
+      ctx.font=`300 ${W*.024}px "Outfit"`;ctx.fillStyle=ac;ctx.letterSpacing='0.28em';ctx.fillText(def('head','実績 · 2024').toUpperCase(),W*.08,H*.14);
+      const stats=[[def('n1','120+'),def('l1','撮影件数/年'),72],[def('n2','15yr'),def('l2','キャリア年数'),88],[def('n3','40+'),def('l3','Web制作件数'),55],[def('n4','98%'),def('l4','リピート率'),93]];
+      const cols=[.08,.54],rows=[.27,.57];
+      stats.forEach(([n,l,p],i)=>{
+        const x=W*cols[i%2],y=H*rows[Math.floor(i/2)];
+        ctx.font=`400 ${W*.095}px "Bebas Neue"`;ctx.fillStyle=tc;ctx.letterSpacing='0.04em';ctx.fillText(n||'—',x,y);
+        ctx.font=`300 ${W*.023}px "Outfit"`;ctx.fillStyle='#8a8a96';ctx.letterSpacing='0.06em';ctx.fillText(l||'',x,y+W*.03);
+        ctx.fillStyle=ac;ctx.globalAlpha=.1;ctx.fillRect(x,y+W*.038,W*.34,2);ctx.globalAlpha=1;
+        ctx.fillStyle=ac;ctx.fillRect(x,y+W*.038,W*.34*(p/100),2);
+      });
+      ctx.fillStyle='rgba(255,255,255,.06)';ctx.fillRect(W*.08,H*.88,W*.84,1);
+      ctx.font=`300 ${W*.021}px "Outfit"`;ctx.fillStyle='rgba(255,255,255,.18)';ctx.letterSpacing='0.1em';
+      ctx.fillText(def('foot','Rio Studio · Tochigi / Tokyo').toUpperCase(),W*.08,H*.94);
+    }
   },
   {
-    id:'p9',name:'Carousel Cover',tag:'カルーセル',icon:'📑',cat:'engage',
-    fields:[
-      {k:'brand',l:'ブランド名',  t:'text',  d:'Rio Studio'},
-      {k:'eye',  l:'アイキャッチ',t:'text',  d:'Photography Tips'},
-      {k:'title',l:'タイトル',    t:'text',  d:'フォトグラファーが\n教える5つの秘訣'},
-      {k:'body', l:'本文',        t:'textarea',d:'プロが普段やっている、光の読み方からポスプロまでのポイントを全5枚で解説します。'},
-      {k:'ac',   l:'アクセント',  t:'color', d:'#d4742a'},
-      {k:'bg',   l:'背景',        t:'color', d:'#08080a'},
-    ],
-    html(v){const t=esc(v.title).replace(/\n/g,'<br>');return`<div class="ti t9" style="background:${v.bg}">
-      <div class="cvtop" style="background:var(--surface)">
-        <div class="cvbrand" style="color:${v.ac}">${esc(v.brand)}</div>
-        <div class="cvnum">01 / 05</div>
-      </div>
-      <div class="cvmain">
-        <div class="cveye" style="color:${v.ac}">${esc(v.eye)}</div>
-        <div class="cvtitle" style="color:#ede9e2">${t}</div>
-        <div class="cvbody">${esc(v.body)}</div>
-      </div>
-      <div class="cvfoot">
-        <div class="cvdots"><div class="dot on" style="background:${v.ac}"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-        <div class="swipe">スワイプ</div>
-      </div>
-      <div class="grain"></div></div>`}
+    id:'p9', name:'Carousel Cover', tag:'カルーセル', icon:'📑', cat:'engage',
+    fields:[{k:'brand',l:'ブランド名',d:'Rio Studio'},{k:'eye',l:'アイキャッチ',d:'Photography Tips'},{k:'title',l:'タイトル',d:'プロが教える5つの秘訣'},{k:'body',l:'本文',d:'光の読み方からポスプロまで全5枚で解説。'}],
+    draw(ctx,W,H,ac,tc) {
+      ctx.fillStyle='rgba(20,20,24,0.95)';ctx.fillRect(0,0,W,H*.1);
+      ctx.font=`400 ${W*.04}px "Bebas Neue"`;ctx.fillStyle=ac;ctx.letterSpacing='0.22em';ctx.fillText(def('brand','Rio Studio').toUpperCase(),W*.07,H*.066);
+      ctx.font=`300 ${W*.021}px "Outfit"`;ctx.fillStyle='#8a8a96';ctx.letterSpacing='0.1em';ctx.textAlign='right';ctx.fillText('01 / 05',W*.93,H*.066);ctx.textAlign='left';
+      ctx.font=`300 ${W*.024}px "Outfit"`;ctx.fillStyle=ac;ctx.letterSpacing='0.28em';ctx.fillText(def('eye','Photography Tips').toUpperCase(),W*.08,H*.44);
+      ctx.font=`400 ${W*.063}px "Playfair Display"`;ctx.fillStyle=tc;ctx.letterSpacing='0';
+      const tl=wrapText(ctx,def('title','タイトル'),W*.84);tl.forEach((l,i)=>ctx.fillText(l,W*.08,H*.52+i*W*.073));
+      ctx.font=`300 ${W*.027}px "Outfit"`;ctx.fillStyle='#8a8a96';ctx.letterSpacing='0';
+      const bl=wrapText(ctx,def('body',''),W*.84);bl.forEach((l,i)=>ctx.fillText(l,W*.08,H*.67+i*W*.035));
+      ctx.fillStyle='rgba(255,255,255,.07)';ctx.fillRect(0,H*.88,W,1);
+      [[.08,ac],[.11,'rgba(255,255,255,.18)'],[.14,'rgba(255,255,255,.18)'],[.17,'rgba(255,255,255,.18)'],[.20,'rgba(255,255,255,.18)']].forEach(([x,c])=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(W*x,H*.94,3.5,0,Math.PI*2);ctx.fill()});
+      ctx.font=`300 ${W*.021}px "Outfit"`;ctx.fillStyle='#8a8a96';ctx.letterSpacing='0.14em';ctx.textAlign='right';ctx.fillText('スワイプ →',W*.93,H*.944);ctx.textAlign='left';
+    }
   },
 ];
 
+// presets
 const PRESETS=[
   {name:'Ember',bg:'#141418',ac:'#d4742a'},{name:'Teal',bg:'#0a0e0d',ac:'#2e8a9c'},
   {name:'Gold', bg:'#0e0c08',ac:'#c9a84c'},{name:'Silver',bg:'#111115',ac:'#c4c4cc'},
   {name:'Crimson',bg:'#140810',ac:'#c43a5a'},{name:'B&W',bg:'#000000',ac:'#ffffff'},
 ];
 
-/* ════════════════════════════════
-   STATE
-════════════════════════════════ */
-let curTpl=TPLS[0];
-let vals={};
-function defVals(t){const v={};t.fields.forEach(f=>v[f.k]=f.d);return v}
-
-/* ════════════════════════════════
-   BUILD TEMPLATE GRID
-════════════════════════════════ */
-function buildGrid(cat='all'){
-  const list=cat==='all'?TPLS:TPLS.filter(t=>t.cat===cat);
-  return`<div class="tpl-grid">${list.map(t=>`
-    <div class="tcard" data-id="${t.id}">
-      <div class="tcard-frame">
-        <div style="width:100%;height:100%;position:relative;overflow:hidden">${t.html(defVals(t))}</div>
-        <div class="tcard-overlay">
-          <button class="ov-btn ov-edit" onclick="openEditor('${t.id}',event)">✏️ 編集</button>
-          <button class="ov-btn ov-dl" onclick="quickDL('${t.id}',event)">📥 そのままDL</button>
-        </div>
-      </div>
-      <div class="tcard-meta">
-        <span class="tcard-name">${t.name}</span>
-        <span class="tcard-tag">${t.tag}</span>
-      </div>
-    </div>`).join('')}</div>`;
+// text wrap util
+function wrapText(ctx, text, maxW) {
+  const words = (text||'').split(' ');
+  const lines=[]; let cur='';
+  for(const w of words){const t=cur?cur+' '+w:w;if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;}else cur=t}
+  if(cur)lines.push(cur);
+  return lines;
 }
 
-function switchTab(cat,btn){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tpl-container').innerHTML=buildGrid(cat);
+/* ══════════════════════════════════════════════
+   INIT DISPLAY
+══════════════════════════════════════════════ */
+applyFmt('ig-sq');
+buildPLBody();
+buildPanelR();
+schedRender();
+
+/* ══════════════════════════════════════════════
+   LEFT PANEL
+══════════════════════════════════════════════ */
+function switchPLTab(tab, btn){
+  S.plTab=tab;
+  document.querySelectorAll('.pltab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildPLBody();
 }
 
-document.getElementById('tpl-container').innerHTML=buildGrid('all');
-
-/* ════════════════════════════════
-   EDITOR MODAL
-════════════════════════════════ */
-function openEditor(id,e){
-  if(e)e.stopPropagation();
-  curTpl=TPLS.find(t=>t.id===id);
-  vals=defVals(curTpl);
-  document.getElementById('modalBg').classList.add('open');
-  document.body.style.overflow='hidden';
-  buildMlList();buildEdPanel();renderEdPreview();
+function buildPLBody(){
+  const el=document.getElementById('plBody');
+  if(S.plTab==='tpl'){
+    el.innerHTML=`<div class="pl-sec">
+      <span class="pl-lbl">テンプレートを選択</span>
+      <div class="tpl-list">${TPLS.map(t=>`
+        <div class="ti-row${t.id===S.tplId?' on':''}" onclick="selectTpl('${t.id}')">
+          <div class="ti-ico">${t.icon}</div>
+          <div class="ti-info"><strong>${t.name}</strong><span>${t.tag}</span></div>
+        </div>`).join('')}</div></div>`;
+  } else {
+    el.innerHTML=`<div class="pl-sec">
+      <span class="pl-lbl">メディアをアップロード</span>
+      <div class="upzone" id="upzone">
+        <input type="file" accept="image/*,video/*" multiple onchange="handleFiles(this.files)" id="fileInput">
+        <span class="upzone-ico">${S.media.length?'📂':'📁'}</span>
+        <div class="upzone-t">写真・動画をドロップ<br>またはクリックして選択</div>
+        <div class="upzone-s">JPG / PNG / MP4 / MOV</div>
+      </div></div>
+    <div class="pl-sec">
+      <span class="pl-lbl">アップロード済み (${S.media.length})</span>
+      <div class="media-list" id="mediaList">${buildMediaListHTML()}</div>
+    </div>`;
+    setupDrop();
+  }
 }
-function closeModal(e){if(e.target===document.getElementById('modalBg'))closeModalDirect()}
-function closeModalDirect(){
-  document.getElementById('modalBg').classList.remove('open');
-  document.body.style.overflow='';
-}
 
-/* modal left list */
-function buildMlList(){
-  const el=document.getElementById('mlList');
-  el.innerHTML=TPLS.map(t=>`
-    <div class="ml-item${t.id===curTpl.id?' active':''}" onclick="switchEdTpl('${t.id}')">
-      <div class="ml-ico">${t.icon}</div>
-      <div class="ml-info"><strong>${t.name}</strong><span>${t.tag}</span></div>
+function buildMediaListHTML(){
+  if(!S.media.length) return '<div style="font-size:.62rem;color:var(--silver);padding:6px 0">まだアップロードされていません</div>';
+  return S.media.map(m=>`
+    <div class="mitem${m.id===S.bgId?' on':''}" onclick="setBgMedia('${m.id}')">
+      <img class="mthumb" src="${m.thumb||m.url}" alt="">
+      <div class="minfo"><div class="mname">${m.name}</div><div class="mtype">${m.type==='video'?'🎬 Video':'📷 Image'}</div></div>
+      <button class="mdel" onclick="delMedia('${m.id}',event)">✕</button>
     </div>`).join('');
 }
-function switchEdTpl(id){curTpl=TPLS.find(t=>t.id===id);vals=defVals(curTpl);buildMlList();buildEdPanel();renderEdPreview()}
 
-/* editor right panel */
-function buildEdPanel(){
-  const panel=document.getElementById('edPanel');
-  let html=`<span class="ps">テキスト編集</span>`;
-  curTpl.fields.filter(f=>f.t!=='color').forEach(f=>{
-    if(f.t==='textarea'){
-      html+=`<div class="field"><label>${f.l}</label><textarea rows="3" oninput="updateVal('${f.k}',this.value)">${esc(f.d)}</textarea></div>`;
+function setupDrop(){
+  const z=document.getElementById('upzone');
+  if(!z)return;
+  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('drag')});
+  z.addEventListener('dragleave',()=>z.classList.remove('drag'));
+  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('drag');handleFiles(e.dataTransfer.files)});
+}
+
+async function handleFiles(files){
+  for(const file of files){
+    const id='m'+Date.now()+Math.random().toString(36).slice(2,6);
+    const url=URL.createObjectURL(file);
+    const isVid=file.type.startsWith('video/');
+    let img=null, thumb=null;
+    if(!isVid){
+      img=await loadImage(url);
+      thumb=url;
     } else {
-      html+=`<div class="field"><label>${f.l}</label><input type="text" value="${esc(vals[f.k])}" oninput="updateVal('${f.k}',this.value)"></div>`;
+      img=await videoFirstFrame(url);
+      thumb=img?img.src:url;
     }
-  });
-  const colorFs=curTpl.fields.filter(f=>f.t==='color');
-  if(colorFs.length){
-    html+=`<span class="ps" style="margin-top:4px">カラー</span><div class="color-row">`;
-    colorFs.forEach(f=>{html+=`<div class="cc"><input type="color" value="${vals[f.k]}" oninput="updateVal('${f.k}',this.value)"><span>${f.l}</span></div>`});
-    html+=`</div>`;
+    S.media.push({id,name:file.name,type:isVid?'video':'image',url,thumb,img,file});
   }
-  html+=`<span class="ps" style="margin-top:4px">カラープリセット</span><div class="pre-grid">`;
-  PRESETS.forEach(p=>{
-    html+=`<button class="pre-btn" style="background:${p.bg};color:${p.ac};border:1px solid ${p.ac}55" onclick="applyPreset('${p.bg}','${p.ac}')">${p.name}</button>`;
-  });
-  html+=`</div>`;
-  panel.innerHTML=html;
+  // auto-set as bg if first upload
+  if(S.media.length>0 && !S.bgId) setBgMedia(S.media[S.media.length-1].id, false);
+  buildPLBody();
+  buildPanelR();
+  schedRender();
 }
 
-function updateVal(k,v){vals[k]=v;renderEdPreview()}
-function applyPreset(bg,ac){
-  curTpl.fields.forEach(f=>{if(f.k==='bg')vals[f.k]=bg;if(f.k==='ac')vals[f.k]=ac});
-  buildEdPanel();renderEdPreview();
-}
-function resetEditor(){vals=defVals(curTpl);buildEdPanel();renderEdPreview()}
-
-function renderEdPreview(){
-  document.getElementById('ed-preview').innerHTML=curTpl.html(vals);
+function loadImage(url){
+  return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=url});
 }
 
-/* ════════════════════════════════
-   DOWNLOAD
-════════════════════════════════ */
-async function doDownload(){
-  const btn=document.getElementById('btnDl');
-  btn.disabled=true;btn.textContent='⏳ 生成中...';
-  try{
-    const el=document.getElementById('ed-preview');
-    const c=await html2canvas(el,{scale:1080/400,useCORS:true,allowTaint:true,backgroundColor:null,logging:false});
-    const a=document.createElement('a');
-    a.download=`rio_${curTpl.id}_${Date.now()}.png`;
-    a.href=c.toDataURL('image/png');a.click();
-    showToast('ダウンロード完了！');
-  }catch(er){showToast('エラーが発生しました');console.error(er)}
-  btn.disabled=false;btn.textContent='📥 PNG ダウンロード (1080px)';
-}
-
-async function quickDL(id,e){
-  if(e)e.stopPropagation();
-  const t=TPLS.find(x=>x.id===id);
-  const v=defVals(t);
-  const zone=document.getElementById('hiddenZone');
-  const wrap=document.createElement('div');
-  wrap.style.cssText='width:400px;height:400px;position:relative;overflow:hidden';
-  wrap.innerHTML=t.html(v);
-  zone.appendChild(wrap);
-  await new Promise(r=>setTimeout(r,150));
-  try{
-    const c=await html2canvas(wrap,{scale:1080/400,useCORS:true,allowTaint:true,backgroundColor:null,logging:false});
-    const a=document.createElement('a');
-    a.download=`rio_${t.id}_default_${Date.now()}.png`;
-    a.href=c.toDataURL('image/png');a.click();
-    showToast('ダウンロード完了！');
-  }catch(er){showToast('エラーが発生しました');console.error(er)}
-  zone.removeChild(wrap);
-}
-
-/* ════════════════════════════════
-   CAPTIONS
-════════════════════════════════ */
-function copyCap(id,btn){
-  const text=document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent='Copied!';btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
+function videoFirstFrame(url){
+  return new Promise(r=>{
+    const v=document.createElement('video');
+    v.src=url;v.muted=true;v.playsInline=true;
+    v.onloadeddata=()=>{v.currentTime=0.1};
+    v.onseeked=()=>{
+      const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;
+      c.getContext('2d').drawImage(v,0,0);
+      const i=new Image();i.src=c.toDataURL();i.onload=()=>r(i);
+    };
+    v.onerror=()=>r(null);v.load();
   });
 }
 
-/* ════════════════════════════════
+function setBgMedia(id, toast=true){
+  S.bgId=id; S.frameId=id;
+  buildPLBody();buildPanelR();schedRender();
+  if(toast) showToast('背景 & フレームに設定しました');
+}
+
+function delMedia(id,e){
+  e.stopPropagation();
+  S.media=S.media.filter(m=>m.id!==id);
+  if(S.bgId===id)S.bgId=null;
+  if(S.frameId===id)S.frameId=null;
+  buildPLBody();buildPanelR();schedRender();
+}
+
+/* ══════════════════════════════════════════════
+   TEMPLATE SELECT
+══════════════════════════════════════════════ */
+function selectTpl(id){
+  S.tplId=id;
+  buildPLBody();buildPanelR();schedRender();
+}
+
+/* ══════════════════════════════════════════════
+   RIGHT PANEL
+══════════════════════════════════════════════ */
+function buildPanelR(){
+  const tpl=TPLS.find(t=>t.id===S.tplId);
+  let h='';
+
+  // ── TEMPLATE TEXT ──
+  if(S.mode==='template'&&tpl){
+    h+=`<div class="pr-sec"><span class="pr-lbl">テキスト</span>`;
+    if(!S.textVals[S.tplId]) S.textVals[S.tplId]={};
+    tpl.fields.forEach(f=>{
+      const val=S.textVals[S.tplId][f.k]!==undefined?S.textVals[S.tplId][f.k]:f.d;
+      if(f.d&&f.d.includes('\n')){
+        h+=`<div class="field"><label>${f.l}</label><textarea rows="3" oninput="setTV('${f.k}',this.value)">${escH(val)}</textarea></div>`;
+      } else {
+        h+=`<div class="field"><label>${f.l}</label><input type="text" value="${escH(val)}" oninput="setTV('${f.k}',this.value)"></div>`;
+      }
+    });
+    h+=`</div>`;
+  }
+
+  // ── COLORS ──
+  h+=`<div class="pr-sec"><span class="pr-lbl">カラー</span>
+    <div class="ccols">
+      <div class="ccolitem"><input type="color" value="${S.colors.ac}" oninput="S.colors.ac=this.value;schedRender()"><span>アクセント</span></div>
+      <div class="ccolitem"><input type="color" value="${S.colors.bg}" oninput="S.colors.bg=this.value;schedRender()"><span>背景</span></div>
+      <div class="ccolitem"><input type="color" value="${S.colors.txt}" oninput="S.colors.txt=this.value;schedRender()"><span>テキスト</span></div>
+      <div class="ccolitem"><input type="color" value="${S.overlay.color}" oninput="S.overlay.color=this.value;schedRender()"><span>オーバーレイ</span></div>
+    </div>
+    <div class="prow">${PRESETS.map(p=>`<button class="prbtn" style="background:${p.bg};color:${p.ac};border:1px solid ${p.ac}55" onclick="applyPreset('${p.bg}','${p.ac}')">${p.name}</button>`).join('')}</div>
+  </div>`;
+
+  // ── MEDIA / BG ──
+  if(S.media.length){
+    h+=`<div class="pr-sec"><span class="pr-lbl">背景メディア</span>
+      <div class="field"><label>使用するメディア</label>
+        <select onchange="S.bgId=this.value;schedRender()">
+          <option value="">なし（単色背景）</option>
+          ${S.media.map(m=>`<option value="${m.id}"${m.id===S.bgId?' selected':''}>${m.name}</option>`).join('')}
+        </select></div>
+      <div class="srow"><label>不透明度 <b id="bgOp">${Math.round(S.bgOpacity*100)}%</b></label>
+        <input type="range" min="0" max="100" value="${Math.round(S.bgOpacity*100)}" oninput="S.bgOpacity=this.value/100;document.getElementById('bgOp').textContent=this.value+'%';schedRender()"></div>
+      <div class="srow"><label>ぼかし <b id="bgBl">${S.bgBlur}px</b></label>
+        <input type="range" min="0" max="40" value="${S.bgBlur}" oninput="S.bgBlur=+this.value;document.getElementById('bgBl').textContent=this.value+'px';schedRender()"></div>
+      <span class="pl-lbl" style="margin-top:4px">配置</span>
+      <div class="pos-grid">
+        ${[['cover','カバー'],['contain','収める'],['fill','引き伸ばし']].map(([k,l])=>`<button class="posbtn${S.bgPos===k?' on':''}" onclick="S.bgPos='${k}';document.querySelectorAll('.posbtn').forEach(b=>b.classList.remove('on'));this.classList.add('on');schedRender()">${l}</button>`).join('')}
+      </div></div>`;
+
+    // ── FRAME MEDIA (only for templates that have frames) ──
+    const frameTemplates=['p1','p3','p6','p7'];
+    if(S.mode==='template'&&frameTemplates.includes(S.tplId)){
+      h+=`<div class="pr-sec"><span class="pr-lbl">フレーム内メディア</span>
+        <div class="field"><label>フレームに配置するメディア</label>
+          <select onchange="S.frameId=this.value;schedRender()">
+            <option value="">なし</option>
+            ${S.media.map(m=>`<option value="${m.id}"${m.id===S.frameId?' selected':''}>${m.name}</option>`).join('')}
+          </select></div>
+        <span class="pl-lbl" style="margin-top:4px">フレーム内配置</span>
+        <div class="pos-grid">
+          ${[['cover','カバー'],['contain','収める'],['fill','引き伸ばし']].map(([k,l])=>`<button class="posbtn${S.framePos===k?' on':''}" onclick="S.framePos='${k}';schedRender()">${l}</button>`).join('')}
+        </div></div>`;
+    }
+  }
+
+  // ── OVERLAY ──
+  h+=`<div class="pr-sec"><span class="pr-lbl">オーバーレイ</span>
+    <div class="tog-row"><label>オーバーレイ表示</label>
+      <label class="tog"><input type="checkbox" ${S.overlay.on?'checked':''} onchange="S.overlay.on=this.checked;schedRender()"><span class="tog-sl"></span></label>
+    </div>
+    <div class="srow"><label>濃度 <b id="ovOp">${Math.round(S.overlay.opacity*100)}%</b></label>
+      <input type="range" min="0" max="90" value="${Math.round(S.overlay.opacity*100)}" oninput="S.overlay.opacity=this.value/100;document.getElementById('ovOp').textContent=this.value+'%';schedRender()"></div>
+  </div>`;
+
+  // ── LAYERS ──
+  h+=`<div class="pr-sec"><span class="pr-lbl">フリーレイヤー</span>
+    <div class="lyr-list">${S.layers.map(l=>`
+      <div class="lyr${l.id===S.selLayer?' on':''}" onclick="selLayer('${l.id}')">
+        <span class="lyr-ico">${l.type==='text'?'T':'◈'}</span>
+        <span class="lyr-nm">${escH(l.text||l.type)}</span>
+        <button class="lyr-btn" onclick="toggleLyrVis('${l.id}',event)">${l.visible?'👁':'🚫'}</button>
+        <button class="lyr-btn lyr-del" onclick="delLayer('${l.id}',event)">✕</button>
+      </div>`).join('')}</div>
+    <button class="add-lbtn" onclick="addTextLayer()">＋ テキストレイヤー</button>
+    <button class="add-lbtn" onclick="addLogoLayer()">＋ ロゴレイヤー</button>
+  </div>`;
+
+  // ── SELECTED LAYER CONTROLS ──
+  const sel=S.layers.find(l=>l.id===S.selLayer);
+  if(sel){
+    h+=`<div class="pr-sec"><span class="pr-lbl">レイヤー設定</span>
+      <div class="field"><label>テキスト</label>
+        <textarea rows="2" oninput="updateLyr('${sel.id}','text',this.value)">${escH(sel.text||'')}</textarea></div>
+      <div class="field"><label>フォント</label>
+        <select onchange="updateLyr('${sel.id}','font',this.value)">
+          <option value="Outfit"${sel.font==='Outfit'?' selected':''}>Outfit（本文）</option>
+          <option value="Bebas Neue"${sel.font==='Bebas Neue'?' selected':''}>Bebas Neue（見出し）</option>
+          <option value="Playfair Display"${sel.font==='Playfair Display'?' selected':''}>Playfair（エレガント）</option>
+        </select></div>
+      <div class="srow"><label>サイズ <b>${sel.fontSize||60}px</b></label>
+        <input type="range" min="12" max="280" value="${sel.fontSize||60}" oninput="updateLyr('${sel.id}','fontSize',+this.value);schedRender()"></div>
+      <div class="field"><label>カラー</label>
+        <input type="color" value="${sel.color||'#ede9e2'}" oninput="updateLyr('${sel.id}','color',this.value)" style="height:30px"></div>
+      <div class="srow"><label>不透明度 <b>${Math.round((sel.opacity??1)*100)}%</b></label>
+        <input type="range" min="0" max="100" value="${Math.round((sel.opacity??1)*100)}" oninput="updateLyr('${sel.id}','opacity',this.value/100);schedRender()"></div>
+      <div class="srow"><label>文字間隔 <b>${sel.ls||0}px</b></label>
+        <input type="range" min="0" max="20" value="${sel.ls||0}" oninput="updateLyr('${sel.id}','ls',+this.value);schedRender()"></div>
+    </div>`;
+  }
+
+  document.getElementById('panelR').innerHTML=h;
+}
+
+function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function setTV(k,v){
+  if(!S.textVals[S.tplId]) S.textVals[S.tplId]={};
+  S.textVals[S.tplId][k]=v;
+  schedRender();
+}
+
+function applyPreset(bg,ac){S.colors.bg=bg;S.colors.ac=ac;buildPanelR();schedRender()}
+
+/* ══════════════════════════════════════════════
+   MODE
+══════════════════════════════════════════════ */
+function setMode(mode, btn){
+  S.mode=mode;
+  document.querySelectorAll('.mpill').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(mode!=='template'){
+    S.plTab='media';
+    document.querySelectorAll('.pltab').forEach((b,i)=>b.classList.toggle('on',i===1));
+  } else {
+    S.plTab='tpl';
+    document.querySelectorAll('.pltab').forEach((b,i)=>b.classList.toggle('on',i===0));
+  }
+  buildPLBody();buildPanelR();schedRender();
+}
+
+/* ══════════════════════════════════════════════
+   LAYERS
+══════════════════════════════════════════════ */
+let lyrCtr=0;
+function mkLyrId(){return'l'+(++lyrCtr)+'_'+Date.now()}
+function addTextLayer(){
+  const id=mkLyrId();
+  S.layers.push({id,type:'text',text:'テキスト',font:'Bebas Neue',fontSize:80,color:'#ede9e2',x:.08,y:.5,opacity:1,ls:0,visible:true,maxW:.84});
+  S.selLayer=id;buildPanelR();schedRender();
+}
+function addLogoLayer(){
+  const id=mkLyrId();
+  S.layers.push({id,type:'logo',text:'RIO',font:'Bebas Neue',fontSize:56,color:S.colors.ac,x:.08,y:.1,opacity:1,ls:0,visible:true});
+  S.selLayer=id;buildPanelR();schedRender();
+}
+function selLayer(id){S.selLayer=id;buildPanelR()}
+function toggleLyrVis(id,e){e.stopPropagation();const l=S.layers.find(x=>x.id===id);if(l){l.visible=!l.visible;buildPanelR();schedRender()}}
+function delLayer(id,e){e.stopPropagation();S.layers=S.layers.filter(x=>x.id!==id);if(S.selLayer===id)S.selLayer=null;buildPanelR();schedRender()}
+function updateLyr(id,k,v){const l=S.layers.find(x=>x.id===id);if(l){l[k]=v;schedRender()}}
+
+function renderTextLayer(l, W, H){
+  ctx.save();
+  ctx.font=`${l.style||'400'} ${(l.fontSize||60)*(W/1080)}px "${l.font||'Outfit'}"`;
+  ctx.fillStyle=l.color||'#ede9e2';
+  ctx.globalAlpha=l.opacity??1;
+  ctx.textAlign=l.align||'left';
+  ctx.letterSpacing=(l.ls||0)+'px';
+  const lines=wrapText(ctx,l.text||'',(l.maxW||0.84)*W);
+  const fs=(l.fontSize||60)*(W/1080);
+  lines.forEach((t,i)=>ctx.fillText(t,l.x*W,l.y*H+i*fs*1.4));
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════
+   CANVAS DRAG (text layers)
+══════════════════════════════════════════════ */
+let drag=null,dox=0,doy=0;
+cv.addEventListener('mousedown',e=>{
+  const r=cv.getBoundingClientRect();
+  const sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
+  for(let i=S.layers.length-1;i>=0;i--){
+    const l=S.layers[i];if(!l.visible)continue;
+    if(Math.abs(sx-l.x)<.15&&Math.abs(sy-l.y)<.08){drag=l;dox=sx-l.x;doy=sy-l.y;S.selLayer=l.id;buildPanelR();break}
+  }
+});
+cv.addEventListener('mousemove',e=>{
+  if(!drag)return;
+  const r=cv.getBoundingClientRect();
+  drag.x=Math.max(0,Math.min(.98,(e.clientX-r.left)/r.width-dox));
+  drag.y=Math.max(.02,Math.min(.98,(e.clientY-r.top)/r.height-doy));
+  schedRender();
+});
+cv.addEventListener('mouseup',()=>{drag=null});
+cv.addEventListener('touchstart',e=>{
+  const t=e.touches[0],r=cv.getBoundingClientRect();
+  const sx=(t.clientX-r.left)/r.width,sy=(t.clientY-r.top)/r.height;
+  for(let i=S.layers.length-1;i>=0;i--){
+    const l=S.layers[i];if(!l.visible)continue;
+    if(Math.abs(sx-l.x)<.18&&Math.abs(sy-l.y)<.1){drag=l;dox=sx-l.x;doy=sy-l.y;S.selLayer=l.id;break}
+  }
+},{passive:true});
+cv.addEventListener('touchmove',e=>{
+  if(!drag)return;e.preventDefault();
+  const t=e.touches[0],r=cv.getBoundingClientRect();
+  drag.x=Math.max(0,Math.min(.98,(t.clientX-r.left)/r.width-dox));
+  drag.y=Math.max(.02,Math.min(.98,(t.clientY-r.top)/r.height-doy));
+  schedRender();
+},{passive:false});
+cv.addEventListener('touchend',()=>{drag=null});
+
+/* ══════════════════════════════════════════════
+   UNDO
+══════════════════════════════════════════════ */
+function undo(){showToast('Undo：近日アップデート予定です');} // basic placeholder
+
+/* ══════════════════════════════════════════════
+   EXPORT
+══════════════════════════════════════════════ */
+async function doExport(fmt='png'){
+  const btn=document.getElementById('dlBtn');
+  btn.disabled=true;btn.textContent='⏳...';
+  // render at full res
+  await renderAll();
+  await new Promise(r=>setTimeout(r,60));
+  try{
+    const url=cv.toDataURL(fmt==='jpg'?'image/jpeg':'image/png',0.94);
+    const a=document.createElement('a');
+    const f=FMTS[S.fmt];
+    a.href=url;a.download=`rio_${S.tplId}_${f.w}x${f.h}_${Date.now()}.${fmt==='jpg'?'jpg':'png'}`;
+    a.click();
+    showToast(`${fmt.toUpperCase()} 保存完了！`);
+  }catch(e){showToast('エラーが発生しました');console.error(e)}
+  btn.disabled=false;btn.textContent='📥 PNG 保存';
+}
+
+/* ══════════════════════════════════════════════
+   SHARE
+══════════════════════════════════════════════ */
+let shareUrl='';
+async function openShare(){
+  await renderAll();
+  await new Promise(r=>setTimeout(r,50));
+  shareUrl=cv.toDataURL('image/png',0.93);
+  document.getElementById('smImg').src=shareUrl;
+  const tpl=TPLS.find(t=>t.id===S.tplId);
+  document.getElementById('smTitle').textContent=tpl?.name||'Post';
+  const f=FMTS[S.fmt];
+  document.getElementById('smDesc').textContent=`${f.w} × ${f.h} px · PNG`;
+  document.getElementById('shareModal').classList.add('open');
+}
+function closeSM(){document.getElementById('shareModal').classList.remove('open')}
+
+async function shareAct(type){
+  if(type==='clipboard'){
+    try{
+      const r=await fetch(shareUrl);const b=await r.blob();
+      await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);
+      showToast('クリップボードにコピーしました！');
+    }catch{
+      await navigator.clipboard.writeText(shareUrl).catch(()=>{});
+      showToast('画像URLをコピーしました');
+    }
+    closeSM();
+  } else if(type==='png'){
+    const a=document.createElement('a');a.href=shareUrl;a.download=`rio_${Date.now()}.png`;a.click();
+    showToast('PNG 保存完了！');closeSM();
+  } else if(type==='jpg'){
+    await renderAll();
+    const u=cv.toDataURL('image/jpeg',0.93);
+    const a=document.createElement('a');a.href=u;a.download=`rio_${Date.now()}.jpg`;a.click();
+    showToast('JPEG 保存完了！');closeSM();
+  } else if(type==='native'){
+    try{
+      const r=await fetch(shareUrl);const b=await r.blob();
+      const file=new File([b],'rio_post.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:'Rio Studio'});
+      } else {
+        showToast('このブラウザでは共有メニューを利用できません');
+      }
+    }catch(e){if(e.name!=='AbortError')showToast('共有に失敗しました')}
+  }
+}
+
+/* ══════════════════════════════════════════════
    TOAST
-════════════════════════════════ */
+══════════════════════════════════════════════ */
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2400);
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);
 }
 
-/* ════════════════════════════════
-   CURSOR
-════════════════════════════════ */
-const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
-(function loop(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;cur2.style.left=rx+'px';cur2.style.top=ry+'px';requestAnimationFrame(loop)})();
-
-/* ════════════════════════════════
-   INTERSECTION FADE
-════════════════════════════════ */
-const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}}),{threshold:.08});
-document.querySelectorAll('.strat-card,.cap-card').forEach(el=>{
-  el.style.cssText='opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease';
-  io.observe(el);
+/* ══════════════════════════════════════════════
+   KEYBOARD
+══════════════════════════════════════════════ */
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();doExport('png')}
 });
-
-/* stats bar color fix */
-document.querySelectorAll('.t8 .sbar::after').forEach(el=>el.style.background='var(--ember)');
 </script>
 </body>
 </html>
