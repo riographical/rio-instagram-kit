@@ -193,36 +193,47 @@ body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;f
 .t9 .swipe{margin-left:auto;font-size:clamp(.32rem,1vw,.46rem);letter-spacing:.18em;color:#8a8a96;display:flex;align-items:center;gap:6px}
 .t9 .swipe::after{content:'→'}
 
-/* ─── EDITOR MODAL (Canvas-based) ─── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+/* ─── EDITOR MODAL ─── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
 .modal-bg.open{display:flex}
-.modal{background:var(--deep);border:1px solid var(--border);width:min(98vw,1120px);max-height:94vh;display:grid;grid-template-columns:220px 1fr 282px;overflow:hidden;position:relative;animation:modalIn .28s ease}
+.modal{background:var(--deep);border:1px solid var(--border);width:min(98vw,1160px);max-height:96vh;display:grid;grid-template-columns:220px 1fr 290px;overflow:hidden;position:relative;animation:modalIn .28s ease}
 @keyframes modalIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
 .modal-close{position:absolute;top:12px;right:14px;z-index:10;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:5px 13px;cursor:pointer;transition:all .2s}
 .modal-close:hover{border-color:var(--ember);color:var(--ember)}
 
 /* modal left */
-.ml{background:var(--void);border-right:1px solid var(--border);padding:18px 11px;overflow-y:auto}
+.ml{background:var(--void);border-right:1px solid var(--border);padding:18px 10px;overflow-y:auto}
 .ml h3{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ember);margin-bottom:10px}
 .ml-list{display:flex;flex-direction:column;gap:5px}
 .ml-item{display:flex;gap:9px;align-items:center;padding:8px;border:1px solid var(--border);cursor:pointer;transition:all .2s}
 .ml-item:hover{border-color:rgba(212,116,42,.4);background:var(--surface)}
-.ml-item.active{border-color:var(--ember);background:var(--edim)}
+.ml-item.active{border-color:var(--ember);background:rgba(212,116,42,.1)}
 .ml-ico{width:36px;height:36px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 .ml-info strong{font-size:.66rem;font-weight:500;color:var(--white);display:block}
 .ml-info span{font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ember);margin-top:1px;display:block}
 
 /* modal center */
-.mc{display:flex;flex-direction:column;align-items:center;background:var(--void);overflow-y:auto;padding:16px 14px;gap:11px}
-.mc-modes{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
-.mmode{font-family:'Outfit',sans-serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;background:none;border:1px solid var(--border);color:var(--silver);cursor:pointer;transition:all .18s;white-space:nowrap}
-.mmode:hover{color:var(--white);border-color:rgba(255,255,255,.2)}
-.mmode.on{background:var(--ember);border-color:var(--ember);color:var(--void);font-weight:600}
+.mc{display:flex;flex-direction:column;align-items:center;background:var(--void);overflow-y:auto;padding:14px 12px;gap:10px}
 .mc-fmts{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
-.mfmt{font-family:'Outfit',sans-serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;background:none;border:1px solid var(--border);color:var(--silver);cursor:pointer;transition:all .18s;white-space:nowrap}
+.mfmt{font-family:'Outfit',sans-serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;background:none;border:1px solid var(--border);color:var(--silver);cursor:pointer;transition:all .18s;white-space:nowrap}
 .mfmt:hover{border-color:var(--ember);color:var(--ember)}
 .mfmt.on{background:var(--ember);border-color:var(--ember);color:var(--void);font-weight:600}
-#ed-canvas{display:block;box-shadow:0 12px 50px rgba(0,0,0,.9)}
+
+/* preview box — scales visually but keeps 1:1 content */
+#ed-preview-wrap{position:relative;overflow:hidden;box-shadow:0 12px 50px rgba(0,0,0,.9);flex-shrink:0}
+#ed-preview{width:100%;height:100%;position:relative;overflow:hidden}
+/* bg image layer inside preview */
+#ed-bg-layer{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transition:opacity .2s}
+#ed-overlay-layer{position:absolute;inset:0;z-index:1;background:#000;pointer-events:none}
+/* template content sits on top */
+#ed-preview .ti{position:relative;z-index:2}
+/* free text layers */
+.free-layer{position:absolute;z-index:30;cursor:move;user-select:none;white-space:pre-wrap;line-height:1.3;transform-origin:top left}
+.free-layer.sel{outline:1px solid rgba(212,116,42,.6)}
+
+/* video bg */
+#ed-video-bg{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+
 .mc-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .btn-dl{background:var(--ember);color:var(--void);font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;border:none;padding:9px 18px;cursor:pointer;transition:background .2s;white-space:nowrap}
 .btn-dl:hover{background:var(--ember2)}.btn-dl:disabled{background:var(--surface);color:var(--silver);cursor:not-allowed}
@@ -230,28 +241,28 @@ body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;f
 .btn-sec:hover{border-color:var(--ember);color:var(--ember)}
 .mc-note{font-size:.52rem;letter-spacing:.12em;color:var(--silver);text-align:center}
 
-/* modal right */
-.mr{background:var(--deep);border-left:1px solid var(--border);padding:13px 11px;overflow-y:auto;display:flex;flex-direction:column;gap:0}
+/* modal right panel */
+.mr{background:var(--deep);border-left:1px solid var(--border);padding:13px 11px;overflow-y:auto;display:flex;flex-direction:column}
 .mr::-webkit-scrollbar{width:2px}
 .ps{font-size:.48rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ember);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border);display:block;margin-top:10px}
 .ps:first-child{margin-top:0}
-.field{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.field{display:flex;flex-direction:column;gap:2px;margin-bottom:7px}
 .field label{font-size:.55rem;letter-spacing:.08em;color:var(--silver)}
 .field input[type=text],.field textarea,.field select{background:var(--surface);border:1px solid var(--border);color:var(--white);font-family:'Outfit',sans-serif;font-size:.7rem;padding:5px 7px;resize:vertical;outline:none;transition:border-color .2s;width:100%}
 .field input:focus,.field textarea:focus{border-color:rgba(212,116,42,.5)}
 .field textarea{min-height:44px}.field select option{background:var(--surface)}
-.color-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.color-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
 .cc{display:flex;flex-direction:column;align-items:center;gap:2px}
 .cc input[type=color]{width:30px;height:28px;border:1px solid var(--border);border-radius:1px;cursor:pointer;padding:2px;background:var(--surface)}
 .cc span{font-size:.42rem;letter-spacing:.08em;color:var(--silver);text-align:center}
-.pre-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:6px}
+.pre-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:7px}
 .pre-btn{font-family:'Outfit',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 3px;cursor:pointer;transition:opacity .2s;border:none;text-align:center}
 .pre-btn:hover{opacity:.8}
-.srow{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.srow{display:flex;flex-direction:column;gap:2px;margin-bottom:7px}
 .srow label{font-size:.55rem;letter-spacing:.08em;color:var(--silver);display:flex;justify-content:space-between}
 .srow label b{color:var(--ember);font-weight:400}
 .srow input[type=range]{width:100%;accent-color:var(--ember);cursor:pointer}
-.tog-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;margin-bottom:2px}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;margin-bottom:3px}
 .tog-row span{font-size:.6rem;color:var(--white)}
 .tog{position:relative;width:28px;height:15px;flex-shrink:0}
 .tog input{opacity:0;width:0;height:0}
@@ -259,35 +270,33 @@ body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;f
 .tog-sl::before{content:'';position:absolute;height:9px;width:9px;left:2px;bottom:2px;background:var(--silver);border-radius:50%;transition:.2s}
 .tog input:checked+.tog-sl{background:var(--ember);border-color:var(--ember)}
 .tog input:checked+.tog-sl::before{transform:translateX(13px);background:#fff}
-/* upload */
-.upzone{border:1px dashed rgba(212,116,42,.32);padding:13px;text-align:center;cursor:pointer;transition:all .18s;position:relative;margin-bottom:6px}
-.upzone:hover,.upzone.drag{border-color:var(--ember);background:var(--edim)}
+.upzone{border:1px dashed rgba(212,116,42,.32);padding:13px;text-align:center;cursor:pointer;transition:all .18s;position:relative;margin-bottom:7px}
+.upzone:hover,.upzone.drag{border-color:var(--ember);background:rgba(212,116,42,.06)}
 .upzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .upzone-t{font-size:.62rem;color:var(--silver);line-height:1.55}
 .upzone-s{font-size:.5rem;color:rgba(255,255,255,.22);margin-top:3px}
-.media-chips{display:flex;flex-direction:column;gap:4px;margin-bottom:6px;max-height:130px;overflow-y:auto}
-.mchip{display:flex;gap:6px;align-items:center;padding:5px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color .18s;font-size:.58rem}
+.media-chips{display:flex;flex-direction:column;gap:4px;margin-bottom:7px;max-height:120px;overflow-y:auto}
+.mchip{display:flex;gap:6px;align-items:center;padding:5px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color .18s}
 .mchip:hover{border-color:rgba(212,116,42,.4)}.mchip.on{border-color:var(--ember)}
-.mchip img{width:26px;height:26px;object-fit:cover;flex-shrink:0;background:var(--lift)}
+.mchip img{width:28px;height:28px;object-fit:cover;flex-shrink:0;background:var(--lift)}
 .mchip .mn{flex:1;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.58rem}
-.mchip .mt{color:var(--ember);flex-shrink:0;font-size:.48rem;letter-spacing:.08em}
-.mchip .mx{background:none;border:none;color:var(--silver);cursor:pointer;padding:0 3px;font-size:.7rem}
+.mchip .mt{color:var(--ember);flex-shrink:0;font-size:.48rem}
+.mchip .mx{background:none;border:none;color:var(--silver);cursor:pointer;padding:0 4px;font-size:.7rem}
 .mchip .mx:hover{color:#c43a5a}
-/* layers */
 .lyr-list{display:flex;flex-direction:column;gap:3px;margin-bottom:4px}
 .lyr{display:flex;gap:5px;align-items:center;padding:5px 6px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all .18s}
-.lyr:hover{border-color:rgba(212,116,42,.35)}.lyr.on{border-color:var(--ember);background:var(--edim)}
+.lyr:hover{border-color:rgba(212,116,42,.35)}.lyr.on{border-color:var(--ember);background:rgba(212,116,42,.08)}
 .lyr-ico{flex-shrink:0;font-size:.8rem}
 .lyr-nm{flex:1;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.6rem}
 .lyr-vis,.lyr-del{background:none;border:none;color:var(--silver);cursor:pointer;padding:1px 3px;font-size:.62rem}
 .lyr-vis:hover{color:var(--ember)}.lyr-del:hover{color:#c43a5a}
-.add-lbtn{width:100%;background:none;border:1px dashed var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;padding:6px;cursor:pointer;margin-bottom:3px;transition:all .18s}
+.add-lbtn{width:100%;background:none;border:1px dashed var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;padding:6px;cursor:pointer;margin-bottom:4px;transition:all .18s}
 .add-lbtn:hover{border-color:var(--ember);color:var(--ember)}
-.pos-btns{display:flex;gap:4px;margin-bottom:6px}
-.pb{flex:1;font-size:.5rem;padding:5px 2px;background:var(--surface);border:1px solid var(--border);color:var(--silver);cursor:pointer;text-align:center;transition:all .18s}
+.pos-btns{display:flex;gap:4px;margin-bottom:7px}
+.pb{flex:1;font-size:.5rem;padding:5px 2px;background:var(--surface);border:1px solid var(--border);color:var(--silver);cursor:pointer;text-align:center;transition:all .18s;font-family:'Outfit',sans-serif}
 .pb:hover{border-color:var(--ember);color:var(--ember)}.pb.on{background:var(--ember);border-color:var(--ember);color:var(--void)}
 
-/* ─── SHARE MODAL ─── */
+/* share modal */
 .sm-bg{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
 .sm-bg.open{display:flex}
 .sm-box{background:var(--deep);border:1px solid var(--border);padding:26px;width:min(92vw,400px);animation:modalIn .25s ease}
@@ -305,71 +314,10 @@ body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;f
 .sm-opt-d{font-size:.5rem;color:var(--silver);margin-top:2px;line-height:1.4}
 .sm-close{width:100%;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;padding:9px;cursor:pointer;transition:all .18s}
 .sm-close:hover{border-color:var(--ember);color:var(--ember)}
-
-/* ─── CAPTIONS ─── */
-.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 52px 72px}
-.cap-card{background:var(--surface);border:1px solid var(--border);padding:24px;transition:border-color .25s,background .25s}
-.cap-card:hover{border-color:rgba(212,116,42,.25);background:var(--lift)}
-.cap-type{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ember);margin-bottom:12px;display:block}
-.cap-body{font-size:.77rem;line-height:1.88;color:rgba(237,233,226,.62)}
-.cap-tags{margin-top:12px;font-size:.67rem;line-height:2;color:rgba(46,138,156,.75)}
-.cap-copy{margin-top:12px;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all .2s}
-.cap-copy:hover{border-color:var(--ember);color:var(--ember)}.cap-copy.copied{border-color:var(--teal);color:var(--teal)}
-
-/* ─── STRATEGY ─── */
-.strat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 52px 72px}
-.strat-card{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--ember);padding:26px}
-.sc-icon{font-size:1.3rem;margin-bottom:12px;display:block}
-.sc-title{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.1em;color:var(--white);margin-bottom:9px}
-.sc-body{font-size:.74rem;line-height:1.8;color:var(--silver)}
-.sc-pill{display:inline-block;margin-top:11px;background:rgba(212,116,42,.12);font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);padding:4px 11px}
-
-/* ─── CHECKLIST ─── */
-.cl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 52px 72px}
-.cl-group{background:var(--surface);border:1px solid var(--border);padding:28px}
-.cl-head{font-family:'Bebas Neue',sans-serif;font-size:.92rem;letter-spacing:.12em;color:var(--white);margin-bottom:8px;padding-bottom:13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
-.cl-badge{font-size:.48rem;padding:3px 9px;background:var(--ember);color:var(--void);letter-spacing:.12em;font-family:'Outfit',sans-serif;font-weight:600}
-.cl-item{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.025);cursor:pointer;user-select:none}
-.cl-item:last-child{border-bottom:none;padding-bottom:0}
-.cl-item input[type=checkbox]{appearance:none;width:14px;height:14px;border:1px solid rgba(255,255,255,.18);flex-shrink:0;margin-top:3px;cursor:pointer;transition:all .15s;position:relative}
-.cl-item input:checked{background:var(--ember);border-color:var(--ember)}
-.cl-item input:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.48rem;color:var(--void);font-weight:700}
-.cl-item label{font-size:.75rem;color:rgba(237,233,226,.6);line-height:1.5;cursor:pointer;transition:color .15s}
-.cl-item input:checked+label{color:rgba(255,255,255,.22);text-decoration:line-through}
-
-/* ─── CALENDAR ─── */
-.cal-wrap{padding:0 52px 80px}
-.cal-legend{display:flex;gap:22px;margin-bottom:16px;flex-wrap:wrap}
-.legend-item{display:flex;align-items:center;gap:8px;font-size:.58rem;letter-spacing:.14em;color:var(--silver)}
-.legend-dot{width:8px;height:8px;border-radius:1px}
-.ld-r{background:var(--ember)}.ld-c{background:var(--teal)}.ld-s{background:var(--film)}.ld-st{background:rgba(255,255,255,.3)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
-.cal-day-hdr{font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);text-align:center;padding:0 0 11px}
-.cal-cell{background:var(--surface);border:1px solid var(--border);padding:10px;min-height:76px;transition:border-color .2s}
-.cal-cell:hover{border-color:rgba(212,116,42,.3)}
-.cal-date{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.06em;color:rgba(255,255,255,.22)}
-.cal-post{margin-top:5px;padding:3px 5px;font-size:.47rem;letter-spacing:.1em;text-transform:uppercase;line-height:1.45}
-.cal-post.reel{background:rgba(212,116,42,.15);color:var(--ember)}
-.cal-post.carousel{background:rgba(46,138,156,.12);color:var(--teal)}
-.cal-post.story{background:rgba(184,168,130,.08);color:var(--film)}
-.cal-post.static{background:rgba(255,255,255,.05);color:var(--silver)}
-.wk-label{font-size:.52rem;letter-spacing:.25em;text-transform:uppercase;margin:16px 0 7px;padding-left:2px}
-
-/* ─── FOOTER ─── */
-footer{background:#030303;border-top:1px solid var(--border);padding:28px 52px;display:flex;align-items:center;justify-content:space-between}
-footer p{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.14)}
-.ft-e{font-size:.58rem;letter-spacing:.14em;color:rgba(212,116,42,.35)}
-
-/* ─── TOAST ─── */
-.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--ember);color:var(--void);font-family:'Outfit',sans-serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;padding:11px 22px;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.16,1,.3,1);pointer-events:none}
-.toast.show{transform:translateY(0);opacity:1}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
 <div id="cur"></div><div id="cur2"></div>
-
-<!-- HEADER -->
 <header class="hdr">
   <div class="logo">RIO<em>.</em>KIT</div>
   <nav class="nav">
@@ -599,36 +547,45 @@ RAWからの現像プロセスを公開。
   <div class="ft-e">riophotographer</div>
 </footer>
 
-<!-- ═══ EDITOR MODAL (Canvas-based) ═══ -->
+<!-- ═══ EDITOR MODAL ═══ -->
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModalDirect()">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModalDirect()">✕ 閉じる</button>
+
+    <!-- left: template list -->
     <div class="ml">
       <h3>テンプレート</h3>
       <div class="ml-list" id="mlList"></div>
     </div>
+
+    <!-- center: live preview -->
     <div class="mc" id="mc">
-      <div class="mc-modes">
-        <button class="mmode on"  onclick="setEdMode('template',this)">📐 テンプレート</button>
-        <button class="mmode"     onclick="setEdMode('photo',this)">🖼️ フォト</button>
-        <button class="mmode"     onclick="setEdMode('video',this)">🎬 動画</button>
-      </div>
       <div class="mc-fmts">
-        <button class="mfmt on" onclick="setFmt('ig-sq',this)">■ 正方形</button>
-        <button class="mfmt"    onclick="setFmt('ig-st',this)">▭ ストーリー</button>
-        <button class="mfmt"    onclick="setFmt('ig-ld',this)">▬ 横長</button>
-        <button class="mfmt"    onclick="setFmt('x-post',this)">◻ X/OGP</button>
+        <button class="mfmt on" onclick="setFmt('sq',this)">■ 正方形</button>
+        <button class="mfmt"    onclick="setFmt('st',this)">▭ ストーリー</button>
+        <button class="mfmt"    onclick="setFmt('ld',this)">▬ 横長</button>
+        <button class="mfmt"    onclick="setFmt('xp',this)">◻ X/OGP</button>
       </div>
-      <canvas id="ed-canvas"></canvas>
+      <!-- the live preview div -->
+      <div id="ed-preview-wrap">
+        <div id="ed-preview">
+          <div id="ed-bg-layer"></div>
+          <div id="ed-overlay-layer"></div>
+          <video id="ed-video-bg" muted playsinline loop style="display:none"></video>
+          <div id="ed-tpl-content"></div>
+        </div>
+        <!-- free text layers are appended here by JS -->
+      </div>
       <div class="mc-btns">
-        <button class="btn-dl" id="btnDl" onclick="doExport('png')">📥 PNG</button>
-        <button class="btn-dl" onclick="doExport('jpg')" style="background:var(--teal)">📥 JPEG</button>
+        <button class="btn-dl" id="btnDl" onclick="doDownload('png')">📥 PNG 保存</button>
+        <button class="btn-dl" onclick="doDownload('jpg')" style="background:var(--teal)">📥 JPEG</button>
         <button class="btn-sec" onclick="openShareModal()">🔗 シェア</button>
         <button class="btn-sec" onclick="addTextLayer()">＋ テキスト</button>
-        <button class="btn-sec" onclick="addLogoLayer()">＋ ロゴ</button>
       </div>
-      <div class="mc-note">Canvas出力 · Ctrl/⌘+S で PNG 保存</div>
+      <div class="mc-note">リアルタイムプレビュー · Ctrl/⌘+S で PNG保存</div>
     </div>
+
+    <!-- right: editor panel -->
     <div class="mr" id="edPanel"></div>
   </div>
 </div>
@@ -649,58 +606,245 @@ RAWからの現像プロセスを公開。
 </div>
 
 <div class="toast" id="toast"></div>
+<div id="hz" style="position:fixed;left:-9999px;top:0;pointer-events:none;z-index:-1;width:0;height:0;overflow:hidden"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* ══════════════════════════════════════════════════
-   TEMPLATE DEFINITIONS (HTML preview + Canvas draw)
-══════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   TEMPLATE DEFINITIONS
+════════════════════════════════════════════════ */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 const TPLS=[
   {
     id:'p1',name:'Portfolio Hero',tag:'作品紹介',icon:'📷',cat:'photo',
-    fields:[{k:'tag',l:'カテゴリタグ',t:'text',d:'Photography'},{k:'title',l:'タイトル',t:'text',d:'Golden Hour Series'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'},{k:'bg',l:'背景',t:'color',d:'#141418'}],
-    html(v){return`<div class="ti t1" style="background:${v.bg}"><div class="imgz"><div class="lens" style="border-color:${v.ac}33"></div><div class="scan"></div></div><div class="bar" style="background:#09090b"><div><div class="etag" style="color:${v.ac}">${esc(v.tag)}</div><div class="etitle">${esc(v.title)}</div></div><div class="arr" style="color:${v.ac}">→</div></div><div class="grain"></div></div>`}
+    fields:[
+      {k:'tag',  l:'カテゴリタグ', t:'text',    d:'Photography'},
+      {k:'title',l:'タイトル',     t:'text',    d:'Golden Hour Series'},
+      {k:'ac',   l:'アクセント',   t:'color',   d:'#d4742a'},
+      {k:'bg',   l:'背景色',       t:'color',   d:'#141418'},
+    ],
+    html(v,media){
+      const imgHtml = media ? `<div style="width:100%;height:100%;background:url('${media.url}') center/cover;filter:brightness(.85)"></div>` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:radial-gradient(ellipse at 60% 35%,rgba(212,116,42,.1),transparent 60%)"><div style="width:36%;aspect-ratio:1;border-radius:50%;border:1px solid ${v.ac}33;display:flex;align-items:center;justify-content:center;position:relative"><div style="position:absolute;width:62%;aspect-ratio:1;border-radius:50%;border:1px solid ${v.ac}22"></div><div style="width:28%;aspect-ratio:1;border-radius:50%;background:${v.ac}18"></div></div></div>`;
+      return`<div class="ti t1" style="background:${v.bg}">
+        <div class="imgz" style="position:relative;overflow:hidden">${imgHtml}<div class="scan" style="background:linear-gradient(to right,transparent,${v.ac}55,transparent)"></div></div>
+        <div class="bar" style="background:#09090b;padding:5% 7%;display:flex;align-items:center;justify-content:space-between">
+          <div><div class="etag" style="color:${v.ac}">${esc(v.tag)}</div><div class="etitle">${esc(v.title)}</div></div>
+          <div class="arr" style="color:${v.ac}">→</div>
+        </div><div class="grain"></div></div>`;
+    }
   },
   {
     id:'p2',name:'Cinematic Quote',tag:'ブランド哲学',icon:'✦',cat:'engage',
-    fields:[{k:'quote',l:'引用テキスト',t:'textarea',d:'光は語る。\nシャッターは、\nその言葉を留める。'},{k:'credit',l:'クレジット',t:'text',d:'Rio · Photographer'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'}],
-    html(v){const q=esc(v.quote).replace(/\n/g,'<br>');return`<div class="ti t2"><div class="lb lbt"></div><div class="lb lbb"></div><div class="frm"><div class="cor tl"></div><div class="cor tr"></div><div class="cor bl"></div><div class="cor br"></div></div><div class="bg-w">LIGHT</div><div class="qt">"${q}"</div><div class="dash" style="background:${v.ac}"></div><div class="cred">— ${esc(v.credit)}</div><div class="tc">RIO_STUDIO · 001</div><div class="grain"></div></div>`}
+    fields:[
+      {k:'quote', l:'引用テキスト', t:'textarea', d:'光は語る。\nシャッターは、\nその言葉を留める。'},
+      {k:'credit',l:'クレジット',   t:'text',    d:'Rio · Photographer'},
+      {k:'ac',    l:'アクセント',   t:'color',   d:'#d4742a'},
+    ],
+    html(v,media){
+      const bg=media?`background:url('${media.url}') center/cover`:'background:#020204';
+      const q=esc(v.quote).replace(/\n/g,'<br>');
+      return`<div class="ti t2" style="${bg}">
+        <div class="lb lbt"></div><div class="lb lbb"></div>
+        <div class="frm"><div class="cor tl"></div><div class="cor tr"></div><div class="cor bl"></div><div class="cor br"></div></div>
+        <div class="bg-w">LIGHT</div>
+        <div class="qt">"${q}"</div>
+        <div class="dash" style="background:${v.ac}"></div>
+        <div class="cred">— ${esc(v.credit)}</div>
+        <div class="tc">RIO_STUDIO · 001</div>
+        <div class="grain"></div></div>`;
+    }
   },
   {
     id:'p3',name:'Behind the Scenes',tag:'撮影現場',icon:'🎬',cat:'video',
-    fields:[{k:'badge',l:'バッジ',t:'text',d:'BTS'},{k:'lbl1',l:'メインラベル',t:'text',d:'Main Camera Setup'},{k:'lbl2',l:'左ラベル',t:'text',d:'Lens Select'},{k:'lbl3',l:'右ラベル',t:'text',d:'Lighting'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'}],
-    html(v){return`<div class="ti t3" style="background:#0c0c0e"><div class="bts-cell ba"><div class="ico">🎬</div><div class="ov"></div><div class="badge" style="color:${v.ac};border-color:${v.ac}66">${esc(v.badge)}</div><div class="lbl" style="color:var(--film)">${esc(v.lbl1)}</div></div><div class="bts-cell bb"><div class="ico">📷</div><div class="ov"></div><div class="lbl">${esc(v.lbl2)}</div></div><div class="bts-cell bc"><div class="ico">💡</div><div class="ov"></div><div class="lbl">${esc(v.lbl3)}</div></div><div class="grain"></div></div>`}
+    fields:[
+      {k:'badge',l:'バッジ',       t:'text',  d:'BTS'},
+      {k:'lbl1', l:'メインラベル', t:'text',  d:'Main Camera Setup'},
+      {k:'lbl2', l:'左ラベル',     t:'text',  d:'Lens Select'},
+      {k:'lbl3', l:'右ラベル',     t:'text',  d:'Lighting'},
+      {k:'ac',   l:'アクセント',   t:'color', d:'#d4742a'},
+    ],
+    html(v,media){
+      const cell=(ico,lbl)=>`<div class="bts-cell" style="position:relative;display:flex;align-items:center;justify-content:center;background:var(--lift);overflow:hidden">${media?`<div style="position:absolute;inset:0;background:url('${media.url}') center/cover;opacity:.55"></div>`:''}<div class="ico" style="font-size:clamp(1.8rem,7vw,3rem);opacity:${media?0:.1}">${ico}</div><div class="ov"></div><div class="lbl">${lbl}</div></div>`;
+      return`<div class="ti t3" style="background:#0c0c0e">
+        <div class="bts-cell ba" style="grid-area:a;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--lift)">
+          ${media?`<div style="position:absolute;inset:0;background:url('${media.url}') center/cover;opacity:.6"></div>`:'<div class="ico" style="font-size:clamp(1.8rem,7vw,3rem);opacity:.1">🎬</div>'}
+          <div class="ov"></div>
+          <div class="badge" style="color:${v.ac};border-color:${v.ac}66">${esc(v.badge)}</div>
+          <div class="lbl" style="color:var(--film)">${esc(v.lbl1)}</div>
+        </div>
+        <div class="bts-cell bb" style="grid-area:b;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--lift)">
+          ${media?`<div style="position:absolute;inset:0;background:url('${media.url}') center/cover;opacity:.5;filter:grayscale(.5)"></div>`:'<div class="ico" style="opacity:.1">📷</div>'}
+          <div class="ov"></div><div class="lbl">${esc(v.lbl2)}</div>
+        </div>
+        <div class="bts-cell bc" style="grid-area:c;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--lift)">
+          ${media?`<div style="position:absolute;inset:0;background:url('${media.url}') center/cover;opacity:.5;filter:hue-rotate(20deg) saturate(.8)"></div>`:'<div class="ico" style="opacity:.1">💡</div>'}
+          <div class="ov"></div><div class="lbl">${esc(v.lbl3)}</div>
+        </div>
+        <div class="grain"></div></div>`;
+    }
   },
   {
     id:'p4',name:'Service Offer',tag:'サービス告知',icon:'💼',cat:'web',
-    fields:[{k:'tag',l:'カテゴリ',t:'text',d:'Web Design'},{k:'title',l:'サービス名',t:'text',d:'Brand Identity & Web'},{k:'i1',l:'項目1',t:'text',d:'ロゴ & ビジュアルアイデンティティ'},{k:'i2',l:'項目2',t:'text',d:'レスポンシブWebデザイン'},{k:'i3',l:'項目3',t:'text',d:'モーショングラフィックス'},{k:'cta',l:'CTA',t:'text',d:'詳細・お問い合わせ'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'},{k:'bg',l:'背景',t:'color',d:'#1c1c22'}],
-    html(v){return`<div class="ti t4-s" style="background:${v.bg}"><div class="bgn">04</div><div class="stag" style="color:${v.ac}">${esc(v.tag)}</div><div class="stitle" style="color:#ede9e2">${esc(v.title)}</div><div class="rule" style="background:${v.ac}"></div><div class="items"><div class="it" style="color:#8a8a96"><span style="background:${v.ac};display:inline-block;width:3px;height:3px;border-radius:50%;flex-shrink:0;margin-right:8px"></span>${esc(v.i1)}</div><div class="it" style="color:#8a8a96"><span style="background:${v.ac};display:inline-block;width:3px;height:3px;border-radius:50%;flex-shrink:0;margin-right:8px"></span>${esc(v.i2)}</div><div class="it" style="color:#8a8a96"><span style="background:${v.ac};display:inline-block;width:3px;height:3px;border-radius:50%;flex-shrink:0;margin-right:8px"></span>${esc(v.i3)}</div></div><div class="scta" style="color:${v.ac}">${esc(v.cta)}</div><div class="grain"></div></div>`}
+    fields:[
+      {k:'tag',  l:'カテゴリ',     t:'text',  d:'Web Design'},
+      {k:'title',l:'サービス名',   t:'text',  d:'Brand Identity & Web'},
+      {k:'i1',   l:'項目1',        t:'text',  d:'ロゴ & ビジュアルアイデンティティ'},
+      {k:'i2',   l:'項目2',        t:'text',  d:'レスポンシブWebデザイン'},
+      {k:'i3',   l:'項目3',        t:'text',  d:'モーショングラフィックス'},
+      {k:'cta',  l:'CTA',          t:'text',  d:'詳細・お問い合わせ'},
+      {k:'ac',   l:'アクセント',   t:'color', d:'#d4742a'},
+      {k:'bg',   l:'背景色',       t:'color', d:'#1c1c22'},
+    ],
+    html(v,media){
+      const bgStyle=media?`background:url('${media.url}') center/cover`:`background:${v.bg}`;
+      return`<div class="ti t4-s" style="${bgStyle}">
+        ${media?`<div style="position:absolute;inset:0;background:rgba(0,0,0,.55)"></div>`:''}
+        <div class="bgn" style="position:absolute;top:2%;right:4%;font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,13vw,5.5rem);color:rgba(212,116,42,.07)">04</div>
+        <div class="stag" style="color:${v.ac};position:relative">${esc(v.tag)}</div>
+        <div class="stitle" style="color:#ede9e2;position:relative">${esc(v.title)}</div>
+        <div class="rule" style="background:${v.ac};position:relative"></div>
+        <div class="items" style="position:relative">
+          ${[v.i1,v.i2,v.i3].filter(Boolean).map(it=>`<div class="it" style="color:#8a8a96"><span style="background:${v.ac};display:inline-block;width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-right:8px;vertical-align:middle"></span>${esc(it)}</div>`).join('')}
+        </div>
+        <div class="scta" style="color:${v.ac};position:relative">${esc(v.cta)}</div>
+        <div class="grain"></div></div>`;
+    }
   },
   {
     id:'p5',name:'Testimonial',tag:'クライアントの声',icon:'⭐',cat:'engage',
-    fields:[{k:'stars',l:'★の数',t:'text',d:'★★★★★'},{k:'quote',l:'コメント',t:'textarea',d:'映像を見た瞬間、言葉を失いました。私たちのブランドを完璧に体現してくれた。'},{k:'name',l:'お客様名',t:'text',d:'Keiko Tanaka'},{k:'role',l:'肩書き',t:'text',d:'Brand Director · Tokyo'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'},{k:'bg',l:'背景',t:'color',d:'#0a0e0d'}],
-    html(v){return`<div class="ti t5" style="background:${v.bg}"><div class="stars" style="color:${v.ac}">${esc(v.stars)}</div><div class="tbody" style="color:#ede9e2">"${esc(v.quote)}"</div><div class="auth"><div class="av"></div><div><div class="aname" style="color:#ede9e2">${esc(v.name)}</div><div class="arole">${esc(v.role)}</div></div></div><div class="wm">REVIEW</div><div class="grain"></div></div>`}
+    fields:[
+      {k:'stars',l:'★の数',       t:'text',    d:'★★★★★'},
+      {k:'quote',l:'コメント',    t:'textarea', d:'映像を見た瞬間、言葉を失いました。私たちのブランドを完璧に体現してくれた。'},
+      {k:'name', l:'お客様名',    t:'text',     d:'Keiko Tanaka'},
+      {k:'role', l:'肩書き',      t:'text',     d:'Brand Director · Tokyo'},
+      {k:'ac',   l:'アクセント',  t:'color',    d:'#d4742a'},
+      {k:'bg',   l:'背景色',      t:'color',    d:'#0a0e0d'},
+    ],
+    html(v,media){
+      const bgStyle=media?`background:url('${media.url}') center/cover`:`background:${v.bg}`;
+      return`<div class="ti t5" style="${bgStyle}">
+        ${media?`<div style="position:absolute;inset:0;background:rgba(0,0,0,.65)"></div>`:''}
+        <div class="stars" style="color:${v.ac};position:relative">${esc(v.stars)}</div>
+        <div class="tbody" style="color:#ede9e2;position:relative">"${esc(v.quote)}"</div>
+        <div class="auth" style="position:relative">
+          <div class="av"></div>
+          <div><div class="aname" style="color:#ede9e2">${esc(v.name)}</div><div class="arole">${esc(v.role)}</div></div>
+        </div>
+        <div class="wm">REVIEW</div>
+        <div class="grain"></div></div>`;
+    }
   },
   {
     id:'p6',name:'Reel Cover',tag:'映像発表',icon:'🎞️',cat:'video',
-    fields:[{k:'cat',l:'カテゴリ',t:'text',d:'Cinematography · 2025'},{k:'title',l:'タイトル',t:'text',d:'NEON DUSK — SHORT FILM'},{k:'m1',l:'メタ1',t:'text',d:'4K'},{k:'m2',l:'メタ2',t:'text',d:'Anamorphic'},{k:'m3',l:'メタ3',t:'text',d:'12 min'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'},{k:'bg',l:'背景',t:'color',d:'#040406'}],
-    html(v){return`<div class="ti t6" style="background:${v.bg}"><div class="rtop"><div class="rgrid"></div><div class="pring" style="border:1px solid ${v.ac}44"><span style="color:${v.ac}66;font-size:clamp(.5rem,2vw,.9rem);margin-left:8%">▶</span></div></div><div class="rbot"><div class="rcat" style="color:${v.ac}">${esc(v.cat)}</div><div class="rtitle" style="color:#ede9e2">${esc(v.title)}</div><div class="rmeta"><span>${esc(v.m1)}</span><span>${esc(v.m2)}</span><span>${esc(v.m3)}</span></div></div><div class="grain"></div></div>`}
+    fields:[
+      {k:'cat',  l:'カテゴリ',    t:'text',  d:'Cinematography · 2025'},
+      {k:'title',l:'タイトル',    t:'text',  d:'NEON DUSK — SHORT FILM'},
+      {k:'m1',   l:'メタ情報1',   t:'text',  d:'4K'},
+      {k:'m2',   l:'メタ情報2',   t:'text',  d:'Anamorphic'},
+      {k:'m3',   l:'メタ情報3',   t:'text',  d:'12 min'},
+      {k:'ac',   l:'アクセント',  t:'color', d:'#d4742a'},
+      {k:'bg',   l:'背景色',      t:'color', d:'#040406'},
+    ],
+    html(v,media){
+      return`<div class="ti t6" style="background:${v.bg}">
+        <div class="rtop" style="${media?`background:url('${media.url}') center/cover`:''}">
+          <div class="rgrid"></div>
+          ${media?`<div style="position:absolute;inset:0;background:rgba(0,0,0,.35)"></div>`:''}
+          <div class="pring" style="border:1px solid ${v.ac}44;position:relative;z-index:2"><span style="color:${v.ac}88;font-size:clamp(.5rem,2vw,.9rem);margin-left:8%">▶</span></div>
+        </div>
+        <div class="rbot">
+          <div class="rcat" style="color:${v.ac}">${esc(v.cat)}</div>
+          <div class="rtitle" style="color:#ede9e2">${esc(v.title)}</div>
+          <div class="rmeta"><span>${esc(v.m1)}</span><span>${esc(v.m2)}</span><span>${esc(v.m3)}</span></div>
+        </div>
+        <div class="grain"></div></div>`;
+    }
   },
   {
     id:'p7',name:'Before / After',tag:'現像プロセス',icon:'🔀',cat:'photo',
-    fields:[{k:'label',l:'ラベル',t:'text',d:'現像の魔法'},{k:'sub',l:'サブ',t:'text',d:'RAW → Cinematic Grade'},{k:'cta',l:'CTA',t:'text',d:'詳細を見る →'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'}],
-    html(v){return`<div class="ti t7"><div class="baw"><div class="bh"><div class="bico">🌑</div><div class="btag">BEFORE</div></div><div class="bh"><div class="bico">🌟</div><div class="btag" style="background:rgba(212,116,42,.12);color:${v.ac}">AFTER</div></div><div class="bdiv" style="background:${v.ac}"></div></div><div class="bfoot"><div><div class="blabel" style="color:#ede9e2">${esc(v.label)}</div><div class="bsub">${esc(v.sub)}</div></div><div class="bcta" style="color:${v.ac}">${esc(v.cta)}</div></div><div class="grain"></div></div>`}
+    fields:[
+      {k:'label',l:'ラベル',      t:'text',  d:'現像の魔法'},
+      {k:'sub',  l:'サブ',        t:'text',  d:'RAW → Cinematic Grade'},
+      {k:'cta',  l:'CTA',         t:'text',  d:'詳細を見る →'},
+      {k:'ac',   l:'アクセント',  t:'color', d:'#d4742a'},
+    ],
+    html(v,media){
+      const beforeBg=media?`background:url('${media.url}') center/cover;filter:grayscale(1) contrast(1.05)`:'background:linear-gradient(145deg,#1a1a1a,#222)';
+      const afterBg=media?`background:url('${media.url}') center/cover`:'background:linear-gradient(145deg,#1e1a14,#2a2218)';
+      return`<div class="ti t7">
+        <div class="baw">
+          <div class="bh" style="${beforeBg}">
+            <div class="btag" style="background:rgba(255,255,255,.07);color:rgba(255,255,255,.45)">BEFORE</div>
+          </div>
+          <div class="bh" style="${afterBg}">
+            <div class="btag" style="background:rgba(212,116,42,.12);color:${v.ac}">AFTER</div>
+          </div>
+          <div class="bdiv" style="background:${v.ac}"></div>
+        </div>
+        <div class="bfoot">
+          <div><div class="blabel" style="color:#ede9e2">${esc(v.label)}</div><div class="bsub">${esc(v.sub)}</div></div>
+          <div class="bcta" style="color:${v.ac}">${esc(v.cta)}</div>
+        </div>
+        <div class="grain"></div></div>`;
+    }
   },
   {
     id:'p8',name:'Studio Stats',tag:'実績データ',icon:'📊',cat:'web',
-    fields:[{k:'head',l:'ヘッダー',t:'text',d:'実績 · 2024'},{k:'n1',l:'数値1',t:'text',d:'120+'},{k:'l1',l:'ラベル1',t:'text',d:'撮影件数 / 年'},{k:'n2',l:'数値2',t:'text',d:'15yr'},{k:'l2',l:'ラベル2',t:'text',d:'キャリア年数'},{k:'n3',l:'数値3',t:'text',d:'40+'},{k:'l3',l:'ラベル3',t:'text',d:'Web制作件数'},{k:'n4',l:'数値4',t:'text',d:'98%'},{k:'l4',l:'ラベル4',t:'text',d:'リピート率'},{k:'foot',l:'フッター',t:'text',d:'Rio Studio · Tochigi / Tokyo'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'},{k:'bg',l:'背景',t:'color',d:'#141418'}],
-    html(v){return`<div class="ti t8" style="background:${v.bg}"><div class="shead" style="color:${v.ac}">${esc(v.head)}</div><div class="sgrid"><div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n1)}</div><div class="slbl">${esc(v.l1)}</div><div class="sbar b1"></div></div><div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n2)}</div><div class="slbl">${esc(v.l2)}</div><div class="sbar b2"></div></div><div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n3)}</div><div class="slbl">${esc(v.l3)}</div><div class="sbar b3"></div></div><div class="sitem"><div class="snum" style="color:#ede9e2">${esc(v.n4)}</div><div class="slbl">${esc(v.l4)}</div><div class="sbar b4"></div></div></div><div class="sfoot">${esc(v.foot)}</div><div class="grain"></div></div>`}
+    fields:[
+      {k:'head',l:'ヘッダー',    t:'text',  d:'実績 · 2024'},
+      {k:'n1',  l:'数値1',       t:'text',  d:'120+'},{k:'l1',l:'ラベル1',t:'text',d:'撮影件数 / 年'},
+      {k:'n2',  l:'数値2',       t:'text',  d:'15yr'},{k:'l2',l:'ラベル2',t:'text',d:'キャリア年数'},
+      {k:'n3',  l:'数値3',       t:'text',  d:'40+'}, {k:'l3',l:'ラベル3',t:'text',d:'Web制作件数'},
+      {k:'n4',  l:'数値4',       t:'text',  d:'98%'}, {k:'l4',l:'ラベル4',t:'text',d:'リピート率'},
+      {k:'foot',l:'フッター',    t:'text',  d:'Rio Studio · Tochigi / Tokyo'},
+      {k:'ac',  l:'アクセント',  t:'color', d:'#d4742a'},
+      {k:'bg',  l:'背景色',      t:'color', d:'#141418'},
+    ],
+    html(v,media){
+      const bgStyle=media?`background:url('${media.url}') center/cover`:`background:${v.bg}`;
+      const bars=['b1','b2','b3','b4'];
+      const stats=[[v.n1,v.l1],[v.n2,v.l2],[v.n3,v.l3],[v.n4,v.l4]];
+      return`<div class="ti t8" style="${bgStyle}">
+        ${media?`<div style="position:absolute;inset:0;background:rgba(0,0,0,.72)"></div>`:''}
+        <div class="shead" style="color:${v.ac};position:relative">${esc(v.head)}</div>
+        <div class="sgrid" style="position:relative">
+          ${stats.map(([n,l],i)=>`<div class="sitem"><div class="snum" style="color:#ede9e2">${esc(n)}</div><div class="slbl">${esc(l)}</div><div class="sbar ${bars[i]}" style="--ac:${v.ac}"></div></div>`).join('')}
+        </div>
+        <div class="sfoot" style="position:relative">${esc(v.foot)}</div>
+        <div class="grain"></div></div>`;
+    }
   },
   {
     id:'p9',name:'Carousel Cover',tag:'カルーセル',icon:'📑',cat:'engage',
-    fields:[{k:'brand',l:'ブランド名',t:'text',d:'Rio Studio'},{k:'eye',l:'アイキャッチ',t:'text',d:'Photography Tips'},{k:'title',l:'タイトル',t:'text',d:'フォトグラファーが\n教える5つの秘訣'},{k:'body',l:'本文',t:'textarea',d:'プロが普段やっている、光の読み方からポスプロまでのポイントを全5枚で解説します。'},{k:'ac',l:'アクセント',t:'color',d:'#d4742a'},{k:'bg',l:'背景',t:'color',d:'#08080a'}],
-    html(v){const t=esc(v.title).replace(/\n/g,'<br>');return`<div class="ti t9" style="background:${v.bg}"><div class="cvtop"><div class="cvbrand" style="color:${v.ac}">${esc(v.brand)}</div><div class="cvnum">01 / 05</div></div><div class="cvmain"><div class="cveye" style="color:${v.ac}">${esc(v.eye)}</div><div class="cvtitle" style="color:#ede9e2">${t}</div><div class="cvbody">${esc(v.body)}</div></div><div class="cvfoot"><div class="cvdots"><div class="dot on" style="background:${v.ac}"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="swipe">スワイプ</div></div><div class="grain"></div></div>`}
+    fields:[
+      {k:'brand',l:'ブランド名',   t:'text',    d:'Rio Studio'},
+      {k:'eye',  l:'アイキャッチ', t:'text',    d:'Photography Tips'},
+      {k:'title',l:'タイトル',     t:'text',    d:'フォトグラファーが\n教える5つの秘訣'},
+      {k:'body', l:'本文',         t:'textarea',d:'プロが普段やっている、光の読み方からポスプロまでのポイントを全5枚で解説します。'},
+      {k:'ac',   l:'アクセント',   t:'color',   d:'#d4742a'},
+      {k:'bg',   l:'背景色',       t:'color',   d:'#08080a'},
+    ],
+    html(v,media){
+      const bgStyle=media?`background:url('${media.url}') center/cover`:`background:${v.bg}`;
+      const t=esc(v.title).replace(/\n/g,'<br>');
+      return`<div class="ti t9" style="${bgStyle}">
+        ${media?`<div style="position:absolute;inset:0;background:rgba(0,0,0,.65)"></div>`:''}
+        <div class="cvtop" style="position:relative">
+          <div class="cvbrand" style="color:${v.ac}">${esc(v.brand)}</div>
+          <div class="cvnum">01 / 05</div>
+        </div>
+        <div class="cvmain" style="position:relative">
+          <div class="cveye" style="color:${v.ac}">${esc(v.eye)}</div>
+          <div class="cvtitle" style="color:#ede9e2">${t}</div>
+          <div class="cvbody">${esc(v.body)}</div>
+        </div>
+        <div class="cvfoot" style="position:relative">
+          <div class="cvdots"><div class="dot on" style="background:${v.ac}"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div class="swipe">スワイプ</div>
+        </div>
+        <div class="grain"></div></div>`;
+    }
   },
 ];
 
@@ -711,47 +855,45 @@ const PRESETS=[
 ];
 
 const FMTS={
-  'ig-sq':{w:1080,h:1080},
-  'ig-st':{w:1080,h:1920},
-  'ig-ld':{w:1080,h:566},
-  'x-post':{w:1200,h:628},
+  sq:{w:1080,h:1080,label:'正方形 1080×1080'},
+  st:{w:1080,h:1920,label:'ストーリー 1080×1920'},
+  ld:{w:1080,h:566, label:'横長 1080×566'},
+  xp:{w:1200,h:628, label:'X/OGP 1200×628'},
 };
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    EDITOR STATE
-══════════════════════════════════════════════════ */
-const ED = {
-  tpl: TPLS[0],
-  vals: {},
-  mode: 'template',   // template | photo | video
-  fmt: 'ig-sq',
-  cW: 1080, cH: 1080,
-  dW: 480, dH: 480,
-  media: [],          // [{id,name,type,url,thumb,img}]
-  bgId: null,
-  bgPos: 'cover',
-  bgOpacity: 0.9,
-  bgBlur: 0,
-  overlay: {on:true, color:'#000000', opacity:0.42},
-  layers: [],         // free text/logo layers
-  selLayer: null,
-  shareUrl: '',
+════════════════════════════════════════════════ */
+const ED={
+  tpl:TPLS[0],
+  vals:{},
+  fmt:'sq',
+  media:[],     // {id,name,type,url,thumb}
+  bgId:null,    // which media is used as background
+  bgPos:'cover',
+  bgOpacity:1,
+  bgBlur:0,
+  overlayOn:true,
+  overlayColor:'#000000',
+  overlayOpacity:0.38,
+  layers:[],    // free text layers
+  selLyr:null,
 };
 
 function defVals(t){const v={};t.fields.forEach(f=>v[f.k]=f.d);return v}
 
-/* ══════════════════════════════════════════════════
-   TEMPLATE GRID (HTML thumbnails)
-══════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   TEMPLATE GRID (on main page)
+════════════════════════════════════════════════ */
 function buildGrid(cat='all'){
   const list=cat==='all'?TPLS:TPLS.filter(t=>t.cat===cat);
   return`<div class="tpl-grid">${list.map(t=>`
     <div class="tcard" data-id="${t.id}">
       <div class="tcard-frame">
-        <div style="width:100%;height:100%;position:relative;overflow:hidden">${t.html(defVals(t))}</div>
+        <div style="width:100%;height:100%;position:relative;overflow:hidden">${t.html(defVals(t),null)}</div>
         <div class="tcard-overlay">
-          <button class="ov-btn ov-edit" onclick="openEditor('${t.id}',event)">✏️ 編集 · アップロード</button>
-          <button class="ov-btn ov-dl" onclick="quickCapture('${t.id}',event)">📥 そのままDL</button>
+          <button class="ov-btn ov-edit" onclick="openEditor('${t.id}',event)">✏️ 編集 / アップロード</button>
+          <button class="ov-btn ov-dl" onclick="quickDL('${t.id}',event)">📥 そのままDL</button>
         </div>
       </div>
       <div class="tcard-meta"><span class="tcard-name">${t.name}</span><span class="tcard-tag">${t.tag}</span></div>
@@ -765,406 +907,186 @@ function switchTab(cat,btn){
 }
 document.getElementById('tpl-container').innerHTML=buildGrid('all');
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    OPEN / CLOSE MODAL
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function openEditor(id,e){
   if(e)e.stopPropagation();
   ED.tpl=TPLS.find(t=>t.id===id);
   ED.vals=defVals(ED.tpl);
-  ED.layers=[];ED.selLayer=null;
+  ED.layers=[];ED.selLyr=null;
   document.getElementById('modalBg').classList.add('open');
   document.body.style.overflow='hidden';
   buildMlList();
-  initCanvas();
+  applyFmtSize();
   buildEdPanel();
-  schedRender();
+  updatePreview();
 }
 function closeModalDirect(){
   document.getElementById('modalBg').classList.remove('open');
   document.body.style.overflow='';
-  if(ED.videoEl){ED.videoEl.pause();ED.videoEl=null}
-  if(ED.videoAF){cancelAnimationFrame(ED.videoAF);ED.videoAF=null}
+  stopVideo();
 }
 
-/* ══════════════════════════════════════════════════
-   CANVAS ENGINE
-══════════════════════════════════════════════════ */
-const cv=document.getElementById('ed-canvas');
-const ctx=cv.getContext('2d');
-let rafId=null;
+/* ════════════════════════════════════════════════
+   PREVIEW — live HTML rendering
+════════════════════════════════════════════════ */
+const PW = document.getElementById('ed-preview-wrap');
+const PV = document.getElementById('ed-preview');
+const BG = document.getElementById('ed-bg-layer');
+const OV = document.getElementById('ed-overlay-layer');
+const VB = document.getElementById('ed-video-bg');
+const TC = document.getElementById('ed-tpl-content');
 
-function initCanvas(){
+const DISPLAY_SIZE = 480; // max display px
+
+function applyFmtSize(){
   const f=FMTS[ED.fmt];
-  ED.cW=f.w; ED.cH=f.h;
-  const maxW=Math.min(480,window.innerWidth*.38);
-  const maxH=window.innerHeight*.62;
-  const s=Math.min(maxW/f.w,maxH/f.h);
-  ED.dW=Math.round(f.w*s); ED.dH=Math.round(f.h*s);
-  cv.width=f.w; cv.height=f.h;
-  cv.style.width=ED.dW+'px'; cv.style.height=ED.dH+'px';
+  const ratio=f.h/f.w;
+  const dW=DISPLAY_SIZE;
+  const dH=Math.round(DISPLAY_SIZE*ratio);
+  PW.style.width=dW+'px';
+  PW.style.height=dH+'px';
+  PV.style.width=dW+'px';
+  PV.style.height=dH+'px';
+  // scale ti children: they use clamp/vw which responds to container width
 }
 
+function updatePreview(){
+  // 1. Background media
+  const m=ED.bgId?ED.media.find(x=>x.id===ED.bgId):null;
+  if(m){
+    if(m.type==='video'){
+      BG.style.display='none';
+      VB.style.display='block';
+      VB.style.objectFit=ED.bgPos==='contain'?'contain':'cover';
+      VB.style.opacity=ED.bgOpacity;
+      VB.style.filter=ED.bgBlur>0?`blur(${ED.bgBlur}px)`:'';
+      if(VB.dataset.src!==m.url){VB.src=m.url;VB.dataset.src=m.url;VB.play().catch(()=>{})}
+    } else {
+      stopVideo();
+      BG.style.display='block';
+      BG.style.backgroundImage=`url('${m.url}')`;
+      BG.style.backgroundSize=ED.bgPos==='contain'?'contain':ED.bgPos==='fill'?'100% 100%':'cover';
+      BG.style.backgroundPosition='center';
+      BG.style.backgroundRepeat='no-repeat';
+      BG.style.opacity=ED.bgOpacity;
+      BG.style.filter=ED.bgBlur>0?`blur(${ED.bgBlur}px)`:'';
+    }
+  } else {
+    stopVideo();
+    BG.style.display='none';
+    BG.style.backgroundImage='none';
+  }
+
+  // 2. Overlay
+  OV.style.display=ED.overlayOn?'block':'none';
+  OV.style.background=ED.overlayColor;
+  OV.style.opacity=ED.overlayOpacity;
+
+  // 3. Template HTML
+  const media4tpl=m&&m.type==='image'?m:null;
+  TC.innerHTML=ED.tpl.html(ED.vals, media4tpl);
+
+  // 4. Free layers
+  refreshFreeLayers();
+}
+
+function stopVideo(){
+  VB.pause();VB.src='';VB.dataset.src='';VB.style.display='none';
+}
+
+/* ════════════════════════════════════════════════
+   FREE TEXT LAYERS — HTML divs, draggable
+════════════════════════════════════════════════ */
+let lc=0;
+function newLid(){return'l'+(++lc)}
+
+function refreshFreeLayers(){
+  // remove old free-layer divs
+  PW.querySelectorAll('.free-layer').forEach(e=>e.remove());
+  const W=PW.offsetWidth, H=PW.offsetHeight;
+  ED.layers.forEach(l=>{
+    if(!l.visible)return;
+    const d=document.createElement('div');
+    d.className='free-layer'+(l.id===ED.selLyr?' sel':'');
+    d.dataset.lid=l.id;
+    d.style.left=(l.px*W)+'px';
+    d.style.top=(l.py*H)+'px';
+    d.style.fontFamily=`'${l.font||"Bebas Neue"}'`;
+    d.style.fontSize=(l.fs||56)+'px';
+    d.style.color=l.color||'#ede9e2';
+    d.style.opacity=l.opacity??1;
+    d.style.letterSpacing=(l.ls||0)+'px';
+    d.style.maxWidth='80%';
+    d.style.zIndex=30;
+    d.style.textShadow='0 2px 8px rgba(0,0,0,.8)';
+    d.textContent=l.text||'';
+    makeDraggable(d,l);
+    d.addEventListener('click',ev=>{ev.stopPropagation();selFreeLayer(l.id)});
+    PW.appendChild(d);
+  });
+}
+
+function makeDraggable(el,layer){
+  let ox=0,oy=0,dragging=false;
+  const start=(e)=>{
+    dragging=true;
+    const pt=e.touches?e.touches[0]:e;
+    const r=PW.getBoundingClientRect();
+    ox=pt.clientX-r.left-layer.px*PW.offsetWidth;
+    oy=pt.clientY-r.top-layer.py*PW.offsetHeight;
+    selFreeLayer(layer.id);
+    e.preventDefault();
+  };
+  const move=(e)=>{
+    if(!dragging)return;
+    const pt=e.touches?e.touches[0]:e;
+    const r=PW.getBoundingClientRect();
+    layer.px=Math.max(0,Math.min(.95,(pt.clientX-r.left-ox)/PW.offsetWidth));
+    layer.py=Math.max(0,Math.min(.97,(pt.clientY-r.top-oy)/PW.offsetHeight));
+    el.style.left=(layer.px*PW.offsetWidth)+'px';
+    el.style.top=(layer.py*PW.offsetHeight)+'px';
+    e.preventDefault();
+  };
+  const end=()=>{dragging=false};
+  el.addEventListener('mousedown',start);
+  document.addEventListener('mousemove',move);
+  document.addEventListener('mouseup',end);
+  el.addEventListener('touchstart',start,{passive:false});
+  document.addEventListener('touchmove',move,{passive:false});
+  document.addEventListener('touchend',end);
+}
+
+function selFreeLayer(id){ED.selLyr=id;buildEdPanel()}
+function addTextLayer(){
+  const id=newLid();
+  ED.layers.push({id,type:'text',text:'テキスト',font:'Bebas Neue',fs:64,color:'#ede9e2',px:.08,py:.5,opacity:1,ls:0,visible:true});
+  ED.selLyr=id;buildEdPanel();updatePreview();
+}
+function addLogoLayer(){
+  const id=newLid();
+  ED.layers.push({id,type:'logo',text:'RIO',font:'Bebas Neue',fs:48,color:ED.vals.ac||'#d4742a',px:.06,py:.06,opacity:1,ls:2,visible:true});
+  ED.selLyr=id;buildEdPanel();updatePreview();
+}
+function delLayer(id,e){e.stopPropagation();ED.layers=ED.layers.filter(x=>x.id!==id);if(ED.selLyr===id)ED.selLyr=null;buildEdPanel();updatePreview()}
+function togVis(id,e){e.stopPropagation();const l=ED.layers.find(x=>x.id===id);if(l){l.visible=!l.visible;buildEdPanel();updatePreview()}}
+function updLyr(id,k,v){const l=ED.layers.find(x=>x.id===id);if(l){l[k]=v;buildEdPanel();updatePreview()}}
+
+/* ════════════════════════════════════════════════
+   FORMAT
+════════════════════════════════════════════════ */
 function setFmt(key,btn){
   ED.fmt=key;
   document.querySelectorAll('.mfmt').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  initCanvas(); schedRender();
+  applyFmtSize();
+  updatePreview();
 }
 
-function schedRender(){
-  if(rafId)cancelAnimationFrame(rafId);
-  rafId=requestAnimationFrame(renderCanvas);
-}
-
-async function renderCanvas(){
-  const W=ED.cW,H=ED.cH;
-  ctx.clearRect(0,0,W,H);
-
-  // 1. Background
-  if(ED.bgId){
-    const m=ED.media.find(x=>x.id===ED.bgId);
-    if(m){
-      const src=(ED.mode==='video'&&m.type==='video'&&ED.videoEl)?ED.videoEl:m.img;
-      if(src){
-        if(ED.bgBlur>0){ctx.save();ctx.filter=`blur(${ED.bgBlur}px)`}
-        ctx.globalAlpha=ED.bgOpacity;
-        drawFit(src,0,0,W,H,ED.bgPos);
-        ctx.globalAlpha=1;
-        if(ED.bgBlur>0)ctx.restore();
-      }
-    }
-  } else {
-    const bgCol=ED.vals.bg||'#141418';
-    ctx.fillStyle=bgCol; ctx.fillRect(0,0,W,H);
-  }
-
-  // 2. Overlay
-  if(ED.overlay.on){
-    ctx.globalAlpha=ED.overlay.opacity;
-    ctx.fillStyle=ED.overlay.color;
-    ctx.fillRect(0,0,W,H);
-    ctx.globalAlpha=1;
-  }
-
-  // 3. Template graphics
-  await document.fonts.ready;
-  if(ED.mode==='template') drawTplCanvas(W,H);
-  else if(ED.mode==='photo') drawPhotoMode(W,H);
-  else if(ED.mode==='video') drawVideoMode(W,H);
-
-  // 4. Free layers
-  for(const l of ED.layers){
-    if(!l.visible)continue;
-    drawTextLayer(l,W,H);
-  }
-
-  // 5. Film grain
-  applyGrain(W,H);
-}
-
-function drawFit(img,x,y,w,h,mode){
-  const iw=img.videoWidth||img.naturalWidth||img.width||1;
-  const ih=img.videoHeight||img.naturalHeight||img.height||1;
-  if(mode==='cover'){
-    const s=Math.max(w/iw,h/ih);
-    ctx.drawImage(img,x+(w-iw*s)/2,y+(h-ih*s)/2,iw*s,ih*s);
-  }else if(mode==='contain'){
-    const s=Math.min(w/iw,h/ih);
-    ctx.drawImage(img,x+(w-iw*s)/2,y+(h-ih*s)/2,iw*s,ih*s);
-  }else{
-    ctx.drawImage(img,x,y,w,h);
-  }
-}
-
-function drawTplCanvas(W,H){
-  const v=ED.vals, ac=v.ac||'#d4742a', tc='#ede9e2';
-  const id=ED.tpl.id;
-
-  if(id==='p1'){
-    // bottom bar
-    const bh=H*.28;
-    ctx.fillStyle='rgba(9,9,11,0.94)'; ctx.fillRect(0,H-bh,W,bh);
-    if(!ED.bgId){
-      ctx.strokeStyle=ac+'33'; ctx.lineWidth=1.5;
-      ctx.beginPath(); ctx.arc(W*.5,H*.35,W*.18,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(W*.5,H*.35,W*.11,0,Math.PI*2); ctx.stroke();
-      ctx.fillStyle=ac+'10'; ctx.beginPath(); ctx.arc(W*.5,H*.35,W*.05,0,Math.PI*2); ctx.fill();
-    }
-    ctx.font=`300 ${W*.024}px Outfit`; ctx.fillStyle=ac; ctx.letterSpacing='0.25em';
-    ctx.fillText((v.tag||'Photography').toUpperCase(),W*.07,H-bh+bh*.32);
-    ctx.font=`400 ${W*.054}px 'Playfair Display'`; ctx.fillStyle=tc; ctx.letterSpacing='0';
-    ctx.fillText(v.title||'Golden Hour Series',W*.07,H-bh+bh*.68);
-    ctx.font=`300 ${W*.055}px Outfit`; ctx.fillStyle=ac; ctx.fillText('→',W*.88,H-bh+bh*.63);
-  }
-  else if(id==='p2'){
-    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H*.08); ctx.fillRect(0,H*.92,W,H*.08);
-    const cs=W*.038;
-    [[W*.07,H*.1],[W*.93,H*.1],[W*.07,H*.9],[W*.93,H*.9]].forEach(([x,y],i)=>{
-      ctx.strokeStyle=ac+'cc'; ctx.lineWidth=1.5;
-      const dx=i%2===0?cs:-cs, dy=i<2?cs:-cs;
-      ctx.beginPath(); ctx.moveTo(x+dx,y); ctx.lineTo(x,y); ctx.lineTo(x,y+dy); ctx.stroke();
-    });
-    const lines=(v.quote||'').split('\n');
-    const fs=W*.046;
-    ctx.font=`italic 400 ${fs}px 'Playfair Display'`;
-    ctx.fillStyle=tc; ctx.textAlign='center'; ctx.letterSpacing='0';
-    lines.forEach((l,i)=>ctx.fillText(`"${l}"`,W*.5,H*.42+i*fs*1.55));
-    ctx.fillStyle=ac; ctx.fillRect(W*.5-14,H*.58,28,1.5);
-    ctx.font=`300 ${W*.022}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0.22em';
-    ctx.fillText(('— '+(v.credit||'Rio')).toUpperCase(),W*.5,H*.64);
-    ctx.textAlign='left';
-  }
-  else if(id==='p3'){
-    const mh=H*.56,ch=(H-mh-3)*.5;
-    if(!ED.bgId){
-      ctx.fillStyle='#181818'; ctx.fillRect(0,0,W,mh);
-      ctx.fillStyle='#151517'; ctx.fillRect(0,mh+2,W/2-1,ch); ctx.fillRect(W/2+1,mh+2,W/2-1,ch);
-      const g=ctx.createLinearGradient(0,0,0,mh);g.addColorStop(.4,'transparent');g.addColorStop(1,'rgba(0,0,0,.6)');
-      ctx.fillStyle=g; ctx.fillRect(0,0,W,mh);
-      ctx.globalAlpha=.08; ctx.font=`${W*.12}px serif`; ctx.textAlign='center';
-      ctx.fillText('🎬',W*.5,mh*.62); ctx.fillText('📷',W*.25,mh+2+ch*.62); ctx.fillText('💡',W*.75,mh+2+ch*.62);
-      ctx.globalAlpha=1; ctx.textAlign='left';
-    }
-    ctx.strokeStyle=ac+'88'; ctx.lineWidth=1;
-    ctx.strokeRect(W*.72,mh*.07,W*.21,mh*.1);
-    ctx.font=`300 ${W*.022}px Outfit`; ctx.fillStyle=ac; ctx.textAlign='center'; ctx.letterSpacing='0.18em';
-    ctx.fillText((v.badge||'BTS').toUpperCase(),W*.825,mh*.135); ctx.textAlign='left';
-    ctx.fillStyle='#b8a882'; ctx.letterSpacing='0.14em';
-    ctx.fillText((v.lbl1||'Main Camera').toUpperCase(),W*.06,mh*.92);
-    ctx.fillText((v.lbl2||'Lens').toUpperCase(),W*.06,mh+2+ch*.88);
-    ctx.fillText((v.lbl3||'Light').toUpperCase(),W/2+1+W*.06,mh+2+ch*.88);
-  }
-  else if(id==='p4'){
-    if(!ED.bgId){ctx.fillStyle=v.bg||'#1c1c22'; ctx.fillRect(0,0,W,H)}
-    ctx.font=`400 ${W*.42}px 'Bebas Neue'`; ctx.fillStyle=ac; ctx.globalAlpha=.04;
-    ctx.fillText('04',W*.48,H*.56); ctx.globalAlpha=1;
-    ctx.font=`300 ${W*.024}px Outfit`; ctx.fillStyle=ac; ctx.letterSpacing='0.3em';
-    ctx.fillText((v.tag||'Web Design').toUpperCase(),W*.08,H*.18);
-    ctx.font=`400 ${W*.072}px 'Bebas Neue'`; ctx.fillStyle=tc; ctx.letterSpacing='0.04em';
-    const tls=wrapText(ctx,v.title||'Service',W*.84);
-    tls.forEach((l,i)=>ctx.fillText(l,W*.08,H*.28+i*W*.08));
-    ctx.fillStyle=ac; ctx.fillRect(W*.08,H*.42,W*.06,1.5);
-    ctx.font=`300 ${W*.028}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0';
-    [v.i1,v.i2,v.i3].forEach((it,i)=>{
-      if(!it)return;
-      ctx.fillStyle=ac; ctx.beginPath(); ctx.arc(W*.09,H*.5+i*H*.082-4,3,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#8a8a96'; ctx.fillText(it,W*.115,H*.5+i*H*.082);
-    });
-    ctx.font=`300 ${W*.025}px Outfit`; ctx.fillStyle=ac; ctx.letterSpacing='0.2em';
-    ctx.fillText(((v.cta||'Contact')+'  →').toUpperCase(),W*.08,H*.83);
-  }
-  else if(id==='p5'){
-    if(!ED.bgId){ctx.fillStyle=v.bg||'#0a0e0d'; ctx.fillRect(0,0,W,H)}
-    ctx.font=`${W*.054}px serif`; ctx.fillStyle=ac; ctx.fillText(v.stars||'★★★★★',W*.08,H*.22);
-    ctx.font=`italic 400 ${W*.044}px 'Playfair Display'`; ctx.fillStyle=tc; ctx.letterSpacing='0';
-    const ql=wrapText(ctx,`"${v.quote||''}"`,W*.84);
-    ql.forEach((l,i)=>ctx.fillText(l,W*.08,H*.34+i*W*.054));
-    const ay=H*.82;
-    ctx.fillStyle=ac; ctx.fillRect(W*.08,ay,W*.04,1.5);
-    ctx.font=`500 ${W*.03}px Outfit`; ctx.fillStyle=tc; ctx.letterSpacing='0.04em';
-    ctx.fillText(v.name||'Client',W*.14,ay+W*.038);
-    ctx.font=`300 ${W*.023}px Outfit`; ctx.fillStyle='#2e8a9c'; ctx.letterSpacing='0.12em';
-    ctx.fillText((v.role||'').toUpperCase(),W*.14,ay+W*.068);
-  }
-  else if(id==='p6'){
-    if(!ED.bgId){
-      ctx.fillStyle=v.bg||'#040406'; ctx.fillRect(0,0,W,H);
-      const g=ctx.createLinearGradient(W*.6,0,W,H*.6);
-      g.addColorStop(0,ac+'08'); g.addColorStop(1,'transparent');
-      ctx.fillStyle=g; ctx.fillRect(0,0,W,H*.7);
-    }
-    ctx.strokeStyle='rgba(200,184,154,.025)'; ctx.lineWidth=1;
-    for(let i=1;i<4;i++){ctx.beginPath();ctx.moveTo(W*i/4,0);ctx.lineTo(W*i/4,H*.7);ctx.stroke()}
-    ctx.strokeStyle=ac+'44'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.arc(W*.5,H*.37,W*.11,0,Math.PI*2); ctx.stroke();
-    ctx.font=`${W*.055}px sans-serif`; ctx.fillStyle=ac+'66'; ctx.textAlign='center';
-    ctx.fillText('▶',W*.52,H*.4); ctx.textAlign='left';
-    ctx.fillStyle='rgba(4,4,6,.95)'; ctx.fillRect(0,H*.7,W,H*.3);
-    ctx.font=`300 ${W*.023}px Outfit`; ctx.fillStyle=ac; ctx.letterSpacing='0.28em';
-    ctx.fillText((v.cat||'Cinematography').toUpperCase(),W*.07,H*.76);
-    ctx.font=`400 ${W*.063}px 'Bebas Neue'`; ctx.fillStyle=tc; ctx.letterSpacing='0.04em';
-    ctx.fillText(v.title||'FILM TITLE',W*.07,H*.845);
-    ctx.font=`300 ${W*.023}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0.1em';
-    ctx.fillText([v.m1,v.m2,v.m3].filter(Boolean).join(' · ').toUpperCase(),W*.07,H*.925);
-  }
-  else if(id==='p7'){
-    const sx=W*.5;
-    if(ED.bgId){
-      const m=ED.media.find(x=>x.id===ED.bgId);
-      if(m&&m.img){
-        ctx.save(); ctx.filter='grayscale(1) contrast(1.08)';
-        ctx.beginPath(); ctx.rect(0,0,sx,H*.72); ctx.clip();
-        drawFit(m.img,0,0,sx,H*.72,'cover'); ctx.restore();
-        ctx.save(); ctx.beginPath(); ctx.rect(sx,0,sx,H*.72); ctx.clip();
-        drawFit(m.img,0,0,W,H*.72,'cover'); ctx.restore();
-      }
-    } else {
-      ctx.fillStyle='#1a1a1a'; ctx.fillRect(0,0,sx,H*.72);
-      ctx.fillStyle='#1e1a14'; ctx.fillRect(sx,0,sx,H*.72);
-    }
-    ctx.fillStyle='rgba(255,255,255,.07)'; ctx.fillRect(sx*.15,H*.07,sx*.7,H*.09);
-    ctx.font=`300 ${W*.022}px Outfit`; ctx.fillStyle='rgba(255,255,255,.45)'; ctx.letterSpacing='0.22em'; ctx.textAlign='center';
-    ctx.fillText('BEFORE',sx*.5,H*.125);
-    ctx.fillStyle=ac+'22'; ctx.fillRect(sx+sx*.15,H*.07,sx*.7,H*.09);
-    ctx.fillStyle=ac; ctx.fillText('AFTER',sx+sx*.5,H*.125); ctx.textAlign='left';
-    ctx.fillStyle=ac; ctx.fillRect(sx-1,0,2,H*.72);
-    ctx.fillStyle='rgba(6,6,8,.95)'; ctx.fillRect(0,H*.72,W,H*.28);
-    ctx.font=`400 ${W*.058}px 'Playfair Display'`; ctx.fillStyle=tc; ctx.letterSpacing='0';
-    ctx.fillText(v.label||'現像の魔法',W*.07,H*.83);
-    ctx.font=`300 ${W*.023}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0.14em';
-    ctx.fillText((v.sub||'RAW → Cinematic').toUpperCase(),W*.07,H*.9);
-    ctx.fillStyle=ac; ctx.letterSpacing='0.18em';
-    ctx.fillText((v.cta||'詳細を見る →').toUpperCase(),W*.63,H*.87);
-  }
-  else if(id==='p8'){
-    if(!ED.bgId){ctx.fillStyle=v.bg||'#141418'; ctx.fillRect(0,0,W,H)}
-    ctx.font=`300 ${W*.024}px Outfit`; ctx.fillStyle=ac; ctx.letterSpacing='0.28em';
-    ctx.fillText((v.head||'実績').toUpperCase(),W*.08,H*.14);
-    const stats=[[v.n1,v.l1,72],[v.n2,v.l2,88],[v.n3,v.l3,55],[v.n4,v.l4,93]];
-    const cols=[.08,.54],rows=[.27,.57];
-    stats.forEach(([n,l,p],i)=>{
-      const x=W*cols[i%2],y=H*rows[Math.floor(i/2)];
-      ctx.font=`400 ${W*.095}px 'Bebas Neue'`; ctx.fillStyle=tc; ctx.letterSpacing='0.04em'; ctx.fillText(n||'—',x,y);
-      ctx.font=`300 ${W*.023}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0.06em'; ctx.fillText(l||'',x,y+W*.03);
-      ctx.fillStyle=ac; ctx.globalAlpha=.1; ctx.fillRect(x,y+W*.038,W*.34,2); ctx.globalAlpha=1;
-      ctx.fillStyle=ac; ctx.fillRect(x,y+W*.038,W*.34*(p/100),2);
-    });
-    ctx.fillStyle='rgba(255,255,255,.06)'; ctx.fillRect(W*.08,H*.88,W*.84,1);
-    ctx.font=`300 ${W*.021}px Outfit`; ctx.fillStyle='rgba(255,255,255,.18)'; ctx.letterSpacing='0.1em';
-    ctx.fillText((v.foot||'Rio Studio').toUpperCase(),W*.08,H*.94);
-  }
-  else if(id==='p9'){
-    if(!ED.bgId){ctx.fillStyle=v.bg||'#08080a'; ctx.fillRect(0,0,W,H)}
-    ctx.fillStyle='rgba(20,20,24,0.95)'; ctx.fillRect(0,0,W,H*.1);
-    ctx.font=`400 ${W*.04}px 'Bebas Neue'`; ctx.fillStyle=ac; ctx.letterSpacing='0.22em';
-    ctx.fillText((v.brand||'Rio Studio').toUpperCase(),W*.07,H*.066);
-    ctx.font=`300 ${W*.021}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0.1em'; ctx.textAlign='right';
-    ctx.fillText('01 / 05',W*.93,H*.066); ctx.textAlign='left';
-    ctx.font=`300 ${W*.024}px Outfit`; ctx.fillStyle=ac; ctx.letterSpacing='0.28em';
-    ctx.fillText((v.eye||'Tips').toUpperCase(),W*.08,H*.44);
-    ctx.font=`400 ${W*.063}px 'Playfair Display'`; ctx.fillStyle=tc; ctx.letterSpacing='0';
-    const tl2=wrapText(ctx,v.title||'タイトル',W*.84);
-    tl2.forEach((l,i)=>ctx.fillText(l,W*.08,H*.52+i*W*.073));
-    ctx.font=`300 ${W*.027}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0';
-    const bl=wrapText(ctx,v.body||'',W*.84);
-    bl.forEach((l,i)=>ctx.fillText(l,W*.08,H*.67+i*W*.035));
-    ctx.fillStyle='rgba(255,255,255,.07)'; ctx.fillRect(0,H*.88,W,1);
-    [[.08,ac],[.11,'rgba(255,255,255,.18)'],[.14,'rgba(255,255,255,.18)'],[.17,'rgba(255,255,255,.18)'],[.20,'rgba(255,255,255,.18)']].forEach(([x,c])=>{
-      ctx.fillStyle=c; ctx.beginPath(); ctx.arc(W*x,H*.94,3.5,0,Math.PI*2); ctx.fill();
-    });
-    ctx.font=`300 ${W*.021}px Outfit`; ctx.fillStyle='#8a8a96'; ctx.letterSpacing='0.14em'; ctx.textAlign='right';
-    ctx.fillText('スワイプ →',W*.93,H*.944); ctx.textAlign='left';
-  }
-}
-
-function drawPhotoMode(W,H){
-  if(!ED.bgId){
-    ctx.fillStyle='#1a1a1a'; ctx.fillRect(0,0,W,H);
-    ctx.globalAlpha=.07; ctx.font=`${W*.18}px serif`; ctx.textAlign='center';
-    ctx.fillText('📷',W*.5,H*.55); ctx.globalAlpha=1; ctx.textAlign='left';
-  }
-  const g=ctx.createLinearGradient(0,H*.75,0,H);
-  g.addColorStop(0,'transparent'); g.addColorStop(1,'rgba(0,0,0,.65)');
-  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-  const ac=ED.vals.ac||'#d4742a';
-  ctx.font=`400 ${W*.032}px 'Bebas Neue'`; ctx.fillStyle=ac; ctx.globalAlpha=.8; ctx.letterSpacing='0.2em';
-  ctx.fillText('RIO STUDIO',W*.06,H*.958); ctx.globalAlpha=1;
-}
-
-function drawVideoMode(W,H){
-  const ac=ED.vals.ac||'#d4742a';
-  ctx.strokeStyle=ac+'22'; ctx.lineWidth=1.5;
-  ctx.strokeRect(W*.04,H*.04,W*.92,H*.92);
-  const now=new Date();
-  const tc=`${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:00:00`;
-  ctx.font=`300 ${W*.018}px Outfit`; ctx.fillStyle=ac+'bb'; ctx.letterSpacing='0.12em';
-  ctx.fillText(tc,W*.055,H*.955);
-  ctx.fillStyle='#8a8a96'; ctx.textAlign='right';
-  ctx.fillText('● REC',W*.945,H*.955); ctx.textAlign='left';
-}
-
-function drawTextLayer(l,W,H){
-  ctx.save();
-  ctx.font=`${l.style||'400'} ${(l.fontSize||60)*(W/1080)}px '${l.font||'Bebas Neue'}'`;
-  ctx.fillStyle=l.color||'#ede9e2';
-  ctx.globalAlpha=l.opacity??1;
-  ctx.textAlign='left';
-  ctx.letterSpacing=(l.ls||0)+'px';
-  const lines=wrapText(ctx,l.text||'',(l.mxW||.84)*W);
-  const fs=(l.fontSize||60)*(W/1080);
-  lines.forEach((t,i)=>ctx.fillText(t,l.x*W,l.y*H+i*fs*1.38));
-  ctx.restore();
-}
-
-function wrapText(ctx,text,maxW){
-  const words=(text||'').split(' ');const lines=[];let cur='';
-  for(const w of words){const t=cur?cur+' '+w:w;if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;}else cur=t}
-  if(cur)lines.push(cur);return lines;
-}
-
-function applyGrain(W,H){
-  ctx.save();
-  const id=ctx.createImageData(W,H);const d=id.data;
-  for(let i=0;i<d.length;i+=4){const n=(Math.random()-.5)*14;d[i]=d[i+1]=d[i+2]=128+n;d[i+3]=6;}
-  ctx.putImageData(id,0,0);ctx.restore();
-}
-
-/* video live loop */
-function startVideoLoop(){
-  if(ED.videoAF)cancelAnimationFrame(ED.videoAF);
-  function loop(){if(!ED.videoEl||ED.videoEl.paused){ED.videoAF=null;return}schedRender();ED.videoAF=requestAnimationFrame(loop)}
-  loop();
-}
-
-/* ══════════════════════════════════════════════════
-   CANVAS DRAG (text layers)
-══════════════════════════════════════════════════ */
-let drag=null,dox=0,doy=0;
-cv.addEventListener('mousedown',e=>{
-  const r=cv.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
-  for(let i=ED.layers.length-1;i>=0;i--){
-    const l=ED.layers[i];if(!l.visible)continue;
-    if(Math.abs(sx-l.x)<.16&&Math.abs(sy-l.y)<.09){drag=l;dox=sx-l.x;doy=sy-l.y;ED.selLayer=l.id;buildEdPanel();break}
-  }
-});
-cv.addEventListener('mousemove',e=>{
-  if(!drag)return;
-  const r=cv.getBoundingClientRect();
-  drag.x=Math.max(0,Math.min(.96,(e.clientX-r.left)/r.width-dox));
-  drag.y=Math.max(.02,Math.min(.98,(e.clientY-r.top)/r.height-doy));
-  schedRender();
-});
-cv.addEventListener('mouseup',()=>{drag=null});
-cv.addEventListener('touchstart',e=>{
-  const t=e.touches[0],r=cv.getBoundingClientRect(),sx=(t.clientX-r.left)/r.width,sy=(t.clientY-r.top)/r.height;
-  for(let i=ED.layers.length-1;i>=0;i--){
-    const l=ED.layers[i];if(!l.visible)continue;
-    if(Math.abs(sx-l.x)<.18&&Math.abs(sy-l.y)<.1){drag=l;dox=sx-l.x;doy=sy-l.y;break}
-  }
-},{passive:true});
-cv.addEventListener('touchmove',e=>{
-  if(!drag)return;e.preventDefault();
-  const t=e.touches[0],r=cv.getBoundingClientRect();
-  drag.x=Math.max(0,Math.min(.96,(t.clientX-r.left)/r.width-dox));
-  drag.y=Math.max(.02,Math.min(.98,(t.clientY-r.top)/r.height-doy));
-  schedRender();
-},{passive:false});
-cv.addEventListener('touchend',()=>{drag=null});
-
-/* ══════════════════════════════════════════════════
-   MODE
-══════════════════════════════════════════════════ */
-function setEdMode(mode,btn){
-  ED.mode=mode;
-  document.querySelectorAll('.mmode').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  buildEdPanel();schedRender();
-}
-
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    MODAL LEFT LIST
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function buildMlList(){
   document.getElementById('mlList').innerHTML=TPLS.map(t=>`
     <div class="ml-item${t.id===ED.tpl.id?' active':''}" onclick="switchEdTpl('${t.id}')">
@@ -1175,131 +1097,136 @@ function buildMlList(){
 function switchEdTpl(id){
   ED.tpl=TPLS.find(t=>t.id===id);
   ED.vals=defVals(ED.tpl);
-  ED.layers=[];ED.selLayer=null;
-  buildMlList();buildEdPanel();schedRender();
+  ED.layers=[];ED.selLyr=null;
+  buildMlList();buildEdPanel();updatePreview();
 }
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    RIGHT PANEL
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function buildEdPanel(){
-  const v=ED.vals, tpl=ED.tpl;
+  const v=ED.vals,tpl=ED.tpl;
   let h='';
 
-  // Template text fields
-  if(ED.mode==='template'){
-    h+=`<span class="ps">テキスト</span>`;
-    tpl.fields.filter(f=>f.t!=='color').forEach(f=>{
-      const val=v[f.k]!==undefined?v[f.k]:f.d;
-      if(f.t==='textarea'){
-        h+=`<div class="field"><label>${f.l}</label><textarea rows="2" oninput="setVal('${f.k}',this.value)">${esc(val)}</textarea></div>`;
-      } else {
-        h+=`<div class="field"><label>${f.l}</label><input type="text" value="${esc(val)}" oninput="setVal('${f.k}',this.value)"></div>`;
-      }
-    });
-    const cfs=tpl.fields.filter(f=>f.t==='color');
-    if(cfs.length){
-      h+=`<span class="ps">カラー</span><div class="color-row">`;
-      cfs.forEach(f=>{h+=`<div class="cc"><input type="color" value="${v[f.k]||f.d}" oninput="setVal('${f.k}',this.value)"><span>${f.l}</span></div>`});
-      h+=`</div>`;
-      h+=`<div class="pre-grid">${PRESETS.map(p=>`<button class="pre-btn" style="background:${p.bg};color:${p.ac};border:1px solid ${p.ac}55" onclick="applyPreset('${p.bg}','${p.ac}')">${p.name}</button>`).join('')}</div>`;
+  // Text fields
+  h+=`<span class="ps">テキスト編集</span>`;
+  tpl.fields.filter(f=>f.t!=='color').forEach(f=>{
+    const val=v[f.k]!==undefined?v[f.k]:f.d;
+    if(f.t==='textarea'){
+      h+=`<div class="field"><label>${f.l}</label><textarea rows="3" oninput="setTV('${f.k}',this.value)">${esc(val)}</textarea></div>`;
+    } else {
+      h+=`<div class="field"><label>${f.l}</label><input type="text" value="${esc(val)}" oninput="setTV('${f.k}',this.value)"></div>`;
     }
+  });
+
+  // Color fields
+  const cfs=tpl.fields.filter(f=>f.t==='color');
+  if(cfs.length){
+    h+=`<span class="ps">カラー設定</span><div class="color-row">`;
+    cfs.forEach(f=>{h+=`<div class="cc"><input type="color" value="${v[f.k]||f.d}" oninput="setTV('${f.k}',this.value)"><span>${f.l}</span></div>`});
+    h+=`</div>`;
+    h+=`<div class="pre-grid">${PRESETS.map(p=>`<button class="pre-btn" style="background:${p.bg};color:${p.ac};border:1px solid ${p.ac}55" onclick="applyPreset('${p.bg}','${p.ac}')">${p.name}</button>`).join('')}</div>`;
   }
 
   // Media upload
-  h+=`<span class="ps">メディア</span>
+  h+=`<span class="ps">写真 / 動画</span>
     <div class="upzone" id="upzone">
-      <input type="file" accept="image/*,video/*" multiple onchange="handleFiles(this.files)">
-      <div class="upzone-t">📁 写真・動画をドロップまたはクリック</div>
-      <div class="upzone-s">JPG / PNG / MP4 / MOV</div>
+      <input type="file" accept="image/*,video/*" multiple onchange="handleFiles(this.files)" id="fileInput">
+      <div class="upzone-t">📁 写真・動画をクリックまたはドロップ</div>
+      <div class="upzone-s">JPG / PNG / GIF / MP4 / MOV 対応</div>
     </div>
-    <div class="media-chips" id="mediaChips">${buildMediaChipsHTML()}</div>`;
+    <div class="media-chips" id="mediaChips">${buildChipsHTML()}</div>`;
 
-  // BG controls (if media uploaded)
+  // BG settings
   if(ED.media.length){
     h+=`<span class="ps">背景設定</span>
-      <div class="field"><label>背景メディア</label>
-        <select onchange="ED.bgId=this.value;schedRender()">
-          <option value="">なし（テンプレート背景）</option>
-          ${ED.media.map(m=>`<option value="${m.id}"${m.id===ED.bgId?' selected':''}>${m.name.slice(0,18)}</option>`).join('')}
-        </select></div>
-      <div class="srow"><label>不透明度 <b id="bgOpV">${Math.round(ED.bgOpacity*100)}%</b></label>
-        <input type="range" min="0" max="100" value="${Math.round(ED.bgOpacity*100)}" oninput="ED.bgOpacity=this.value/100;document.getElementById('bgOpV').textContent=this.value+'%';schedRender()"></div>
-      <div class="srow"><label>ぼかし <b id="bgBlV">${ED.bgBlur}px</b></label>
-        <input type="range" min="0" max="40" value="${ED.bgBlur}" oninput="ED.bgBlur=+this.value;document.getElementById('bgBlV').textContent=this.value+'px';schedRender()"></div>
-      <div class="pos-btns">
-        ${[['cover','カバー'],['contain','収める'],['fill','引き伸ばし']].map(([k,l])=>`<button class="pb${ED.bgPos===k?' on':''}" onclick="ED.bgPos='${k}';document.querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));this.classList.add('on');schedRender()">${l}</button>`).join('')}
-      </div>`;
+      <div class="field"><label>背景に使用</label>
+        <select onchange="ED.bgId=this.value||null;updatePreview()">
+          <option value="">なし（テンプレートの背景色のみ）</option>
+          ${ED.media.map(m=>`<option value="${m.id}"${m.id===ED.bgId?' selected':''}>${m.name.slice(0,22)}</option>`).join('')}
+        </select></div>`;
+    if(ED.bgId){
+      h+=`<div class="pos-btns">
+          ${[['cover','カバー'],['contain','収める'],['fill','引き伸ばし']].map(([k,l])=>`<button class="pb${ED.bgPos===k?' on':''}" onclick="ED.bgPos='${k}';document.querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));this.classList.add('on');updatePreview()">${l}</button>`).join('')}
+        </div>
+        <div class="srow"><label>不透明度 <b id="v-bgop">${Math.round(ED.bgOpacity*100)}%</b></label>
+          <input type="range" min="0" max="100" value="${Math.round(ED.bgOpacity*100)}" oninput="ED.bgOpacity=this.value/100;document.getElementById('v-bgop').textContent=this.value+'%';updatePreview()"></div>
+        <div class="srow"><label>ぼかし <b id="v-bgbl">${ED.bgBlur}px</b></label>
+          <input type="range" min="0" max="30" value="${ED.bgBlur}" oninput="ED.bgBlur=+this.value;document.getElementById('v-bgbl').textContent=this.value+'px';updatePreview()"></div>`;
+    }
   }
 
   // Overlay
-  h+=`<span class="ps">オーバーレイ</span>
-    <div class="tog-row"><span>表示</span>
-      <label class="tog"><input type="checkbox" ${ED.overlay.on?'checked':''} onchange="ED.overlay.on=this.checked;schedRender()"><span class="tog-sl"></span></label>
+  h+=`<span class="ps">暗幕オーバーレイ</span>
+    <div class="tog-row"><span>表示する</span>
+      <label class="tog"><input type="checkbox" ${ED.overlayOn?'checked':''} onchange="ED.overlayOn=this.checked;updatePreview()"><span class="tog-sl"></span></label>
     </div>
-    <div class="srow"><label>濃度 <b id="ovOpV">${Math.round(ED.overlay.opacity*100)}%</b></label>
-      <input type="range" min="0" max="90" value="${Math.round(ED.overlay.opacity*100)}" oninput="ED.overlay.opacity=this.value/100;document.getElementById('ovOpV').textContent=this.value+'%';schedRender()"></div>
-    <div class="field"><label>カラー</label>
-      <input type="color" value="${ED.overlay.color}" oninput="ED.overlay.color=this.value;schedRender()" style="height:28px;width:100%"></div>`;
+    <div class="srow"><label>濃度 <b id="v-ovop">${Math.round(ED.overlayOpacity*100)}%</b></label>
+      <input type="range" min="0" max="90" value="${Math.round(ED.overlayOpacity*100)}" oninput="ED.overlayOpacity=this.value/100;document.getElementById('v-ovop').textContent=this.value+'%';updatePreview()"></div>`;
 
   // Layers
-  h+=`<span class="ps">フリーレイヤー</span>
+  h+=`<span class="ps">フリーテキスト</span>
     <div class="lyr-list">${ED.layers.map(l=>`
-      <div class="lyr${l.id===ED.selLayer?' on':''}" onclick="selLayer('${l.id}')">
-        <span class="lyr-ico">${l.type==='logo'?'◈':'T'}</span>
-        <span class="lyr-nm">${esc(l.text||l.type)}</span>
-        <button class="lyr-vis" onclick="toggleVis('${l.id}',event)">${l.visible?'👁':'🚫'}</button>
+      <div class="lyr${l.id===ED.selLyr?' on':''}" onclick="selFreeLayer('${l.id}')">
+        <span class="lyr-ico">T</span>
+        <span class="lyr-nm">${esc(l.text||'(空)')}</span>
+        <button class="lyr-vis" onclick="togVis('${l.id}',event)">${l.visible?'👁':'🚫'}</button>
         <button class="lyr-del" onclick="delLayer('${l.id}',event)">✕</button>
       </div>`).join('')}</div>
-    <button class="add-lbtn" onclick="addTextLayer()">＋ テキスト追加</button>
-    <button class="add-lbtn" onclick="addLogoLayer()">＋ ロゴ追加</button>`;
+    <button class="add-lbtn" onclick="addTextLayer()">＋ テキストを追加</button>
+    <button class="add-lbtn" onclick="addLogoLayer()">＋ ロゴを追加</button>`;
 
-  // Selected layer controls
-  const sel=ED.layers.find(l=>l.id===ED.selLayer);
+  // Selected layer settings
+  const sel=ED.layers.find(l=>l.id===ED.selLyr);
   if(sel){
-    h+=`<span class="ps">選択レイヤー設定</span>
-      <div class="field"><label>テキスト</label><textarea rows="2" oninput="updLayer('${sel.id}','text',this.value)">${esc(sel.text||'')}</textarea></div>
+    h+=`<span class="ps">選択テキスト設定</span>
+      <div class="field"><label>テキスト</label>
+        <textarea rows="2" oninput="updLyr('${sel.id}','text',this.value)">${esc(sel.text||'')}</textarea></div>
       <div class="field"><label>フォント</label>
-        <select onchange="updLayer('${sel.id}','font',this.value)">
-          <option value="Bebas Neue"${sel.font==='Bebas Neue'?' selected':''}>Bebas Neue</option>
-          <option value="Playfair Display"${sel.font==='Playfair Display'?' selected':''}>Playfair Display</option>
-          <option value="Outfit"${sel.font==='Outfit'?' selected':''}>Outfit</option>
+        <select onchange="updLyr('${sel.id}','font',this.value)">
+          <option value="Bebas Neue"${sel.font==='Bebas Neue'?' selected':''}>Bebas Neue（見出し）</option>
+          <option value="Playfair Display"${sel.font==='Playfair Display'?' selected':''}>Playfair Display（エレガント）</option>
+          <option value="Outfit"${sel.font==='Outfit'?' selected':''}>Outfit（本文）</option>
         </select></div>
-      <div class="srow"><label>サイズ <b>${sel.fontSize||60}px</b></label>
-        <input type="range" min="14" max="280" value="${sel.fontSize||60}" oninput="updLayer('${sel.id}','fontSize',+this.value);schedRender()"></div>
+      <div class="srow"><label>サイズ <b id="v-fs">${sel.fs||56}px</b></label>
+        <input type="range" min="12" max="220" value="${sel.fs||56}" oninput="sel=ED.layers.find(l=>l.id==='${sel.id}');if(sel){sel.fs=+this.value;document.getElementById('v-fs').textContent=this.value+'px';updatePreview()}"></div>
       <div class="field"><label>カラー</label>
-        <input type="color" value="${sel.color||'#ede9e2'}" oninput="updLayer('${sel.id}','color',this.value)" style="height:28px;width:100%"></div>
-      <div class="srow"><label>不透明度 <b>${Math.round((sel.opacity??1)*100)}%</b></label>
-        <input type="range" min="0" max="100" value="${Math.round((sel.opacity??1)*100)}" oninput="updLayer('${sel.id}','opacity',this.value/100);schedRender()"></div>`;
+        <input type="color" value="${sel.color||'#ede9e2'}" oninput="updLyr('${sel.id}','color',this.value)" style="height:30px;width:100%"></div>
+      <div class="srow"><label>不透明度 <b id="v-lop">${Math.round((sel.opacity??1)*100)}%</b></label>
+        <input type="range" min="0" max="100" value="${Math.round((sel.opacity??1)*100)}" oninput="updLyr('${sel.id}','opacity',this.value/100);document.getElementById('v-lop').textContent=this.value+'%'"></div>
+      <div class="srow"><label>文字間隔 <b id="v-ls">${sel.ls||0}px</b></label>
+        <input type="range" min="0" max="20" value="${sel.ls||0}" oninput="updLyr('${sel.id}','ls',+this.value);document.getElementById('v-ls').textContent=this.value+'px'"></div>`;
   }
 
   document.getElementById('edPanel').innerHTML=h;
   setupDropZone();
 }
 
-function buildMediaChipsHTML(){
-  if(!ED.media.length)return`<div style="font-size:.58rem;color:var(--silver);padding:3px 0">アップロード待ち</div>`;
+function buildChipsHTML(){
+  if(!ED.media.length)return`<div style="font-size:.58rem;color:var(--silver);padding:2px 0">まだアップロードされていません</div>`;
   return ED.media.map(m=>`
-    <div class="mchip${m.id===ED.bgId?' on':''}" onclick="setBg('${m.id}')">
-      <img src="${m.thumb||m.url}" alt="">
+    <div class="mchip${m.id===ED.bgId?' on':''}" onclick="setBgMedia('${m.id}')">
+      <img src="${m.thumb}" alt="">
       <span class="mn">${m.name}</span>
-      <span class="mt">${m.type==='video'?'🎬':'📷'}</span>
-      <button class="mx" onclick="delMedia('${m.id}',event)">✕</button>
+      <span class="mt">${m.type==='video'?'🎬 Video':'📷 Image'}</span>
+      <button class="mx" onclick="delMedia('${m.id}',event)" title="削除">✕</button>
     </div>`).join('');
 }
 
-function setVal(k,v){ED.vals[k]=v;schedRender()}
-function applyPreset(bg,ac){ED.tpl.fields.forEach(f=>{if(f.k==='bg')ED.vals[f.k]=bg;if(f.k==='ac')ED.vals[f.k]=ac});buildEdPanel();schedRender()}
-function resetEditor(){ED.vals=defVals(ED.tpl);ED.layers=[];ED.selLayer=null;buildEdPanel();schedRender()}
+function setTV(k,v){ED.vals[k]=v;updatePreview()}
+function applyPreset(bg,ac){
+  ED.tpl.fields.forEach(f=>{if(f.k==='bg')ED.vals[f.k]=bg;if(f.k==='ac')ED.vals[f.k]=ac});
+  buildEdPanel();updatePreview();
+}
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    MEDIA UPLOAD
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function setupDropZone(){
   const z=document.getElementById('upzone');if(!z)return;
-  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('drag')});
-  z.addEventListener('dragleave',()=>z.classList.remove('drag'));
-  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('drag');handleFiles(e.dataTransfer.files)});
+  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('drag')},false);
+  z.addEventListener('dragleave',()=>z.classList.remove('drag'),false);
+  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('drag');handleFiles(e.dataTransfer.files)},false);
 }
 
 async function handleFiles(files){
@@ -1307,202 +1234,191 @@ async function handleFiles(files){
     const id='m'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
     const url=URL.createObjectURL(file);
     const isVid=file.type.startsWith('video/');
-    let img=null, thumb=url;
-    if(!isVid){
-      img=await loadImg(url);
-    } else {
-      img=await grabVideoFrame(url);
-      if(img)thumb=img.src;
+    let thumb=url;
+    if(isVid){
+      // generate thumbnail from first frame
+      try{thumb=await videoThumb(url)}catch(e){}
     }
-    ED.media.push({id,name:file.name,type:isVid?'video':'image',url,thumb,img,file});
-    if(!ED.bgId){ED.bgId=id;}
+    ED.media.push({id,name:file.name,type:isVid?'video':'image',url,thumb});
+    if(!ED.bgId)ED.bgId=id;
   }
-  buildEdPanel();schedRender();showToast(`${files.length}件のメディアをアップロードしました`);
+  buildEdPanel();updatePreview();
+  showToast(`${files.length}件アップロード完了`);
 }
 
-function loadImg(url){
-  return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=url});
-}
-function grabVideoFrame(url){
-  return new Promise(r=>{
-    const v=document.createElement('video');v.src=url;v.muted=true;v.playsInline=true;
-    v.onloadeddata=()=>{v.currentTime=0.5};
+function videoThumb(url){
+  return new Promise((res,rej)=>{
+    const v=document.createElement('video');
+    v.src=url;v.muted=true;v.playsInline=true;v.crossOrigin='anonymous';
+    v.onloadeddata=()=>{v.currentTime=0.1};
     v.onseeked=()=>{
-      const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;
-      c.getContext('2d').drawImage(v,0,0);
-      const i=new Image();i.src=c.toDataURL();i.onload=()=>r(i);
-      // also store video element for live playback
-      ED.videoEl=v;
-      v.play().catch(()=>{});
-      startVideoLoop();
+      try{
+        const c=document.createElement('canvas');c.width=v.videoWidth||320;c.height=v.videoHeight||180;
+        c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+        res(c.toDataURL('image/jpeg',0.7));
+      }catch(e){res(url)}
+      v.src='';
     };
-    v.onerror=()=>r(null);v.load();
+    v.onerror=()=>res(url);
+    setTimeout(()=>res(url),4000);
+    v.load();
   });
 }
 
-function setBg(id){
-  ED.bgId=id;
-  const m=ED.media.find(x=>x.id===id);
-  if(m&&m.type==='video'&&m.file){
-    const url=URL.createObjectURL(m.file);
-    if(ED.videoEl){ED.videoEl.pause();ED.videoEl=null}
-    const v=document.createElement('video');v.src=url;v.muted=true;v.playsInline=true;v.loop=true;
-    v.oncanplay=()=>{v.play().catch(()=>{});ED.videoEl=v;startVideoLoop()};
-    v.load();
-  }
-  buildEdPanel();schedRender();
+function setBgMedia(id){
+  ED.bgId=id;buildEdPanel();updatePreview();
 }
-
 function delMedia(id,e){
   e.stopPropagation();
-  ED.media=ED.media.filter(m=>m.id!==id);
-  if(ED.bgId===id)ED.bgId=null;
-  buildEdPanel();schedRender();
+  const m=ED.media.find(x=>x.id===id);
+  if(m)URL.revokeObjectURL(m.url);
+  ED.media=ED.media.filter(x=>x.id!==id);
+  if(ED.bgId===id)ED.bgId=ED.media.length?ED.media[0].id:null;
+  buildEdPanel();updatePreview();
 }
 
-/* ══════════════════════════════════════════════════
-   LAYERS
-══════════════════════════════════════════════════ */
-let lc=0;
-function mkLid(){return'l'+(++lc)+'_'+Date.now()}
-function addTextLayer(){
-  const id=mkLid();
-  ED.layers.push({id,type:'text',text:'テキスト',font:'Bebas Neue',fontSize:80,color:'#ede9e2',x:.08,y:.5,opacity:1,ls:0,visible:true,mxW:.84});
-  ED.selLayer=id;buildEdPanel();schedRender();
-}
-function addLogoLayer(){
-  const id=mkLid();
-  ED.layers.push({id,type:'logo',text:'RIO',font:'Bebas Neue',fontSize:56,color:ED.vals.ac||'#d4742a',x:.08,y:.1,opacity:1,ls:0,visible:true,mxW:.5});
-  ED.selLayer=id;buildEdPanel();schedRender();
-}
-function selLayer(id){ED.selLayer=id;buildEdPanel()}
-function toggleVis(id,e){e.stopPropagation();const l=ED.layers.find(x=>x.id===id);if(l){l.visible=!l.visible;buildEdPanel();schedRender()}}
-function delLayer(id,e){e.stopPropagation();ED.layers=ED.layers.filter(x=>x.id!==id);if(ED.selLayer===id)ED.selLayer=null;buildEdPanel();schedRender()}
-function updLayer(id,k,v){const l=ED.layers.find(x=>x.id===id);if(l){l[k]=v;schedRender()}}
-
-/* ══════════════════════════════════════════════════
-   EXPORT
-══════════════════════════════════════════════════ */
-async function doExport(fmt='png'){
+/* ════════════════════════════════════════════════
+   DOWNLOAD — html2canvas on the preview div
+════════════════════════════════════════════════ */
+async function doDownload(fmt='png'){
   const btn=document.getElementById('btnDl');
-  btn.disabled=true;btn.textContent='⏳...';
-  await renderCanvas();
-  await new Promise(r=>setTimeout(r,60));
+  btn.disabled=true;btn.textContent='⏳ 生成中...';
   try{
-    const url=cv.toDataURL(fmt==='jpg'?'image/jpeg':'image/png',0.94);
     const f=FMTS[ED.fmt];
+    const scale=f.w/PW.offsetWidth;
+
+    // Temporarily hide free-layer selection outline
+    PW.querySelectorAll('.free-layer.sel').forEach(e=>e.classList.remove('sel'));
+
+    const canvas=await html2canvas(PW,{
+      scale,
+      useCORS:true,
+      allowTaint:true,
+      backgroundColor:null,
+      logging:false,
+      imageTimeout:8000,
+    });
+
+    // Restore selection
+    if(ED.selLyr){const el=PW.querySelector(`[data-lid="${ED.selLyr}"]`);if(el)el.classList.add('sel')}
+
+    const mime=fmt==='jpg'?'image/jpeg':'image/png';
+    const url=canvas.toDataURL(mime,0.94);
     const a=document.createElement('a');
-    a.href=url;a.download=`rio_${ED.tpl.id}_${f.w}x${f.h}_${Date.now()}.${fmt==='jpg'?'jpg':'png'}`;
-    a.click();showToast(`${fmt.toUpperCase()} 保存完了！`);
-  }catch(e){showToast('エラーが発生しました');console.error(e)}
-  btn.disabled=false;btn.textContent='📥 PNG';
+    a.href=url;a.download=`rio_${ED.tpl.id}_${f.w}x${f.h}.${fmt}`;a.click();
+    showToast(`${fmt.toUpperCase()} 保存完了！`);
+  }catch(err){showToast('エラー: '+err.message);console.error(err)}
+  btn.disabled=false;btn.textContent='📥 PNG 保存';
 }
 
-/* quick capture (no editor) */
-async function quickCapture(id,e){
+/* quick DL without opening editor */
+async function quickDL(id,e){
   if(e)e.stopPropagation();
+  showToast('生成中...');
   const tpl=TPLS.find(t=>t.id===id);
-  const v=defVals(tpl);
-  // temp canvas
-  const tc=document.createElement('canvas');tc.width=1080;tc.height=1080;
-  const tx=tc.getContext('2d');
-  tx.fillStyle=v.bg||'#141418';tx.fillRect(0,0,1080,1080);
-  // render simple text fallback
-  tx.font=`400 80px 'Bebas Neue'`;tx.fillStyle=v.ac||'#d4742a';tx.letterSpacing='0.1em';
-  tx.fillText(tpl.name,60,560);
-  tx.font=`300 32px Outfit`;tx.fillStyle='#8a8a96';tx.letterSpacing='0';
-  tx.fillText('RIO Studio · riophotographer',60,620);
-  const url=tc.toDataURL('image/png');
-  const a=document.createElement('a');a.href=url;a.download=`rio_${id}_default.png`;a.click();
-  showToast('DL完了！編集はボタンをクリック');
+  const wrap=document.createElement('div');
+  wrap.style.cssText=`width:400px;height:400px;position:relative;overflow:hidden;background:#141418`;
+  wrap.innerHTML=tpl.html(defVals(tpl),null);
+  document.getElementById('hz').appendChild(wrap);
+  await new Promise(r=>setTimeout(r,200));
+  try{
+    const c=await html2canvas(wrap,{scale:2.7,useCORS:true,allowTaint:true,backgroundColor:null,logging:false});
+    const a=document.createElement('a');
+    a.href=c.toDataURL('image/png');a.download=`rio_${id}_default.png`;a.click();
+    showToast('DL完了！');
+  }catch(err){showToast('エラーが発生しました')}
+  document.getElementById('hz').removeChild(wrap);
 }
 
-/* ══════════════════════════════════════════════════
-   SHARE
-══════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   SHARE MODAL
+════════════════════════════════════════════════ */
+let _shareUrl='';
 async function openShareModal(){
-  await renderCanvas();
-  await new Promise(r=>setTimeout(r,50));
-  ED.shareUrl=cv.toDataURL('image/png',0.93);
-  document.getElementById('smImg').src=ED.shareUrl;
+  // capture preview
+  PW.querySelectorAll('.free-layer.sel').forEach(e=>e.classList.remove('sel'));
   const f=FMTS[ED.fmt];
+  const canvas=await html2canvas(PW,{scale:f.w/PW.offsetWidth,useCORS:true,allowTaint:true,backgroundColor:null,logging:false});
+  if(ED.selLyr){const el=PW.querySelector(`[data-lid="${ED.selLyr}"]`);if(el)el.classList.add('sel')}
+  _shareUrl=canvas.toDataURL('image/png',0.93);
+  document.getElementById('smImg').src=_shareUrl;
   document.getElementById('smTitle').textContent=ED.tpl.name;
-  document.getElementById('smDesc').textContent=`${f.w} × ${f.h} px · PNG`;
+  document.getElementById('smDesc').textContent=`${f.w}×${f.h}px · ${FMTS[ED.fmt].label}`;
   document.getElementById('smBg').classList.add('open');
 }
 function closeSM(){document.getElementById('smBg').classList.remove('open')}
-
 async function shareAct(type){
   if(type==='clipboard'){
     try{
-      const r=await fetch(ED.shareUrl);const b=await r.blob();
+      const r=await fetch(_shareUrl);const b=await r.blob();
       await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);
       showToast('クリップボードにコピーしました！');
     }catch{
-      await navigator.clipboard.writeText(ED.shareUrl).catch(()=>{});
-      showToast('URLをコピーしました');
+      await navigator.clipboard.writeText(_shareUrl).catch(()=>{});
+      showToast('画像URLをコピーしました');
     }
     closeSM();
-  } else if(type==='png'){
-    const a=document.createElement('a');a.href=ED.shareUrl;a.download=`rio_${Date.now()}.png`;a.click();
+  }else if(type==='png'){
+    const a=document.createElement('a');a.href=_shareUrl;a.download=`rio_${Date.now()}.png`;a.click();
     showToast('PNG 保存完了！');closeSM();
-  } else if(type==='jpg'){
-    await renderCanvas();
-    const u=cv.toDataURL('image/jpeg',0.93);
+  }else if(type==='jpg'){
+    const f=FMTS[ED.fmt];
+    const c=await html2canvas(PW,{scale:f.w/PW.offsetWidth,useCORS:true,allowTaint:true,backgroundColor:null,logging:false});
+    const u=c.toDataURL('image/jpeg',0.93);
     const a=document.createElement('a');a.href=u;a.download=`rio_${Date.now()}.jpg`;a.click();
     showToast('JPEG 保存完了！');closeSM();
-  } else if(type==='native'){
+  }else if(type==='native'){
     try{
-      const r=await fetch(ED.shareUrl);const b=await r.blob();
+      const r=await fetch(_shareUrl);const b=await r.blob();
       const file=new File([b],'rio_post.png',{type:'image/png'});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){
-        await navigator.share({files:[file],title:'RIO Studio'});
-      } else showToast('このブラウザは共有メニューに対応していません');
+      if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'RIO Studio'})}
+      else showToast('このブラウザは共有に対応していません');
     }catch(e){if(e.name!=='AbortError')showToast('共有に失敗しました')}
   }
 }
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    CAPTIONS
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function copyCap(id,btn){
   navigator.clipboard.writeText(document.getElementById(id).innerText).then(()=>{
     btn.textContent='Copied!';btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2200);
   });
 }
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    TOAST
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);
 }
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    CURSOR
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
 (function loop(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;cur2.style.left=rx+'px';cur2.style.top=ry+'px';requestAnimationFrame(loop)})();
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    KEYBOARD
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 document.addEventListener('keydown',e=>{
-  if((e.ctrlKey||e.metaKey)&&e.key==='s'&&document.getElementById('modalBg').classList.contains('open')){
-    e.preventDefault();doExport('png');
+  const modalOpen=document.getElementById('modalBg').classList.contains('open');
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'&&modalOpen){e.preventDefault();doDownload('png')}
+  if(e.key==='Escape'){
+    if(document.getElementById('smBg').classList.contains('open'))closeSM();
+    else if(modalOpen)closeModalDirect();
   }
-  if(e.key==='Escape'&&document.getElementById('smBg').classList.contains('open')){closeSM()}
-  if(e.key==='Escape'&&document.getElementById('modalBg').classList.contains('open')){closeModalDirect()}
 });
 
-/* ══════════════════════════════════════════════════
-   INTERSECTION OBSERVER (fade-in animations)
-══════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   INTERSECTION OBSERVER (card animations)
+════════════════════════════════════════════════ */
 const io=new IntersectionObserver(entries=>entries.forEach(e=>{
   if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}
 }),{threshold:.08});
