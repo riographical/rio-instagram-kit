@@ -175,7 +175,7 @@ body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;f
 .t8 .snum{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,5vw,2.2rem);line-height:1}
 .t8 .slbl{font-size:clamp(.36rem,1.1vw,.52rem);color:#8a8a96;letter-spacing:.06em;line-height:1.4}
 .t8 .sbar{height:2px;background:var(--border);margin-top:5%;position:relative;overflow:hidden}
-.t8 .sbar::after{content:'';position:absolute;top:0;left:0;height:100%}
+.t8 .sbar::after{content:'';position:absolute;top:0;left:0;height:100%;background:var(--ember)}
 .t8 .b1::after{width:72%}.t8 .b2::after{width:88%}.t8 .b3::after{width:55%}.t8 .b4::after{width:93%}
 .t8 .sfoot{padding-top:5%;border-top:1px solid var(--border);font-size:clamp(.34rem,1vw,.48rem);letter-spacing:.1em;color:rgba(255,255,255,.15)}
 .t9{background:#08080a}
@@ -314,6 +314,68 @@ body{background:var(--void);color:var(--white);font-family:'Outfit',sans-serif;f
 .sm-opt-d{font-size:.5rem;color:var(--silver);margin-top:2px;line-height:1.4}
 .sm-close{width:100%;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;padding:9px;cursor:pointer;transition:all .18s}
 .sm-close:hover{border-color:var(--ember);color:var(--ember)}
+
+/* ─── CAPTIONS ─── */
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 52px 72px}
+.cap-card{background:var(--surface);border:1px solid var(--border);padding:24px;transition:border-color .25s,background .25s}
+.cap-card:hover{border-color:rgba(212,116,42,.25);background:var(--lift)}
+.cap-type{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ember);margin-bottom:12px;display:block}
+.cap-body{font-size:.77rem;line-height:1.88;color:rgba(237,233,226,.62);white-space:pre-line}
+.cap-tags{margin-top:12px;font-size:.67rem;line-height:2;color:rgba(46,138,156,.75)}
+.cap-copy{margin-top:12px;background:none;border:1px solid var(--border);color:var(--silver);font-family:'Outfit',sans-serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all .2s}
+.cap-copy:hover{border-color:var(--ember);color:var(--ember)}.cap-copy.copied{border-color:var(--teal);color:var(--teal)}
+
+/* ─── STRATEGY ─── */
+.strat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 52px 72px}
+.strat-card{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--ember);padding:26px}
+.sc-icon{font-size:1.3rem;margin-bottom:12px;display:block}
+.sc-title{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.1em;color:var(--white);margin-bottom:9px}
+.sc-body{font-size:.74rem;line-height:1.8;color:var(--silver)}
+.sc-pill{display:inline-block;margin-top:11px;background:rgba(212,116,42,.12);font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);padding:4px 11px}
+
+/* ─── CHECKLIST ─── */
+.cl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 52px 72px}
+.cl-group{background:var(--surface);border:1px solid var(--border);padding:28px}
+.cl-head{font-family:'Bebas Neue',sans-serif;font-size:.92rem;letter-spacing:.12em;color:var(--white);margin-bottom:8px;padding-bottom:13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.cl-badge{font-size:.48rem;padding:3px 9px;background:var(--ember);color:var(--void);letter-spacing:.12em;font-family:'Outfit',sans-serif;font-weight:600}
+.cl-item{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.025);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none;padding-bottom:0}
+.cl-item input[type=checkbox]{appearance:none;-webkit-appearance:none;width:14px;height:14px;border:1px solid rgba(255,255,255,.18);flex-shrink:0;margin-top:3px;cursor:pointer;transition:all .15s;position:relative}
+.cl-item input:checked{background:var(--ember);border-color:var(--ember)}
+.cl-item input:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.48rem;color:var(--void);font-weight:700}
+.cl-item span{font-size:.75rem;color:rgba(237,233,226,.6);line-height:1.5;cursor:pointer;transition:color .15s}
+.cl-item input:checked+span{color:rgba(255,255,255,.22);text-decoration:line-through}
+
+/* ─── CALENDAR ─── */
+.cal-wrap{padding:0 52px 80px}
+.cal-legend{display:flex;gap:22px;margin-bottom:16px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:.58rem;letter-spacing:.14em;color:var(--silver)}
+.legend-dot{width:8px;height:8px;border-radius:1px}
+.ld-r{background:var(--ember)}.ld-c{background:var(--teal)}.ld-s{background:var(--film)}.ld-st{background:rgba(255,255,255,.3)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.cal-day-hdr{font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);text-align:center;padding:0 0 11px}
+.cal-cell{background:var(--surface);border:1px solid var(--border);padding:10px;min-height:76px;transition:border-color .2s}
+.cal-cell:hover{border-color:rgba(212,116,42,.3)}
+.cal-date{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.06em;color:rgba(255,255,255,.22)}
+.cal-post{margin-top:5px;padding:3px 5px;font-size:.47rem;letter-spacing:.1em;text-transform:uppercase;line-height:1.45}
+.cal-post.reel{background:rgba(212,116,42,.15);color:var(--ember)}
+.cal-post.carousel{background:rgba(46,138,156,.12);color:var(--teal)}
+.cal-post.story{background:rgba(184,168,130,.08);color:var(--film)}
+.cal-post.static{background:rgba(255,255,255,.05);color:var(--silver)}
+.wk-label{font-size:.52rem;letter-spacing:.25em;text-transform:uppercase;margin:16px 0 7px;padding-left:2px}
+
+/* ─── FOOTER ─── */
+footer{background:#030303;border-top:1px solid var(--border);padding:28px 52px;display:flex;align-items:center;justify-content:space-between}
+footer p{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.14)}
+.ft-e{font-size:.58rem;letter-spacing:.14em;color:rgba(212,116,42,.35)}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--ember);color:var(--void);font-family:'Outfit',sans-serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;padding:11px 22px;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* fade-in animation for cards */
+.fade-wait{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.fade-wait.visible{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
@@ -450,33 +512,33 @@ RAWからの現像プロセスを公開。
   <div class="cl-grid">
     <div class="cl-group">
       <div class="cl-head"><span class="cl-badge">IMG</span>ビジュアル品質</div>
-      <label class="cl-item"><input type="checkbox"><label>解像度・シャープネスが十分か（最低1080×1080px）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>カラーグレーディングがブランドトーンと一致しているか</label></label>
-      <label class="cl-item"><input type="checkbox"><label>ノイズ・手ブレが許容範囲内か</label></label>
-      <label class="cl-item"><input type="checkbox"><label>トリミング・コンポジションが意図通りか</label></label>
-      <label class="cl-item"><input type="checkbox"><label>テキスト・ロゴの配置と可読性の確認</label></label>
+      <label class="cl-item"><input type="checkbox"><span>解像度・シャープネスが十分か（最低1080×1080px）</span></label>
+      <label class="cl-item"><input type="checkbox"><span>カラーグレーディングがブランドトーンと一致しているか</span></label>
+      <label class="cl-item"><input type="checkbox"><span>ノイズ・手ブレが許容範囲内か</span></label>
+      <label class="cl-item"><input type="checkbox"><span>トリミング・コンポジションが意図通りか</span></label>
+      <label class="cl-item"><input type="checkbox"><span>テキスト・ロゴの配置と可読性の確認</span></label>
     </div>
     <div class="cl-group">
       <div class="cl-head"><span class="cl-badge">TXT</span>キャプション</div>
-      <label class="cl-item"><input type="checkbox"><label>ブランドのトーン・ボイスに合っているか</label></label>
-      <label class="cl-item"><input type="checkbox"><label>CTAが明確に含まれているか（保存・DM・リンク等）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>誤字・脱字のチェック</label></label>
-      <label class="cl-item"><input type="checkbox"><label>ハッシュタグは20〜30個の最適範囲内か</label></label>
-      <label class="cl-item"><input type="checkbox"><label>改行・絵文字が読みやすい構造になっているか</label></label>
+      <label class="cl-item"><input type="checkbox"><span>ブランドのトーン・ボイスに合っているか</span></label>
+      <label class="cl-item"><input type="checkbox"><span>CTAが明確に含まれているか（保存・DM・リンク等）</span></label>
+      <label class="cl-item"><input type="checkbox"><span>誤字・脱字のチェック</span></label>
+      <label class="cl-item"><input type="checkbox"><span>ハッシュタグは20〜30個の最適範囲内か</span></label>
+      <label class="cl-item"><input type="checkbox"><span>改行・絵文字が読みやすい構造になっているか</span></label>
     </div>
     <div class="cl-group">
       <div class="cl-head"><span class="cl-badge">SET</span>投稿設定</div>
-      <label class="cl-item"><input type="checkbox"><label>位置情報タグの追加（栃木・東京など）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>コラボレーター・クライアントのタグ付け</label></label>
-      <label class="cl-item"><input type="checkbox"><label>Altテキスト（アクセシビリティ・SEO）の入力</label></label>
-      <label class="cl-item"><input type="checkbox"><label>投稿タイミングのスケジュール設定（推奨：平日19〜21時）</label></label>
+      <label class="cl-item"><input type="checkbox"><span>位置情報タグの追加（栃木・東京など）</span></label>
+      <label class="cl-item"><input type="checkbox"><span>コラボレーター・クライアントのタグ付け</span></label>
+      <label class="cl-item"><input type="checkbox"><span>Altテキスト（アクセシビリティ・SEO）の入力</span></label>
+      <label class="cl-item"><input type="checkbox"><span>投稿タイミングのスケジュール設定（推奨：平日19〜21時）</span></label>
     </div>
     <div class="cl-group">
       <div class="cl-head"><span class="cl-badge">PRO</span>ブランド一貫性</div>
-      <label class="cl-item"><input type="checkbox"><label>フィードのグリッドバランスを確認（明暗・テーマ）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>ストーリーズへのクロス投稿を計画・実施</label></label>
-      <label class="cl-item"><input type="checkbox"><label>前回投稿と差別化されているか（テーマの流れ）</label></label>
-      <label class="cl-item"><input type="checkbox"><label>投稿後30分はコメント返信・エンゲージメント対応</label></label>
+      <label class="cl-item"><input type="checkbox"><span>フィードのグリッドバランスを確認（明暗・テーマ）</span></label>
+      <label class="cl-item"><input type="checkbox"><span>ストーリーズへのクロス投稿を計画・実施</span></label>
+      <label class="cl-item"><input type="checkbox"><span>前回投稿と差別化されているか（テーマの流れ）</span></label>
+      <label class="cl-item"><input type="checkbox"><span>投稿後30分はコメント返信・エンゲージメント対応</span></label>
     </div>
   </div>
 </section>
@@ -1420,10 +1482,10 @@ document.addEventListener('keydown',e=>{
    INTERSECTION OBSERVER (card animations)
 ════════════════════════════════════════════════ */
 const io=new IntersectionObserver(entries=>entries.forEach(e=>{
-  if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}
-}),{threshold:.08});
+  if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
+}),{threshold:0,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.strat-card,.cap-card').forEach(el=>{
-  el.style.cssText='opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease';
+  el.classList.add('fade-wait');
   io.observe(el);
 });
 </script>
